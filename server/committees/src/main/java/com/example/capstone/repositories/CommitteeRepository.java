@@ -1,6 +1,5 @@
 package com.example.capstone.repositories;
 
-import com.example.capstone.entities.Volunteer;
 import com.example.capstone.entities.Committee;
 import com.example.capstone.entities.User;
 import com.example.capstone.projections.*;

@@ -1,7 +1,5 @@
 
 package com.example.capstone.entities;
-
-import com.example.capstone.entities.userCommittee;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;

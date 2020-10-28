@@ -2,7 +2,6 @@ package com.example.capstone.controller;
 
 import com.example.capstone.entities.*;
 import com.example.capstone.repositories.UserRepository;
-import com.example.capstone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +10,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping( "" )
 @Validated
 public class LoginController {
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private UserRepository userRepo;

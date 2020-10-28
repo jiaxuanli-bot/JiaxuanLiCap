@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User save(User u);
 
+    User findByEmailEqualsAndYearEquals(String email, String year);
+
 }

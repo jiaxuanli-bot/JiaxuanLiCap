@@ -28,8 +28,8 @@ export class ApiService {
     return this.http.get<HashedCommittees>( `${AppConstants.API_URL}/hashedCommittees?startYear=${startYear}&endYear=${endYear}` );
   }
 
-  createSurvey(userId, committeeId) {
-    return this.http.post<Survey>(`${AppConstants.API_URL}/users/${userId}/enlistings/${committeeId}`, {} );
+  createSurvey(userId, committeeId, year) {
+    return this.http.post<Survey>(`${AppConstants.API_URL}/users/${userId}/enlistings/${committeeId}?year=${year}`, {} );
   }
 
   getCommitteesYears() {
@@ -40,8 +40,8 @@ export class ApiService {
     return this.http.get<string[]>(`${AppConstants.API_URL}/committees/${id}/years`, {} );
   }
 
-  getSurveys(userId) {
-    return this.http.get<Survey[]>(`${AppConstants.API_URL}/users/${userId}/enlistings`, { });
+  getSurveys(userId, year) {
+    return this.http.get<Survey[]>(`${AppConstants.API_URL}/users/${userId}/enlistings?year=${year}`, { });
   }
 
   getFacultyByYear(year) {

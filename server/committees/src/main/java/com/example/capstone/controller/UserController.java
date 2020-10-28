@@ -3,10 +3,8 @@ package com.example.capstone.controller;
 import com.example.capstone.entities.Survey;
 import com.example.capstone.entities.User;
 import com.example.capstone.projections.CommitteeSummary;
-import com.example.capstone.repositories.CommitteeRepository;
 import com.example.capstone.repositories.UserRepository;
 import com.example.capstone.service.UserService;
-import com.example.capstone.service.UserServiceNew;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -24,12 +22,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserServiceNew userServiceNew;
-
-    @Autowired
-    private CommitteeRepository committeeRepo;
 
     @Autowired
     private UserRepository userRepo;
@@ -96,7 +88,7 @@ public class UserController {
         Example<User> example = Example.of(u, matcher);
 
         Pageable paging = PageRequest.of( pageNo, pageSize, Sort.by(sortBy));
-        return userServiceNew.getUsers(example, paging );
+        return userService.getUsers(example, paging );
     }
 
     @RequestMapping( value="/users/{id}", method=RequestMethod.PUT)
@@ -106,7 +98,7 @@ public class UserController {
         user.setId(u.getId());
         user.setEmail(u.getEmail());
         user.setYear(u.getYear());
-        return userServiceNew.modifyUser(user);
+        return userService.modifyUser(user);
     }
 
 //    @RequestMapping( value="/users/{id}", method=RequestMethod.DELETE )
@@ -117,13 +109,13 @@ public class UserController {
 
     @RequestMapping( value="/users/{id}", method=RequestMethod.DELETE )
     public void deleteUser(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(name="year", required=false) String year) {
-        userServiceNew.deleteUser(Long.valueOf(id));
+        userService.deleteUser(Long.valueOf(id));
     }
 
-    @RequestMapping( value="/users", method=RequestMethod.POST,consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public User createUser(User user) {
+    @RequestMapping( value="/users", method=RequestMethod.POST)
+    public User createUser(@RequestBody(required=true) User user) {
         //create a new user
-        return userServiceNew.createUser(user);
+        return userService.createUser(user);
     }
 
     @RequestMapping( value="/users/{id}/committees", method=RequestMethod.GET )
@@ -131,15 +123,16 @@ public class UserController {
         //Get all the committees that user have been assigned
         User u =new User();
         u.setId(Long.valueOf(id));
-        return  userServiceNew.getUserCommittees(u);
+        return  userService.getUserCommittees(u);
     }
 
     @RequestMapping( value="/users/{id}/enlistings", method=RequestMethod.GET )
-    public List<Survey> getUserSurveys(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id) {
+    public List<Survey> getUserSurveys(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id, @RequestParam(name="year", required=false) String year) {
         //Get all the survey that user have been volunteered
-        User u =new User();
-        u.setId(Long.valueOf(id));
-        return userServiceNew.getUserSurveys(Long.valueOf(id),u);
+        User v  = userService.getUserById(Long.valueOf(id));
+        System.out.println("year:" + year);
+        v = userService.getUserByEmailAndYear(v.getEmail(), year);
+        return userService.getUserSurveys(Long.valueOf(id),v);
     }
 
     @RequestMapping( value="/users/{id}/enlistings/committees", method=RequestMethod.GET )
@@ -147,27 +140,29 @@ public class UserController {
         //Get all the survey that user have been volunteered
         User v =new User();
         v.setId(Long.valueOf(id));
-        return userServiceNew.getUserSurveysCommittees(v);
+        return userService.getUserSurveysCommittees(v);
     }
 
     @RequestMapping( value="/users/{id}/enlistings/{committeeid}", method=RequestMethod.POST )
-    public void createSurvey(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeid) {
+    public void createSurvey(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeid, @RequestParam(name="year", required=false) String year) {
        //Create a new survey that user volunteer one committee
-        User v  = new User();
-        v.setId(Long.valueOf(id));
-        userServiceNew.createSurvey(Long.valueOf(committeeid),v);
+        User v  = userService.getUserById(Long.valueOf(id));
+        System.out.println("year:" + year);
+        v = userService.getUserByEmailAndYear(v.getEmail(), year);
+        System.out.println("id:" + v.getId());
+        userService.createSurvey(Long.valueOf(committeeid),v);
     }
 
     @RequestMapping( value="/users/{id}/enlistings/{committeeid}", method=RequestMethod.DELETE )
     public void deleteSurvey(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeid) {
         //Delete survey for that user
-        userServiceNew.deleteSurvey(Long.valueOf(id),Long.valueOf(committeeid));
+        userService.deleteSurvey(Long.valueOf(id),Long.valueOf(committeeid));
     }
 
     @RequestMapping( value="/users/email/{email}/years", method=RequestMethod.GET )
     public List<String> getUserYears(@PathVariable String email) {
         //get all years of users which have same email
-        return userServiceNew.getUserYears(email);
+        return userService.getUserYears(email);
     }
 
 }

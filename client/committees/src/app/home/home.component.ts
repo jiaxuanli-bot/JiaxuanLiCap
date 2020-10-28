@@ -39,14 +39,13 @@ export class HomeComponent implements OnInit {
     this.apiService.getUserYears(this.authentication.currentUserValue.email).subscribe(
       value => {
         this.yearService.setYears(value);
-        console.log(value);
         this.yearService.setValue(value[0]);
         this.yearService.getValue().subscribe( value1 => {
           this.selectedYear = value1;
           this.apiService.getCommitteesByYear(value1).subscribe(
             res => {
               this.committees = res;
-              this.apiService.getSurveys(this.authenticationService.currentUserValue.id).subscribe(
+              this.apiService.getSurveys(this.authenticationService.currentUserValue.id, this.yearService.getYearValue).subscribe(
                 survey => {
                   console.log(survey);
                   this.surveys = survey;
@@ -78,7 +77,7 @@ export class HomeComponent implements OnInit {
   }
 
   createSurvey(committeeId) {
-    this.apiService.createSurvey(this.authenticationService.currentUserValue.id, committeeId).subscribe(
+    this.apiService.createSurvey(this.authenticationService.currentUserValue.id, committeeId, this.yearService.getYearValue).subscribe(
       res => {
       }
     );
