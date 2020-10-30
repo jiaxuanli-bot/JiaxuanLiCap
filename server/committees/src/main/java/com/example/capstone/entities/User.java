@@ -54,6 +54,7 @@ public class User {
 		this.roles = b.roles;
 		this.college = b.college;
 		this.soe = b.soe;
+		this.adminResponsibility = b.adminResponsibility;
 	    this.volunteeredCommittees = b.volunteeredCommittees;
 	}
 

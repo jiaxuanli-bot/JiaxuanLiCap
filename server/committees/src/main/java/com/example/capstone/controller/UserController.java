@@ -6,11 +6,9 @@ import com.example.capstone.projections.CommitteeSummary;
 import com.example.capstone.repositories.UserRepository;
 import com.example.capstone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.Pattern;
-
 import java.util.List;
 import org.springframework.data.domain.*;
 
@@ -26,19 +24,6 @@ public class UserController {
     @Autowired
     private UserRepository userRepo;
 
-//    @RequestMapping( value="/users", method= RequestMethod.GET )
-//    public ArrayList<User> getUsers(@RequestParam(name="pageIndex", required=false) String pageIndex,@RequestParam(name="pageLength", required=false) String pageLength, @Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(name="year", required=false) String year, @Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @RequestParam(name="id", required=false) String id, @RequestParam(name="first", required=false) String first, @RequestParam(name="last", required=false) String last, @Pattern( regexp = "Full Professor|Associate Professor|Assistant Professor", message = "the rank format is wrong") @RequestParam(name="rank", required=false) String rank,@Pattern( regexp = "CASH|CSH|CBA", message = "the college format is wrong") @RequestParam(name="college", required=false) String college, @Pattern( regexp = "1|0", message = "the tenured format is wrong") @RequestParam(name="tenured", required=false) String tenured,@Pattern( regexp = "1|0", message = "the soe format is wrong") @RequestParam(name="soe", required=false) String soe
-//           ,@Pattern( regexp = "1|0", message = "the admin format is wrong") @RequestParam(name="admin_responsibility", required=false) String admin_responsibility,@Pattern( regexp = "F|M", message = "the gender format is wrong") @RequestParam(name="gender", required=false) String gender) {
-//        //Search users who meet the conditions
-//        if (pageIndex!=null) {
-//            return userService.getCommitteesByYearAndPage(Integer.parseInt(pageIndex),year,Integer.parseInt(pageLength));
-//        }else {
-//            return userService.searchUser(year, id, first, last, rank, gender, college, tenured, soe);
-//        }
-//
-//    }
-
-    //Do not know how to write filter without SQL
     @RequestMapping(value="/users",	method=RequestMethod.GET )
     public Page<User> getUsers(
             @RequestParam(defaultValue="0") Integer pageNo,
@@ -100,12 +85,6 @@ public class UserController {
         user.setYear(u.getYear());
         return userService.modifyUser(user);
     }
-
-//    @RequestMapping( value="/users/{id}", method=RequestMethod.DELETE )
-//    public void deleteUser(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(name="year", required=false) String year) {
-//        System.out.println("delete");
-//        userService.deleteUser(id, year);
-//    }
 
     @RequestMapping( value="/users/{id}", method=RequestMethod.DELETE )
     public void deleteUser(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(name="year", required=false) String year) {

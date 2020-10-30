@@ -26,4 +26,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByEmailEqualsAndYearEquals(String email, String year);
 
+    List<User> findByYear( String year);
 }

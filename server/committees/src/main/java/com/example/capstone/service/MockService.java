@@ -1,135 +1,179 @@
 package com.example.capstone.service;
 
+import com.example.capstone.entities.*;
+import com.example.capstone.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.swing.plaf.synth.SynthProgressBarUI;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
-public class MockService { ;
+public class MockService {
     @Autowired
-    JdbcTemplate jdbcTemplate;
-    public void mockData(int userNum, int committeeNum){
-        ArrayList<String> rankList = new ArrayList<>();
-        rankList.add("Full Professor");
-        rankList.add("Associate Professor");
-        rankList.add("Assistant Professor");
-        ArrayList<String> collegeList = new ArrayList<>();
-        collegeList.add("CASH");
-        collegeList.add("CSH");
-        collegeList.add("CBA");
-        ArrayList<String> genderList = new ArrayList<>();
-        genderList.add("M");
-        genderList.add("F");
-        ArrayList<String> Committees = new ArrayList<>();
-        Committees.add("Nominating Committee");
-        Committees.add("Faculty Standing Committee");
-        Committees.add("Standing Committee");
-        Committees.add("Academic Planning Committee");
-        Committees.add("Planning Committee");
-        Random random=new Random();
-        String year;
-        int randomNum;
-        int randomNum2;
-        HashSet<String> set =new HashSet<String>();
+    private CommitteeRepository committeeRepo;
 
-        for (int i = 0; i < Committees.size(); i++) {
-            set.clear();
-            for (int l = 0; l < 5; l++) {
-                year = getRandomYear();
-                while (set.contains(year)) {
-                    year = getRandomYear();
-                };
-                set.add(year);
-                String introduction = "The following faculty standing committees shall perform in";
-                jdbcTemplate.update("INSERT into committee (id, introduction, name, year) values (?,?,?,?)",5*i+l,introduction,Committees.get(i),year);
-                for(int j =1;j<= 10; j++) {
-                    jdbcTemplate.update("INSERT into committee_criteria (criteria, committee_id) values (?,?)",getRandomString(20),5*i+l);
-                }
-                for (int k=0; k<=10; k++) {
-                    jdbcTemplate.update("INSERT into committee_duty (duty, committee_id) values (?,?)",getRandomString(20),5*i+l);
-                }
-            }
-        }
+    @Autowired
+    private UserRepository userRepo;
 
-        for (int j =1; j <= userNum; j++) {
-            String first = getRandomString(4);
-            String last = getRandomString(5);
-            String rank = getRandomFromList(rankList);
-            String college = getRandomFromList(collegeList);
-            int tenured = random.nextInt(2);
-            int soe = random.nextInt(2);
-            int admin_responsibility = random.nextInt(2);
-            String gender = getRandomFromList(genderList);
-            String email = getRandomString(10);
-            year = getRandomYear();
-            System.out.println(j);
-            jdbcTemplate.update("INSERT into user (id, first, last, rank, college, tenured, soe, admin_responsibility, gender, email, year) values (?,?,?,?,?,?,?,?,?,?,?)",j,first,last,rank,college,tenured,soe,admin_responsibility,gender,email,year);
-            randomNum = random.nextInt(3)+1;
-            for (int k =1; k <= randomNum; k++) {
-                jdbcTemplate.update("INSERT into user_role (role_id, user_id) values (?, ?)",k,j);
-            }
-            Set<Integer> numSet = new HashSet<Integer>();
-            randomNum = random.nextInt(10);
-            for (int l = 1; l <= randomNum; l++){
-                randomNum2 = random.nextInt(committeeNum-1)+1;
-                if(!numSet.contains(randomNum2)){
-                    numSet.add(randomNum2);
-                    jdbcTemplate.update("INSERT into committee_volunteers (user_id, committee_id) values (?,?)",j,randomNum2);
-                }
-            }
-            randomNum = random.nextInt(10)+1;
-            numSet = new HashSet<Integer>();
-            for(int m = 1; m <= randomNum; m++){
-                randomNum2 = random.nextInt(committeeNum-1)+1;
-                if (!numSet.contains(randomNum2)){
-                    numSet.add(randomNum2);
-                    jdbcTemplate.update("INSERT into committee_members (user_id, committee_id) values (?,?)",j,randomNum2);
-                }
-            }
-        }
-    }
+    @Autowired
+    private CriteriaRepository criteriaRepo;
 
-    public static String getRandomString(int length){
-        String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Random random=new Random();
-        StringBuffer sb=new StringBuffer();
-        for(int i=0;i<length;i++){
-            int number=random.nextInt(62);
-            sb.append(str.charAt(number));
-        }
-        return sb.toString();
-    }
-    public static String getRandomYear(){
-        String str="0129";
-        Random random=new Random();
-        StringBuffer sb=new StringBuffer();
-        sb.append("20");
-        for(int i=0;i<2;i++){
-            int number=random.nextInt(3);
-            sb.append(str.charAt(number));
+    @Autowired
+    private DutyRepository dutyRepo;
+
+    @Autowired
+    private RoleRepository roleRepo;
+
+    public String randomString() {
+        int length = (int)(Math.random() * 10 + 5);
+
+        StringBuffer sb = new StringBuffer();
+        for( int i = 0; i < length; i++ ) {
+            int offset = (int)(Math.random() * 26 );
+            sb.append( (char)( 'a' + offset ));
         }
         return sb.toString();
     }
 
-    public static String getRandomFromList(ArrayList<String> arrayList){
-        Random random=new Random();
-        return arrayList.get(random.nextInt(arrayList.size()));
+    public String year() {
+        return String.valueOf( (int)( Math.random() * 20 + 2000 ) );
     }
 
-    public void truncate(){
-//        jdbcTemplate.update("delete from committee_member");
-//        jdbcTemplate.update("delete from criteria");
-//        jdbcTemplate.update("delete from duty");
-//        jdbcTemplate.update("delete from member_role");
-        jdbcTemplate.update("delete from survey");
-//        jdbcTemplate.update("delete from user");
-//        jdbcTemplate.update("delete from committee");
+    public List<Role> roles() {
+        return Arrays.asList("Admin", "Normal", "Nominate" )
+                .stream()
+                .map( roleName -> {
+                    Role role = new Role();
+                    role.setRole(roleName);
+                    return roleRepo.save(role);
+                })
+                .collect( Collectors.toList() );
     }
 
+    public static List<String> ranks = Arrays.asList( "Associate Professor", "Assistant Professor", "Full Professor" );
+    public static List<String> colleges = Arrays.asList("CSH", "CASH", "CBA");
+
+    public static <T> T one( List<T> ts ) {
+        int index = (int)(Math.random() * ts.size() );
+        return ts.get(index);
+    }
+
+    public String email() {
+        return randomString() + "@uwlax.edu";
+    }
+
+    public User user(List<Role> roles) {
+        //Builder design modal
+        return new User.Builder()
+                .first( randomString() )
+                .last( randomString() )
+                .rank( one( ranks ) )
+                .college( one( colleges ) )
+                .email( email() )
+                .committees( new HashSet<>())
+                .volunteeredCommittees(new ArrayList<>())
+                .gender( Math.random() < .5 ? "M" : "F" )
+                .adminResponsibility(Math.random() < .6)
+                .year( year() )
+                .tenured( Math.random() < .6 )
+                .soe( Math.random() < .35 )
+                .roles( choose( roles, (int)(Math.random() * 2 + 1 ) ) )
+                .build();
+    }
+
+    public List<Criteria> criteria(final Committee committee) {
+        List<Criteria> criteria = IntStream
+                .range(0,  (int)(Math.random() * 5 + 10 ) )
+                .mapToObj( i -> {
+                    Criteria c = new Criteria.Builder()
+                            .criteria( randomString() )
+                            .committee(committee)
+                            .build();
+                    return criteriaRepo.save( c );
+                }).collect(Collectors.toList());
+        return criteriaRepo.saveAll( criteria );
+    }
+
+    public List<Duty> duties(Committee committee) {
+        List<Duty> duties = IntStream
+                .range(0,  (int)(Math.random() * 5 + 10 ) )
+                .mapToObj( i -> {
+                    Duty duty = new Duty.Builder()
+                            .duty( randomString() )
+                            .committee(committee)
+                            .build();
+                    return dutyRepo.save( duty );
+                })
+                .collect(Collectors.toList());
+
+        return dutyRepo.saveAll( duties );
+    }
+
+    public Committee committee( ) {
+        Committee committee = new Committee();
+        committee.setIntroduction(randomString());
+        committee.setName(randomString());
+        committee.setYear( year() );
+        committee = committeeRepo.save( committee );
+
+        committee.setCriteria( criteria( committee ) );
+        committee.setDuties( duties( committee ) );
+        committee.setMembers( new HashSet<>() );
+
+        return committeeRepo.save( committee );
+    }
+
+    public List<Committee> committees( ) {
+        List<Committee> committees = IntStream
+                .range(0,  200 )
+                .mapToObj( i -> committee() )
+                .collect( Collectors.toList() );
+
+        return committeeRepo.saveAll( committees );
+    }
+
+
+    public List<User> users(List<Role> roles) {
+        List<User> users = IntStream
+                .range(0,  200 )
+                .mapToObj( i -> user(roles) )
+                .collect( Collectors.toList() );
+
+        return userRepo.saveAll( users );
+    }
+
+    public <T> List<T> choose( List<T> ts, int n ) {
+        if( n > ts.size() ) return ts;
+        List<T> copy = new ArrayList<T>( ts );
+        Collections.shuffle(copy);
+        return copy.subList(0,  n);
+    }
+
+    //	@PostConstruct
+    public void makeData() {
+        List<Role> roles = roles();
+        List<Committee> committees = committees();
+        List<User> users = users(roles);
+
+        committees
+                .stream()
+                .forEach( c -> {
+                    List<User> members = choose( userRepo.findByYear(c.getYear()) , (int)(Math.random() * 5 ) );
+                    Set memberSet =  new HashSet();
+                    Set volunteerSet = new HashSet();
+                    members.forEach(
+                            member->{
+                                if (!memberSet.contains(member)){
+                                    memberSet.add(member);
+                                    volunteerSet.add(member);
+                                }
+                            }
+                    );
+                    c.setMembers( memberSet );
+                    c.setVolunteers( volunteerSet );
+                });
+        committeeRepo.saveAll( committees );
+    }
 }
