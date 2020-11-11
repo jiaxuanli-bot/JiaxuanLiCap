@@ -22,219 +22,154 @@
   </nav>
 
   <div class="table-responsive">
+    <form [formGroup]="facultiesForm">
     <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12" id="facultyTable">
       <thead>
       <tr id="searchTr">
-        <th>
-          <input type="text" class="form-control searchInput" [(ngModel)]=first placeholder="First Name" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
-        </th>
-        <th>
-          <input type="text" class="form-control searchInput" [(ngModel)]=last placeholder="Last Name" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
-        </th>
-        <th>
-          <select [(ngModel)]=rank class= "form-control" (ngModelChange)="changed($event)">
-            <option>Full Professor</option>
-            <option>Associate Professor</option>
-            <option>Assistant Professor</option>
-            <option>None</option>
-          </select>
-        </th>
-        <th>
-          <select [(ngModel)]=college class= "form-control" (ngModelChange)="changed($event)">
-            <option>CASH</option>
-            <option>CSH</option>
-            <option>CBA</option>
-            <option>None</option>
-          </select>
-        </th>
-        <th>
-          <select [(ngModel)]=tenured class= "form-control" (ngModelChange)="changed($event)">
-            <option>Yes</option>
-            <option>No</option>
-            <option>None</option>
-          </select>
-        </th>
-        <th>
-          <select [(ngModel)]=soe class= "form-control" (ngModelChange)="changed($event)">
-            <option>Yes</option>
-            <option>No</option>
-            <option>None</option>
-          </select>
-        </th>
-        <th>
-          <select [(ngModel)]=admin class= "form-control" (ngModelChange)="changed($event)">
-            <option>Yes</option>
-            <option>No</option>
-            <option>None</option>
-          </select>
-        </th>
-        <th>
-          <select [(ngModel)]=gender class= "form-control" (ngModelChange)="changed($event)">
-            <option>Male</option>
-            <option>Female</option>
-            <option>None</option>
-          </select>
-        </th>
-        <th>
-          <div class="btn btn-primary btn-sm" (click)="clear()">
-            Clear
-          </div>
-        </th>
+          <th>
+            <input type="text" class="form-control searchInput" formControlName="first" placeholder="First Name" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
+          </th>
+          <th>
+            <input type="text" class="form-control searchInput" formControlName="last" placeholder="Last Name" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
+          </th>
+          <th>
+            <select formControlName="rank" class= "form-control" (ngModelChange)="changed($event)">
+              <option *ngFor="let rank of ['Associate Professor','Assistant Professor','Full Professor','None']">{{rank}}</option>
+            </select>
+          </th>
+          <th>
+            <select formControlName="college" class= "form-control" (ngModelChange)="changed($event)">
+              <option *ngFor="let college of ['CASH','CBA','CSH','None']">{{college}}</option>
+            </select>
+          </th>
+          <th>
+            <select formControlName="tenured" class= "form-control" (ngModelChange)="changed($event)">
+              <option *ngFor="let tenured of ['Yes','No','None']">{{tenured}}</option>
+            </select>
+          </th>
+          <th>
+            <select formControlName="soe" class= "form-control" (ngModelChange)="changed($event)">
+              <option *ngFor="let soe of ['Yes','No','None']">{{soe}}</option>
+            </select>
+          </th>
+          <th>
+            <select formControlName="admin" class= "form-control" (ngModelChange)="changed($event)">
+              <option *ngFor="let admin of ['Yes','No','None']">{{admin}}</option>
+            </select>
+          </th>
+          <th>
+            <select formControlName="gender" class= "form-control" (ngModelChange)="changed($event)">
+              <option *ngFor="let gender of ['Female','Male','None']">{{gender}}</option>
+            </select>
+          </th>
+          <th>
+            <div class="btn btn-primary btn-sm" (click)="clear()">
+              Clear
+            </div>
+          </th>
       </tr>
       <tr>
-        <th>
-          First
-        </th>
-        <th>
-          Last
-        </th>
-        <th>
-          Rank
-        </th>
-        <th>
-          College
-        </th>
-        <th>
-          Tenured
-        </th>
-        <th>
-          SOE
-        </th>
-        <th>
-          Admin
-        </th>
-        <th>
-          Gender
-        </th>
-        <th>
-          Action
+        <th *ngFor="let property of ['First','Last','Rank','College','Tenured','SOE','Admin','Gender','Action']">
+          {{property}}
         </th>
       </tr>
       </thead>
       <tbody>
 
-      <tr *ngFor="let faculty of searchedFaculties; index as i;" id="firstLine">
-        <td *ngIf="i!==editIndex">
-          {{faculty.first}}
-        </td>
-        <td  *ngIf="i!==editIndex">
-          {{faculty.last}}
-        </td>
-        <td *ngIf="i!==editIndex">
-          {{faculty.rank}}
-        </td>
-        <td *ngIf="i!==editIndex">
-          {{faculty.college}}
-        </td>
-        <td *ngIf="i!==editIndex">
-          <label *ngIf="faculty.tenured == 1" class="myCheckBox">
-            <input type="checkbox" checked="checked">
-            <span class="checkmark"></span>
-          </label>
-          <label *ngIf="faculty.tenured == 0" class="myCheckBox">
-            <input type="checkbox" checked="checked">
-            <span class="emptyCheckBox"></span>
-          </label>
-        </td>
-        <td *ngIf="i!==editIndex">
-          <label *ngIf="faculty.soe == 1" class="myCheckBox">
-            <input type="checkbox" checked="checked">
-            <span class="checkmark"></span>
-          </label>
-          <label *ngIf="faculty.soe == 0" class="myCheckBox">
-            <input type="checkbox" checked="checked">
-            <span class="emptyCheckBox"></span>
-          </label>
-        </td>
-        <td *ngIf="i!==editIndex">
-          <label *ngIf="faculty.adminResponsibility == 1" class="myCheckBox">
-            <input type="checkbox" checked="checked">
-            <span class="checkmark"></span>
-          </label>
-          <label *ngIf="faculty.adminResponsibility == 0" class="myCheckBox">
-            <input type="checkbox" checked="checked">
-            <span class="emptyCheckBox"></span>
-          </label>
-        </td>
-        <td *ngIf="i!==editIndex" class="text-center">
-          {{faculty.gender}}
-        </td>
-        <td *ngIf="i!==editIndex">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 view-link file-trash-icon" href="#" data-toggle="modal" data-target="#exampleModal" (click)="delete(i)"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3 view-link file-edit-icon" href="#" (click)="edit(i)"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text view-link file-text-icon" data-toggle="modal" data-target="#committeeListModal"  (click)="getUserCommittees(i)" href="#"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-        </td>
-
-        <td *ngIf="i==editIndex">
-          <input type="text" [(ngModel)]=editFirst>
-        </td>
-        <td *ngIf="i==editIndex">
-          <input type="text" [(ngModel)]=editLast>
-        </td>
-        <td *ngIf="i==editIndex">
-          <select class="form-control" [(ngModel)]=editRank>
-            <option>Full Professor</option>
-            <option>Associate Professor</option>
-            <option>Assistant Professor</option>
-          </select>
-        </td>
-        <td *ngIf="i==editIndex">
-          <select class="form-control" [(ngModel)]=editCollege>
-            <option>CASH</option>
-            <option>CSH</option>
-            <option>CBA</option>
-          </select>
-        </td>
-        <td *ngIf="i==editIndex">
-          <input *ngIf="searchedFaculties[i].tenured==1" type="checkbox" class="check" [(ngModel)]=editTenured checked>
-          <input *ngIf="searchedFaculties[i].tenured==0" type="checkbox" class="check" [(ngModel)]=editTenured>
-        </td>
-        <td *ngIf="i==editIndex">
-          <input *ngIf="searchedFaculties[i].soe==1" type="checkbox" class="check" [(ngModel)]=editSoe checked>
-          <input *ngIf="searchedFaculties[i].soe==0" type="checkbox" class="check" [(ngModel)]=editSoe>
-        </td>
-        <td *ngIf="i==editIndex">
-          <input *ngIf="searchedFaculties[i].adminResponsibility==1" type="checkbox" class="check" [(ngModel)]=editAdmin checked>
-          <input *ngIf="searchedFaculties[i].adminResponsibility==0" type="checkbox" class="check" [(ngModel)]=editAdmin>
-        </td>
-        <td *ngIf="i==editIndex">
-          <select class="form-control" [(ngModel)]=editGender>
-            <option>Male</option>
-            <option>Female</option>
-          </select>
-        </td>
-        <td *ngIf="i==editIndex">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check file-check-icon" data-target="#modifyModal" data-toggle="modal"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x file-x-icon" data-target="#cancelModal" data-toggle="modal"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </td>
+      <tr *ngFor="let faculty of faculties; index as i;" id="firstLine">
+        <ng-container *ngIf="i!==editIndex">
+          <td>
+            {{faculty.first}}
+          </td>
+          <td>
+            {{faculty.last}}
+          </td>
+          <td>
+            {{faculty.rank}}
+          </td>
+          <td>
+            {{faculty.college}}
+          </td>
+          <td>
+            <label class="myCheckBox">
+              <input type="checkbox" checked="checked">
+              <span [ngClass]="faculty.tenured?'checkmark':'emptyCheckBox'"></span>
+            </label>
+          </td>
+          <td>
+            <label class="myCheckBox">
+              <input type="checkbox" checked="checked">
+              <span [ngClass]="faculty.soe?'checkmark':'emptyCheckBox'"></span>
+            </label>
+          </td>
+          <td>
+            <label class="myCheckBox">
+              <input type="checkbox" checked="checked">
+              <span [ngClass]="faculty.adminResponsibility?'checkmark':'emptyCheckBox'"></span>
+            </label>
+          </td>
+          <td class="text-center">
+            {{faculty.gender}}
+          </td>
+          <td>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 view-link file-trash-icon" href="#" data-toggle="modal" data-target="#exampleModal" (click)="delete(i)"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3 view-link file-edit-icon" href="#" (click)="edit(i)"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text view-link file-text-icon" data-toggle="modal" data-target="#committeeListModal"  (click)="getUserCommittees(i)" href="#"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="i==editIndex">
+          <td>
+            <input type="text" formControlName="editFirst">
+          </td>
+          <td>
+            <input type="text" formControlName="editLast">
+          </td>
+          <td>
+            <select class="form-control" formControlName="editRank">
+              <option *ngFor="let rank of ranks">{{rank}}</option>
+            </select>
+          </td>
+          <td>
+            <select class="form-control" formControlName="editCollege">
+              <option *ngFor="let college of colleges">{{college}}</option>
+            </select>
+          </td>
+          <td>
+            <input  formControlName="editTenured" type="checkbox" class="check" [checked]="faculties[i].tenured">
+          </td>
+          <td>
+            <input type="checkbox" class="check" formControlName="editSoe" [checked]="faculties[i].soe">
+          </td>
+          <td>
+            <input type="checkbox" formControlName="editAdmin" class="check" [checked]="faculties[i].adminResponsibility">
+          </td>
+          <td>
+            <select class="form-control" formControlName="editGender">
+              <option *ngFor="let gender of genders">{{gender}}</option>
+            </select>
+          </td>
+          <td>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check file-check-icon" data-target="#modifyModal" data-toggle="modal"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x file-x-icon" data-target="#cancelModal" data-toggle="modal"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </td>
+        </ng-container>
       </tr>
       </tbody>
     </table>
+    </form>
   </div>
 
   <div class="table-buttons mt-4" id="tableFooterGroup">
     <ul class="pagination">
-      <ng-container *ngIf="searchedFaculties&&searchedFaculties.length>0">
-        <li class="page-item disabledPagation" *ngIf="currentPage === 0">
-          <a class="page-link disabledPagation" aria-label="Previous">
+      <ng-container *ngIf="faculties&&faculties.length>0">
+        <li [ngClass]="currentPage === 0?['page-item', 'disabledPagation']:['page-item']" (click)="firstPage()">
+          <a [ngClass]="currentPage ===0?['page-link', 'disabledPagation']:['page-link']" aria-label="Previous">
             <span aria-hidden="true">|<</span>
           </a>
         </li>
 
-        <li class="page-item disabledPagation" *ngIf="currentPage === 0">
-          <a class="page-link disabledPagation" aria-label="Previous">
-            <span aria-hidden="true"><</span>
-          </a>
-        </li>
-
-
-        <li class="page-item" (click)="firstPage()" *ngIf="currentPage !== 0">
-          <a class="page-link" aria-label="Previous">
-            <span aria-hidden="true">|<</span>
-          </a>
-        </li>
-        <li class="page-item" (click)="prevoiusPage()" *ngIf="currentPage !== 0" >
-          <a class="page-link" aria-label="Previous">
+        <li [ngClass] = "currentPage === 0?['page-item', 'disabledPagation']:['page-item']" (click)="prevoiusPage()">
+          <a [ngClass] = "currentPage === 0?['page-link', 'disabledPagation']:['page-link']" aria-label="Previous">
             <span aria-hidden="true"><</span>
           </a>
         </li>
@@ -244,23 +179,13 @@
           <li *ngIf="currentPage === j " class="page-item selectedpageItem" (click)="getPageItem(j)"><a class="page-link selectPage">{{j+1}}</a></li>
         </ng-container>
 
-        <li class="page-item disabledPagation"  *ngIf="currentPage === pageNum - 1">
-          <a class="page-link disabledPagation" aria-label="Next">
+        <li [ngClass]="currentPage === pageNum - 1?['page-item', 'disabledPagation']:['page-item']" (click)="nextPage()">
+          <a [ngClass]="currentPage === pageNum - 1?['page-link', 'disabledPagation']:['page-link']" aria-label="Next">
             <span aria-hidden="true">></span>
           </a>
         </li>
-        <li class="page-item disabledPagation" *ngIf="currentPage === pageNum - 1">
-          <a class="page-link disabledPagation" aria-label="Next">
-            <span aria-hidden="true">>|</span>
-          </a>
-        </li>
-        <li class="page-item" (click)="nextPage()" *ngIf="currentPage !== pageNum - 1">
-          <a class="page-link" aria-label="Next">
-            <span aria-hidden="true">></span>
-          </a>
-        </li>
-        <li class="page-item" (click)="lastPage()" *ngIf="currentPage !== pageNum - 1">
-          <a class="page-link" aria-label="Next">
+        <li [ngClass]="currentPage === pageNum - 1?['page-item', 'disabledPagation']:['page-item']" (click)="lastPage()">
+          <a [ngClass]="currentPage === pageNum - 1?['page-link', 'disabledPagation']:['page-link']" aria-label="Next">
             <span aria-hidden="true">>|</span>
           </a>
         </li>
@@ -351,9 +276,7 @@
                   <label class="col-xs-3 control-label">Rank:</label>
                   <div class="col-xs-8">
                     <select formControlName="rank" class="form-control select-duiqi">
-                      <option>Full Professor</option>
-                      <option>Associate Professor</option>
-                      <option>Assistant Professor</option>
+                      <option *ngFor="let rank of ['Assistant Professor','Associate Professor','Full Professor']">{{rank}}</option>
                     </select>
                   </div>
                 </div>
@@ -362,9 +285,7 @@
                   <label class="col-xs-3 control-label">College Affiliation:</label>
                   <div class="col-xs-8">
                     <select formControlName="college" class="form-control select-duiqi">
-                      <option>CASH</option>
-                      <option>CSH</option>
-                      <option value="">CBA</option>
+                      <option *ngFor="let college of ['CASH','CBA','CSH']">{{college}}</option>
                     </select>
                   </div>
                 </div>

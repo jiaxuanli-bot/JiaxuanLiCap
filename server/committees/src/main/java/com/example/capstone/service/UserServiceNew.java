@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserServiceNew {
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private CommitteeRepository committeeRepo;
@@ -92,13 +94,5 @@ public class UserService {
                 }
         );
         return list;
-    }
-
-    public User getUserById(Long Id){
-       return userRepo.findById(Id).get();
-    }
-
-    public User getUserByEmailAndYear(String email, String year){
-        return userRepo.findByEmailEqualsAndYearEquals(email, year);
     }
 }

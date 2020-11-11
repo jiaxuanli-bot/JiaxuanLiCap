@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {AuthenticationService} from './authentication.service';
 import {Observable} from 'rxjs';
 import {AppConstants} from '../constants/app-constants';
@@ -8,6 +8,7 @@ import {Survey} from '../models/survey';
 import {User} from '../models/user';
 import {HashedCommittees} from '../models/hashed-committees';
 import {Page} from '../models/page';
+import {reduce} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -20,39 +21,43 @@ export class ApiService {
     return this.http.get<Committee[]>( `${AppConstants.API_URL}/committees` );
   }
 
-  getCommitteesByYear(year): Observable<Committee[]> {
+  getCommitteesByYear(year: string): Observable<Committee[]> {
       return this.http.get<Committee[]>( `${AppConstants.API_URL}/committees?startYear=${year}&endYear=${year}` );
   }
 
-  getHashedCommitteesByYears(startYear, endYear): Observable<HashedCommittees> {
+  getHashedCommitteesByYears(startYear: string, endYear: string): Observable<HashedCommittees> {
     return this.http.get<HashedCommittees>( `${AppConstants.API_URL}/hashedCommittees?startYear=${startYear}&endYear=${endYear}` );
   }
 
-  createSurvey(userId, committeeId, year) {
+  createSurvey(userId: string, committeeId: string, year: string): Observable<Survey> {
     return this.http.post<Survey>(`${AppConstants.API_URL}/users/${userId}/enlistings/${committeeId}?year=${year}`, {} );
   }
 
-  getCommitteesYears() {
+  getCommitteesYears(): Observable<string[]> {
     return this.http.get<string[]>(`${AppConstants.API_URL}/committees/years`, {} );
   }
 
-  getCommitteeYears(id) {
+  getCommitteeYears(id: string): Observable<string[]> {
     return this.http.get<string[]>(`${AppConstants.API_URL}/committees/${id}/years`, {} );
   }
 
-  getSurveys(userId, year) {
+  getSurveys(userId: string, year: string): Observable<Survey[]> {
     return this.http.get<Survey[]>(`${AppConstants.API_URL}/users/${userId}/enlistings?year=${year}`, { });
   }
 
-  getFacultyByYear(year) {
+  getFacultyByYear(year: string): Observable<Page> {
     return this.http.get<Page>(`${AppConstants.API_URL}/users?year=${year}`);
   }
 
-  getFacultyByYearAndQueries(year , queries , pageNo) {
-    return this.http.get<Page>(`${AppConstants.API_URL}/users?year=${year}&pageNo=${pageNo}${queries}`);
+  getFacultyByYearAndQueries(year: string, queries: any, pageNo: number) {
+    let params = Object.keys( queries ).filter(value =>  queries[value].length > 0).reduce(
+      (acc, val) => acc = acc.append(val, queries[val] ), new HttpParams() );
+    params = params.append( 'year', year );
+    params = params.append( 'pageNo', pageNo.toString() );
+    return this.http.get<Page>(`${AppConstants.API_URL}/users`, { params : params } );
   }
 
-  modifyUser(first, last, rank, college, tenured, soe, admin, gender, userId) {
+  modifyUser(first: string, last: string, rank: string, college: string, tenured: boolean, soe: boolean, admin: boolean, gender: string, userId: string): Observable<User> {
     const data = {
       first : first,
       last : last,
@@ -66,39 +71,42 @@ export class ApiService {
     return this.http.put<User>(`${AppConstants.API_URL}/users/${userId}`, data);
   }
 
-  deleteUser(userId: string) {
+  deleteUser(userId: string): Observable<any> {
     return this.http.delete(`${AppConstants.API_URL}/users/${userId}`);
   }
 
-  getCommitteesByPagation(year , pageNo: number) {
+  getCommitteesByPagation(year , pageNo: number): Observable<Page>{
     return this.http.get<Page>(`${AppConstants.API_URL}/users?year=${year}&pageNo=${pageNo}`, {} );
   }
 
-  getUserVolunteeredCommittees(userId) {
+  getUserVolunteeredCommittees(userId): Observable<Committee[]> {
     return this.http.get<Committee[]>(`${AppConstants.API_URL}/users/${userId}/enlistings/committees`, {} );
   }
 
-  getUserAssignedCommittees(userId) {
+  getUserAssignedCommittees(userId): Observable<Committee[]> {
     return this.http.get<Committee[]>(`${AppConstants.API_URL}/users/${userId}/committees`, {} );
   }
 
-  assignUserToOneCommittee(committeeId, userId) {
-    return this.http.put(`${AppConstants.API_URL}/committees/${committeeId}/members/${userId}`, {} );
+  assignUserToOneCommittee(committeeId, userId): Observable<any> {
+    return  this.http.put(`${AppConstants.API_URL}/committees/${committeeId}/members/${userId}`, {} );
   }
 
-  removeUserFromCommittee(committeeId, userId) {
-    return this.http.delete(`${AppConstants.API_URL}/committees/${committeeId}/members/${userId}`);
+  removeUserFromCommittee(committeeId, userId): Observable<any> {
+    return  this.http.delete(`${AppConstants.API_URL}/committees/${committeeId}/members/${userId}`);
   }
 
-  getCommitteeById(committeeId) {
+  getCommitteeMember(committeeId): Observable<User[]> {
+    return  this.http.get<User[]>(`${AppConstants.API_URL}/committees/${committeeId}/members`);
+  }
+  getCommitteeById(committeeId): Observable<Committee> {
     return this.http.get<Committee>(`${AppConstants.API_URL}/committees/${committeeId}`);
   }
 
-  getCommitteeVolunteers(committeeId) {
+  getCommitteeVolunteers(committeeId): Observable<User[]> {
     return this.http.get<User[]>(`${AppConstants.API_URL}/committees/${committeeId}/volunteers/users`);
   }
 
-  createUser(first, last, rank, college, tenured, admin, soe, gender) {
+  createUser(first, last, rank, college, tenured, admin, soe, gender): Observable<User> {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const data = {
       "email": '123',
@@ -114,11 +122,11 @@ export class ApiService {
     return this.http.post <User> (`${AppConstants.API_URL}/users`, data, config);
   }
 
-  getCommitteeIdByYearAndName(year, name) {
+  getCommitteeIdByYearAndName(year, name): Observable<string> {
     return this.http.get<string>(`${AppConstants.API_URL}/committees/${name}/years/${year}`, {} );
   }
 
-  getUserYears(email) {
+  getUserYears(email): Observable<string> {
     return this.http.get<string>(`${AppConstants.API_URL}/users/email/${email}/years`, {} );
   }
 }

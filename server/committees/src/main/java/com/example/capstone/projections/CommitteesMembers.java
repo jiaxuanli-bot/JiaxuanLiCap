@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface CommitteesMembers {
    public Long getId();
-    public List<UserSummary> getMembers();
+   public List<UserSummary> getMembers();
 }

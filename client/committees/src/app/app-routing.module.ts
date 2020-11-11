@@ -8,14 +8,15 @@ import {CommitteesDetailsComponent} from './committees-details/committees-detail
 import {Survey} from './models/survey';
 import {CommitteesListComponent} from './committees-list/committees-list.component';
 import {ReportComponent} from './report/report.component';
+import {AuthGuard} from './utilities/auth-guard';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
-  { path: 'committees/:id', component: CommitteesDetailsComponent},
-  { path: 'faculty', component: FacultyComponent},
-  { path: 'survey', component: HomeComponent},
-  { path: 'committees', component: CommitteesListComponent},
-  { path: 'report', component : ReportComponent}
+  { path: 'committees/:id', component: CommitteesDetailsComponent, canActivate: [AuthGuard]},
+  { path: 'faculty', component: FacultyComponent, canActivate: [AuthGuard]},
+  { path: 'survey', component: HomeComponent, canActivate: [AuthGuard]},
+  { path: 'committees', component: CommitteesListComponent, canActivate: [AuthGuard]},
+  { path: 'report', component : ReportComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

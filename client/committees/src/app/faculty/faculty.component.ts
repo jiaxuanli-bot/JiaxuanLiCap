@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from '../service/api.service';
 import {User} from '../models/user';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {debounceTime} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {YearService} from '../service/year.service';
-import { AfterViewInit } from '@angular/core';
-import * as Feather from 'feather-icons';
 import {Committee} from '../models/committee';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup} from '@angular/forms';
@@ -16,57 +14,46 @@ import {AuthenticationService} from '../service/authentication.service';
   templateUrl: './faculty.component.html',
   styleUrls: ['./faculty.component.css']
 })
-export class FacultyComponent implements OnInit, AfterViewInit {
+export class FacultyComponent implements OnInit {
   userVolunteeredCommittees: Committee[];
   userAssignedCommittees: Committee[];
   currentPage = 0;
   pageNum  = 1;
   editIndex: number;
-  editFirst: string;
-  editLast: string;
-  editRank: string;
-  editCollege: string;
-  editTenured: number;
-  editSoe: number;
-  editAdmin: number;
-  editGender: string;
-  deleteindex: number;
+  deleteIndex: number;
+  queries = {
+    first: '',
+    last: '',
+    rank: '',
+    college: '',
+    tenured: '',
+    soe: '',
+    admin: '',
+    gender: ''
+  };
   faculties: User[];
-  first = '';
-  last = '';
-  rank = 'None';
-  college = 'None';
-  tenured = 'None';
-  soe = 'None';
-  admin = 'None';
-  gender = 'None';
-  queries = '';
+  facultiesForm: FormGroup;
   searchTextChanged = new Subject<string>();
-  searchedFaculties: User[];
   year: Observable<string>;
   addUserForm: FormGroup;
-  queryPrototype = {
-    first: 'first',
-    last: 'last',
-    rank: 'rank',
-    college: 'college',
-    tenured: 'tenured',
-    soe: 'soe',
-    admin: 'admin_responsibility',
-    gender: 'gender'
-  };
-  constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService, private router: Router,  private formBuilder: FormBuilder) {
-    this.searchTextChanged.pipe(debounceTime(1000)).subscribe(() => {
-      this.queries = '';
-      if (this.first.length === 0 && this.last.length === 0 && this.rank === 'None' && this.college === 'None' && this.tenured === 'None' && this.soe === 'None' && this.admin === 'None' && this.gender === 'None') {
+  ranks = ['Assistant', 'Associate', 'Full'];
+  genders = ['F', 'M'];
+  colleges = ['CASH', 'CBA', 'CSH'];
+
+  constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
+              private router: Router,  private formBuilder: FormBuilder) {
+    this.searchTextChanged.pipe( debounceTime(1000) ).subscribe(() => {
+      if (this.facultiesForm.controls.first.value.length === 0 && this.facultiesForm.controls.last.value.length === 0 &&
+        this.facultiesForm.controls.rank.value === 'None' && this.facultiesForm.controls.college.value === 'None' &&
+        this.facultiesForm.controls.tenured.value === 'None' && this.facultiesForm.controls.soe.value === 'None' &&
+        this.facultiesForm.controls.admin.value === 'None' && this.facultiesForm.controls.gender.value === 'None') {
         this.year.subscribe(
           value => {
             if (value !== '') {
-              this.apiService.getFacultyByYear(value).subscribe(
+              this.apiService.getFacultyByYear( value ).subscribe(
                 res => {
                   this.faculties = res.content;
                   this.pageNum = res.totalPages;
-                  this.searchedFaculties = res.content;
                   this.apiService.getCommitteesByPagation(value , 0).subscribe(
                     res2 => {
                       this.currentPage = 0;
@@ -78,43 +65,31 @@ export class FacultyComponent implements OnInit, AfterViewInit {
           }
         );
       }
-      this.searchedFaculties = [...this.faculties];
-      if (this.first.length > 0) {
-          this.queries += '&' + this.queryPrototype.first + '=' + this.first;
-      }
-      if (this.last.length > 0) {
-          this.queries += '&' + this.queryPrototype.last + '=' + this.last;
-      }
-      if (this.rank !== 'None') {
-        if (this.rank === 'Full Professor') {
-          this.queries += '&' + this.queryPrototype.rank + '=Full';
-        } else if (this.rank === 'Associate Professor') {
-          this.queries += '&' + this.queryPrototype.rank + '=Associate';
-        } else {
-          this.queries += '&' + this.queryPrototype.rank + '=Assistant';
-        }
-      }
-      if (this.college !== 'None') {
-          this.queries += '&' + this.queryPrototype.college + '=' + this.college;
-      }
-      if (this.tenured !== 'None') {
-          this.queries += '&' + this.queryPrototype.tenured + '=' + this.tenured;
-      }
-      if (this.soe !== 'None') {
-          this.queries += '&' + this.queryPrototype.soe + '=' + this.soe;
-      }
-      if (this.admin !== 'None') {
-          this.queries += '&' + this.queryPrototype.admin + '=' + this.admin;
-      }
-      if (this.gender !== 'None') {
-          this.queries += '&' + this.queryPrototype.gender + '=' + this.gender.substring(0, 1);
-      }
-      if (this.queries.length > 0) {
-        this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue , this.queries, 0).subscribe(
+      this.queries = {
+        first: '',
+        last: '',
+        rank: '',
+        college: '',
+        tenured: '',
+        soe: '',
+        admin: '',
+        gender: ''
+      };
+      let nonEmpty = false;
+      // @ts-ignore
+      this.queries =  Object.keys( this.facultiesForm.controls )
+        .filter(key => this.facultiesForm.controls[key].value.length > 0
+                && this.facultiesForm.controls[key].value !== 'None')
+        .reduce( (acc, key) => {
+                nonEmpty = true;
+                acc[key] = this.facultiesForm.controls[key].value;
+                return acc;
+          }, {} );
+      if (nonEmpty) {
+        this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue, this.queries, 0).subscribe(
           value => {
-            this.searchedFaculties = value.content;
+            this.faculties = value.content;
             this.pageNum = value.totalPages;
-            this.searchedFaculties = value.content;
             this.currentPage = 0;
           }
         );
@@ -123,6 +98,24 @@ export class FacultyComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.facultiesForm = this.formBuilder.group({
+      first: [''],
+      last: [''],
+      rank: ['None'],
+      college: ['None'],
+      tenured: ['None'],
+      admin: ['None'],
+      soe: ['None'],
+      gender: ['None'],
+      editFirst: [''],
+      editLast: [''],
+      editRank: [''],
+      editCollege: [''],
+      editTenured: [''],
+      editAdmin: [''],
+      editSoe: [''],
+      editGender: ['']
+    });
     this.yearService.setPos('faculty');
     this.year = this.yearService.getValue();
     this.addUserForm = this.formBuilder.group({
@@ -138,7 +131,7 @@ export class FacultyComponent implements OnInit, AfterViewInit {
     this.apiService.getCommitteesYears().subscribe(
       years => {
         years.sort();
-        this.yearService.setYears(years)
+        this.yearService.setYears(years);
         this.yearService.setValue(years[0]);
         this.year.subscribe( value => {
           if (value !== '') {
@@ -146,7 +139,6 @@ export class FacultyComponent implements OnInit, AfterViewInit {
               res => {
                 this.faculties = res.content;
                 this.pageNum = res.totalPages;
-                this.searchedFaculties = res.content;
                 this.currentPage = 0;
               }
             );
@@ -156,85 +148,89 @@ export class FacultyComponent implements OnInit, AfterViewInit {
     );
   }
 
-  ngAfterViewInit() {
-    Feather.replace();
-  }
-
-  changed($event: any) {
+  changed($event: any): void {
     this.searchTextChanged.next();
   }
-  edit(i) {
+
+  edit(i: number): void {
     this.editIndex = i;
-    this.editFirst = this.searchedFaculties[i].first;
-    this.editLast = this.searchedFaculties[i].last;
-    this.editRank = this.searchedFaculties[i].rank;
-    this.editCollege = this.searchedFaculties[i].college;
-    this.editTenured = this.searchedFaculties[i].tenured;
-    this.editSoe = this.searchedFaculties[i].soe;
-    this.editAdmin = this.searchedFaculties[i].adminResponsibility;
-    if (this.searchedFaculties[i].gender === 'F') {
-      this.editGender = 'Female';
-    }
-    else {
-      this.editGender = 'Male';
+    this.facultiesForm.controls.editFirst.setValue(this.faculties[i].first);
+    this.facultiesForm.controls.editLast.setValue(this.faculties[i].last);
+    this.facultiesForm.controls.editRank.setValue(this.faculties[i].rank);
+    this.facultiesForm.controls.editCollege.setValue(this.faculties[i].college);
+    this.facultiesForm.controls.editTenured.setValue(this.faculties[i].tenured);
+    this.facultiesForm.controls.editSoe.setValue(this.faculties[i].soe);
+    this.facultiesForm.controls.editAdmin.setValue(this.faculties[i].adminResponsibility);
+    if (this.faculties[i].gender === 'F') {
+      this.facultiesForm.controls.editGender.setValue('Female');
+    } else {
+      this.facultiesForm.controls.editGender.setValue('Male');
     }
   }
   // searchFaculty($event) {
   //   this.searchTextChanged.next($event.target.value);
   // }
 
-  clear() {
-    this.first = '';
-    this.last = '';
-    this.rank = 'None';
-    this.college = 'None';
-    this.tenured = 'None';
-    this.soe = 'None';
-    this.admin = 'None';
-    this.gender = 'None';
+  clear(): void {
+    this.facultiesForm.controls.first.setValue('');
+    this.facultiesForm.controls.last.setValue('');
+    this.facultiesForm.controls.rank.setValue('None');
+    this.facultiesForm.controls.college.setValue('None');
+    this.facultiesForm.controls.tenured.setValue('None');
+    this.facultiesForm.controls.soe.setValue('None');
+    this.facultiesForm.controls.admin.setValue('None');
+    this.facultiesForm.controls.gender.setValue('None');
     this.yearService.getValue().subscribe(
       value => {
         this.apiService.getCommitteesByPagation(value , 0).subscribe(
           res => {
-            this.searchedFaculties = res.content;
+            this.faculties = res.content;
             this.currentPage = 0;
           }
         );
       }
     );
   }
-
-  modifyUser() {
-    this.apiService.modifyUser(this.editFirst, this.editLast, this.editRank, this.editCollege, Number(this.editTenured), Number(this.editSoe), Number(this.editAdmin), this.editGender.substring(0, 1), this.searchedFaculties[this.editIndex].id).subscribe(
+  ifFiltered(): boolean {
+    return this.queries.gender.length > 0 || this.queries.admin.length > 0 || this.queries.college.length > 0
+      || this.queries.first.length > 0 || this.queries.last.length > 0 || this.queries.rank.length > 0
+      || this.queries.soe.length > 0 || this.queries.tenured.length > 0;
+  }
+  modifyUser(): void {
+    this.apiService.modifyUser( this.facultiesForm.controls.editFirst.value,  this.facultiesForm.controls.editLast.value,
+      this.facultiesForm.controls.editRank.value, this.facultiesForm.controls.editCollege.value,
+      this.facultiesForm.controls.editTenured.value,  this.facultiesForm.controls.editSoe.value,
+      this.facultiesForm.controls.editAdmin.value, this.facultiesForm.controls.editGender.value.substring(0, 1),
+      this.faculties[this.editIndex].id).subscribe(
       res => {
-        this.searchedFaculties[this.editIndex] = res;
+        this.faculties[this.editIndex] = res;
         this.editIndex = -1;
       }
     );
   }
 
-  cancleEdit() {
+  cancleEdit(): void {
     this.editIndex = -1;
   }
 
-  deleteUser() {
-    this.apiService.deleteUser(this.searchedFaculties[this.deleteindex].id).subscribe(
+  deleteUser(): void {
+    this.apiService.deleteUser(this.faculties[this.deleteIndex].id).subscribe(
       res => {
-        this.searchedFaculties.splice(this.deleteindex , 1);
-        this.deleteindex = -1;
+        this.faculties.splice(this.deleteIndex , 1);
+        this.deleteIndex = -1;
       }
     );
   }
 
-  delete(i) {
-    this.deleteindex = i;
+  delete(i: number): void {
+    this.deleteIndex = i;
   }
 
-  getPageItem(pageIndex) {
-    if (this.queries.length > 0) {
+  getPageItem(pageIndex: number): void {
+    if (this.ifFiltered()) {
       this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue , this.queries, pageIndex).subscribe(
         value => {
-          this.searchedFaculties = value.content;
+          this.faculties = value.content;
           this.currentPage = pageIndex;
         }
       );
@@ -243,7 +239,7 @@ export class FacultyComponent implements OnInit, AfterViewInit {
         value => {
           this.apiService.getCommitteesByPagation(value , pageIndex ).subscribe(
             res => {
-              this.searchedFaculties = res.content;
+              this.faculties = res.content;
               this.currentPage = pageIndex;
             }
           );
@@ -252,12 +248,12 @@ export class FacultyComponent implements OnInit, AfterViewInit {
     }
   }
 
-  nextPage() {
+  nextPage(): void {
     if (this.currentPage !== this.pageNum - 1) {
-      if (this.queries.length > 0) {
+      if (this.ifFiltered()) {
         this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue , this.queries, this.currentPage + 1).subscribe(
           value => {
-            this.searchedFaculties = value.content;
+            this.faculties = value.content;
             this.currentPage ++;
           }
         );
@@ -266,7 +262,7 @@ export class FacultyComponent implements OnInit, AfterViewInit {
           value => {
             this.apiService.getCommitteesByPagation(value , this.currentPage + 1).subscribe(
               res => {
-                this.searchedFaculties = res.content;
+                this.faculties = res.content;
                 this.currentPage ++;
               }
             );
@@ -276,12 +272,12 @@ export class FacultyComponent implements OnInit, AfterViewInit {
     }
   }
 
-  prevoiusPage() {
+  prevoiusPage(): void {
     if (this.currentPage !== 0) {
-    if (this.queries.length > 0) {
+    if (this.ifFiltered()) {
       this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue , this.queries, this.currentPage - 1).subscribe(
         value => {
-          this.searchedFaculties = value.content;
+          this.faculties = value.content;
           this.currentPage --;
         }
       );
@@ -290,7 +286,7 @@ export class FacultyComponent implements OnInit, AfterViewInit {
           value => {
             this.apiService.getCommitteesByPagation(value , this.currentPage - 1).subscribe(
               res => {
-                this.searchedFaculties = res.content;
+                this.faculties = res.content;
                 this.currentPage --;
               }
             );
@@ -300,11 +296,11 @@ export class FacultyComponent implements OnInit, AfterViewInit {
     }
   }
 
-  firstPage() {
-    if (this.queries.length > 0) {
+  firstPage(): void {
+    if (this.ifFiltered()) {
       this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue , this.queries,  0).subscribe(
         value => {
-          this.searchedFaculties = value.content;
+          this.faculties = value.content;
           this.currentPage  = 0;
         }
       );
@@ -313,7 +309,7 @@ export class FacultyComponent implements OnInit, AfterViewInit {
         value => {
           this.apiService.getCommitteesByPagation(value , 0).subscribe(
             res => {
-              this.searchedFaculties = res.content;
+              this.faculties = res.content;
               this.currentPage = 0;
             }
           );
@@ -322,11 +318,11 @@ export class FacultyComponent implements OnInit, AfterViewInit {
     }
   }
 
-  lastPage() {
-    if (this.queries.length > 0) {
+  lastPage(): void {
+    if (this.ifFiltered()) {
       this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue , this.queries, this.pageNum - 1).subscribe(
         value => {
-          this.searchedFaculties = value.content;
+          this.faculties = value.content;
           this.currentPage = this.pageNum - 1;
         }
       );
@@ -335,7 +331,7 @@ export class FacultyComponent implements OnInit, AfterViewInit {
         value => {
           this.apiService.getCommitteesByPagation(value , this.pageNum - 1).subscribe(
             res => {
-              this.searchedFaculties = res.content;
+              this.faculties = res.content;
               this.currentPage  = this.pageNum - 1;
             }
           );
@@ -344,24 +340,22 @@ export class FacultyComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getUserCommittees(i) {
-    this.apiService.getUserAssignedCommittees(this.searchedFaculties[i].id).subscribe(
+  getUserCommittees(i: number): void {
+    this.apiService.getUserAssignedCommittees(this.faculties[i].id).subscribe(
       committees => {
         this.userAssignedCommittees = committees;
       }
-    )
-    this.apiService.getUserVolunteeredCommittees(this.searchedFaculties[i].id).subscribe(
+    );
+    this.apiService.getUserVolunteeredCommittees(this.faculties[i].id).subscribe(
       committees => {
         this.userVolunteeredCommittees = committees;
       }
     );
-    // this.userAssignedCommittees = ;
   }
-
-  get f() { return this.addUserForm.controls; }
-
-  addFaculty() {
-    this.apiService.createUser(this.f.first.value, this.f.last.value, this.f.rank.value,
-      this.f.college.value, Number(this.f.tenured.value), Number(this.f.admin.value), Number(this.f.soe.value), this.f.gender.value).subscribe();
+  addFaculty(): void {
+    this.apiService.createUser(this.addUserForm.controls.first.value, this.addUserForm.controls.last.value,
+      this.addUserForm.controls.rank.value, this.addUserForm.controls.college.value, Number(this.addUserForm.controls.tenured.value),
+      Number(this.addUserForm.controls.admin.value), Number(this.addUserForm.controls.soe.value), this.addUserForm.controls.gender.value).
+    subscribe();
   }
 }

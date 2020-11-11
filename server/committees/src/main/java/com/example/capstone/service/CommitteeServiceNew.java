@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CommitteeService {
+public class CommitteeServiceNew {
     @Autowired
     private CommitteeRepository committeeRepo;
 

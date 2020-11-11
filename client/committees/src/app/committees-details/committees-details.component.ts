@@ -86,19 +86,19 @@ export class CommitteesDetailsComponent implements OnInit {
     );
   }
 
-  expandIntroduction() {
+  expandIntroduction(): void {
     this.introductionExpand = 1 - this.introductionExpand;
   }
 
-  expandCriteria() {
+  expandCriteria(): void {
     this.critreriaExpand = 1 - this.critreriaExpand;
   }
 
-  expandDuties() {
+  expandDuties(): void {
     this.dutyExpand = 1 - this.dutyExpand;
   }
 
-  removeMember() {
+  removeMember(): void {
     this.apiService.removeUserFromCommittee(this.committee.id, this.seletedUserid).subscribe(
       value => {
         for (let i = 0; i < this.committee.members.length; i++) {
@@ -121,7 +121,7 @@ export class CommitteesDetailsComponent implements OnInit {
     );
   }
 
-  assignVolunteer() {
+  assignVolunteer(): void {
     this.apiService.assignUserToOneCommittee(this.committee.id, this.seletedUserid).subscribe(
       value => {
         for (let i = 0; i < this.volunteers.length; i++) {
@@ -149,11 +149,11 @@ export class CommitteesDetailsComponent implements OnInit {
       );
   }
 
-  selectUser(id) {
+  selectUser(id): void {
     this.seletedUserid = id;
   }
 
-  closePop() {
+  closePop(): void {
     this.popIntroductionExpand = 0;
     this.popDutyExpand = 0;
     this.popCritreriaExpand = 0;

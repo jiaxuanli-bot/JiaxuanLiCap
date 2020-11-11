@@ -83,8 +83,8 @@ export class ReportComponent implements OnInit {
         this.FP += committees[property][j].members.filter(item => item.rank === 'Full Professor').length;
         this.AP += committees[property][j].members.filter(item => item.rank === 'Associate Professor').length;
         this.ATP += committees[property][j].members.filter(item => item.rank === 'Assistant Professor').length;
-        this.TT += committees[property][j].members.filter(item => item.tenured == 1).length;
-        this.TF += committees[property][j].members.filter(item => item.tenured == 0).length;
+        this.TT += committees[property][j].members.filter(item => item.tenured === true).length;
+        this.TF += committees[property][j].members.filter(item => item.tenured === false).length;
       }
     }
     this.GData = [

@@ -4,6 +4,7 @@ import {ApiService} from '../service/api.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Committee} from '../models/committee';
 import {AuthenticationService} from '../service/authentication.service';
+import {CommitteeSummary} from '../models/committee-summary';
 
 @Component({
   selector: 'app-committees-list',
@@ -11,7 +12,7 @@ import {AuthenticationService} from '../service/authentication.service';
   styleUrls: ['./committees-list.component.css']
 })
 export class CommitteesListComponent implements OnInit {
-  committees: Committee[];
+  committees: CommitteeSummary[];
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
@@ -26,6 +27,15 @@ export class CommitteesListComponent implements OnInit {
             this.apiService.getCommitteesByYear(value).subscribe(
               value1 => {
                 this.committees = value1;
+                this.committees.forEach(
+                  value2 => {
+                    this.apiService.getCommitteeMember(value2.id).subscribe(
+                      value3 => {
+                        value2.members = value3;
+                      }
+                    );
+                  }
+                );
               }
             );
           }

@@ -9,9 +9,9 @@ export class User {
   last: string;
   rank: string;
   college: string;
-  tenured: number;
-  soe: number;
-  adminResponsibility: number;
+  tenured: boolean;
+  soe: boolean;
+  adminResponsibility: boolean;
   gender: string;
   committees: UserCommittees[];
   roles: Role[];
