@@ -1,0 +1,192 @@
+ <!-- /sidebar -->
+  <!-- main right col -->
+  <div id="main">
+    <!-- top nav -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+      <a class="navbar-brand" href="#">Survey</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav mr-auto">
+        </ul>
+        <ul class="navbar-nav ml-auto mr-3">
+          <div ngbDropdown class="d-inline-block">
+            <button class="btn btn-outline-primary" id="dropdownMenuButton" ngbDropdownToggle>{{authentication.currentUserValue.first}} {{authentication.currentUserValue.last}}</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
+              <button ngbDropdownItem (click)="authentication.logout()">Logout</button>
+            </div>
+          </div>
+        </ul>
+      </div>
+    </nav>
+
+    <nav id="reportFormGroup" class="navbar navbar-expand-lg navbar-light bg-light mt-5">
+      <h3>Committees</h3>
+    </nav>
+
+    <div class="table-responsive  mb-4">
+      <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12 mt-4 mb-5" id="committeeList">
+        <thead>
+        <tr>
+          <th *ngFor="let proprety of ['Name','Volunteered']">
+            {{proprety}}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let committee of committees;index as i;">
+          <td>
+            <a data-toggle="modal" class="clickAble" data-target="#committeeModal" (click)="popUp(committee)">
+              {{committee.name}}
+            </a>
+          </td>
+          <td>
+            <input type="checkbox" class="check" [checked]="surveyRecord[i]">
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="selectedCommittee" class="modal fade" id="committeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span class="closeBtn mr-4" aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="featuredHead">{{selectedCommittee.name}}</h3>
+            <ul class="nav nav-tabs mb-4" role="tablist">
+              <li role="presentation" class="active">
+              </li>
+            </ul>
+            <div class="mb-3 mt-4">
+              <div id="h1">
+                <div class="input-group mb-2">
+                  Introduction
+                  <button (click)="expandIntroduction()" class="btn btn-sm pull-right">
+                    <svg *ngIf="introductionExpand === true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up file-text-icon"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                    <svg *ngIf="introductionExpand === false" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down file-text-icon"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+                </div>
+              </div>
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                </li>
+              </ul>
+              <p *ngIf="introductionExpand === true" class="lead mt-4" id="1">
+                {{selectedCommittee.introduction}}
+              </p>
+            </div>
+
+            <div class="mb-3" >
+              <div id="h2">
+                <div class="input-group mb-2 mt-4">
+                  Duties
+                  <button (click)="expandDuty()" class="btn btn-sm pull-right">
+                    <svg *ngIf="dutyExpand === true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up file-text-icon"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                    <svg *ngIf="dutyExpand === false" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down file-text-icon"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+                </div>
+              </div>
+              <ul class="nav nav-tabs mb-4" role="tablist">
+                <li role="presentation" class="active">
+                </li>
+              </ul>
+              <div *ngIf="dutyExpand === true"  class="tab-content" id="2">
+                <div role="tabpanel" class="tab-pane active">
+                  <div>
+                    <div class="List">
+                      <ol>
+                        <li *ngFor="let duty of selectedCommittee.duties" class="mt-1">
+                          {{duty.duty}}
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3 mt-4">
+              <div id="h3">
+                <div class="input-group mb-2">
+                  Criteria
+                  <button (click)="expandCriteria()" class="btn btn-sm pull-right">
+                    <svg *ngIf="critreriaExpand === true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up file-text-icon"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                    <svg *ngIf="critreriaExpand === false" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down file-text-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </button>
+                </div>
+              </div>
+              <ul class="nav nav-tabs mb-4" role="tablist">
+                <li role="presentation" class="active">
+                </li>
+              </ul>
+              <div *ngIf="critreriaExpand === true" class="tab-content" id="3">
+                <div role="tabpanel" class="tab-pane active">
+                  <div>
+                    <div class="List">
+                      <ol>
+                        <li *ngFor="let criterion of selectedCommittee.criteria"class="mt-1">
+                          {{criterion.criteria}}
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for join-->
+    <div class="modal fade" id="joinModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="exampleModalLabel">Join Committee</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span class="closeBtn" aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you volunteer  this committee?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="button" class="btn btn-primary">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for cancelApp-->
+    <div class="modal fade" id="withdrawModal" tabindex="-1" role="dialog" aria-labelledby="modifyModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="Modify">Withdraw</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span class="closeBtn" aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to withdraw this committee？
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="button" class="btn btn-primary">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for committee-->
+    <footer class="footer">
+      <div class="container" id="footerText">
+        <span class="text-dark">UWLAX</span>
+      </div>
+    </footer>
+  </div>
+<!-- /main -->
