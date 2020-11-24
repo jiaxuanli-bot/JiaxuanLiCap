@@ -17,8 +17,7 @@ import {CommitteeUser} from '../models/committee-user';
 })
 export class CommitteesListComponent implements OnInit {
   committees: CommitteeSummary[];
-  constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
-              private route: ActivatedRoute, private router: Router) {}
+  constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService) {}
 
   ngOnInit(): void {
     this.apiService.getCommitteesYears().subscribe(
@@ -32,9 +31,11 @@ export class CommitteesListComponent implements OnInit {
                 this.committees = value1;
                 const reqs2 = [];
                 // tslint:disable-next-line:prefer-for-of
-                for (let i = 0; i < this.committees.length; i++) {
-                  reqs2.push( this.apiService.getCommitteeMember(this.committees[i].id));
-                }
+                this.committees.forEach(
+                  value2 => {
+                    reqs2.push( this.apiService.getCommitteeMember(value2.id));
+                  }
+                );
                 forkJoin(reqs2).subscribe(
                   results => {
                     for (let i = 0; i < results.length; i++) {

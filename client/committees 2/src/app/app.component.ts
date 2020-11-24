@@ -14,7 +14,7 @@ import {YearService} from './service/year.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, AfterViewInit{
+export class AppComponent implements OnInit, AfterViewInit {
   title = 'committees';
   user: User;
   constructor(private yearService: YearService, private apiService: ApiService, private formBuilder: FormBuilder, private router: Router,

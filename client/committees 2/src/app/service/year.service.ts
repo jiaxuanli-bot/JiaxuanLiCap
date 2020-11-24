@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {User} from '../models/user';
-import {Router} from '@angular/router';
+import {ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class YearService {
   private currentYear: BehaviorSubject<string>;
   private yearForCommitteePage: BehaviorSubject<string>;
   private years: BehaviorSubject<string[]>;
-  constructor(private router: Router) {
+  constructor(private router: Router, private route: ActivatedRoute) {
     this.pos = new BehaviorSubject<string>('');
     this.years = new BehaviorSubject<string[]>([]);
     this.currentYear = new BehaviorSubject<string>('');
@@ -25,6 +25,13 @@ export class YearService {
   }
   setValue(newValue): void {
     //activate class
+    console.log("routes");
+    this.route.snapshot.url.join(" ");
+    this.route.fragment.subscribe(
+    value => {
+      console.log(value);
+     }
+    );
     const regex = /^\/committees\/[1-9]\d*$/
     if (this.router.url.match(regex) !== null  ) {
       this.yearForCommitteePage.next(newValue);

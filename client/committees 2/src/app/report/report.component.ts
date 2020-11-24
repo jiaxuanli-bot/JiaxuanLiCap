@@ -65,8 +65,8 @@ export class ReportComponent implements OnInit {
         this.committeeMemberMaxLength(value);
         this.initPiecgart(value);
         this.years =  newArray( this.f.endYear.value - this.f.startYear.value + 1);
-        for (let i = 0; i < this.f.endYear.value - this.f.startYear.value + 1; i++)  {
-          this.years[i] = ( parseInt(this.f.startYear.value) + i ).toString();
+        for (let i = 0; i < this.f.endYear.value - this.f.startYear.value + 1; i++) {
+          this.years[i] = (parseInt(this.f.startYear.value) + i).toString();
         }
       }
     );

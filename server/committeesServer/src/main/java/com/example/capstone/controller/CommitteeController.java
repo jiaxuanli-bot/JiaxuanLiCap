@@ -1,6 +1,7 @@
 package com.example.capstone.controller;
 
 import com.example.capstone.entities.Survey;
+import com.example.capstone.entities.User;
 import com.example.capstone.projections.*;
 import com.example.capstone.service.CommitteeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,13 +69,13 @@ public class CommitteeController {
     }
 
     @RequestMapping( value="/committees/{id}/members/{userId}", method=RequestMethod.PUT )
-    public void assignCommitteeMember(@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String id, @Pattern( regexp = "^[0-9]*$", message = "the MemberID format is wrong") @PathVariable String userId){
-        committeeService.assignCommitteeMember(Long.valueOf(id), Long.valueOf(userId));
+    public User assignCommitteeMember(@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String id, @Pattern( regexp = "^[0-9]*$", message = "the MemberID format is wrong") @PathVariable String userId){
+        return committeeService.assignCommitteeMember(Long.valueOf(id), Long.valueOf(userId));
     }
 
     @RequestMapping( value="/committees/{id}/members/{memberId}", method=RequestMethod.DELETE )
-    public void removeMember(@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong")  @PathVariable String id,@Pattern( regexp = "^[0-9]*$", message = "the MemberID format is wrong") @PathVariable String memberId) {
-        committeeService.removeMember(Long.valueOf(id),Long.valueOf(memberId));
+    public User removeMember(@Pattern( regexp = "^[0-9]*$", message = "delete the CommitteeID format is wrong")  @PathVariable String id, @Pattern( regexp = "^[0-9]*$", message = "the MemberID format is wrong") @PathVariable String memberId) {
+        return committeeService.removeMember(Long.valueOf(id),Long.valueOf(memberId));
     }
 }
 

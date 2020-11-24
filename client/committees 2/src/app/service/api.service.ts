@@ -57,7 +57,8 @@ export class ApiService {
     return this.http.get<Page>(`${AppConstants.API_URL}/users`, { params : params } );
   }
 
-  modifyUser(first: string, last: string, rank: string, college: string, tenured: boolean, soe: boolean, admin: boolean, gender: string, userId: string): Observable<User> {
+  modifyUser(first: string, last: string, rank: string, college: string, tenured: boolean, soe: boolean,
+             admin: boolean, gender: string, userId: string): Observable<User> {
     const data = {
       first : first,
       last : last,
@@ -91,8 +92,9 @@ export class ApiService {
     return  this.http.put(`${AppConstants.API_URL}/committees/${committeeId}/members/${userId}`, {} );
   }
 
-  removeUserFromCommittee(committeeId, userId): Observable<any> {
-    return  this.http.delete(`${AppConstants.API_URL}/committees/${committeeId}/members/${userId}`);
+  removeUserFromCommittee(committeeId, userId): Observable<User> {
+    // @ts-ignore
+    return this.http.delete(`${AppConstants.API_URL}/committees/${committeeId}/members/${userId}`);
   }
 
   getCommitteeMember(committeeId): Observable<User[]> {

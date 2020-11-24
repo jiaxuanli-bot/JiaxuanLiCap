@@ -49,15 +49,28 @@ export class HomeComponent implements OnInit {
                   this.surveys = survey;
                   this.surveyRecord = [];
                   let checked;
-                  for (let j = 0; j < this.committees.length; j++) {
-                    checked = false;
-                    for (let k = 0; k < survey.length; k++) {
-                      if (this.committees[j].id === survey[k].committeeId) {
-                        checked = true;
-                      }
+                  this.committees.forEach(
+                    value2 => {
+                      checked = false;
+                      survey.forEach(
+                        value3 => {
+                          if (value2.id === value3.committeeId) {
+                            checked = true;
+                          }
+                        }
+                      );
+                      this.surveyRecord.push(checked);
                     }
-                    this.surveyRecord.push(checked);
-                  }
+                  );
+                  // for (let j = 0; j < this.committees.length; j++) {
+                  //   checked = false;
+                  //   for (let k = 0; k < survey.length; k++) {
+                  //     if (this.committees[j].id === survey[k].committeeId) {
+                  //       checked = true;
+                  //     }
+                  //   }
+                  //   this.surveyRecord.push(checked);
+                  // }
                 }
               );
             }

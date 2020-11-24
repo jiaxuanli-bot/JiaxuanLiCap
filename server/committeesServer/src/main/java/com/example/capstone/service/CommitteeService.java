@@ -1,6 +1,7 @@
 package com.example.capstone.service;
 import com.example.capstone.entities.Committee;
 import com.example.capstone.entities.Survey;
+import com.example.capstone.entities.User;
 import com.example.capstone.projections.CommitteeSummary;
 import com.example.capstone.projections.CommitteesWithMembersAndVolunteers;
 import com.example.capstone.projections.UserSummary;
@@ -50,9 +51,9 @@ public class CommitteeService {
                 }
         );
         return years;
-     }
+    }
 
-     public List<String> getCommitteeYears(Long id){
+    public List<String> getCommitteeYears(Long id){
         ArrayList<String> years = new ArrayList<String>();
         String name =  committeeRepo.findById(id).get().getName();
         committeeRepo.findDistinctByNameEquals(name).forEach(
@@ -61,11 +62,11 @@ public class CommitteeService {
                 }
         );
         return years;
-     }
+    }
 
-     public CommitteesWithMembersAndVolunteers getCommittee(Long id){
-         return committeeRepo.findByIdEqualsAndIdNotNull(id);
-     }
+    public CommitteesWithMembersAndVolunteers getCommittee(Long id){
+        return committeeRepo.findByIdEqualsAndIdNotNull(id);
+    }
 
     public List<UserSummary> getCommitteeMembers(Long id){
         Committee c = new Committee();
@@ -95,29 +96,37 @@ public class CommitteeService {
         return userRepo.findByVolunteeredCommitteesEquals(c);
     }
 
-    public void assignCommitteeMember(Long id,Long userId){
+    public User assignCommitteeMember(Long id,Long userId){
+        final User[] res = new User[1];
         userRepo.findById(Long.valueOf(userId)).map(
                 user -> {
+                    res[0] = user;
                     Committee c = new Committee();
                     c.setId(Long.valueOf(id));
                     user.getCommittees().add(c);
                     return userRepo.save(user);
                 }
         );
+        return res[0];
     }
 
-    public void removeMember(Long id ,Long memberId){
+    public User removeMember(Long id , Long memberId){
+        final User[] res = new User[1];
         committeeRepo.findById(Long.valueOf(id)).map(
                 committee -> {
                     return userRepo.findById(Long.valueOf(memberId)).map(
                             user -> {
+                                res[0] = user;
                                 user.removeCommittee(committee);
-                                return userRepo.save(user);
+                                userRepo.save(user);
+                                return user;
                             }
                     );
                 }
         );
+        return res[0];
     }
+
     public String getCommitteeIdByYearAndName(String name, String year) {
         return committeeRepo.findByNameEqualsAndYearEquals(name, year).getId().toString();
     }

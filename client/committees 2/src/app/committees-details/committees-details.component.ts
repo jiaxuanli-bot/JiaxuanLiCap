@@ -22,9 +22,9 @@ export class CommitteesDetailsComponent implements OnInit {
   committee: Committee;
   dutyExpand = false;
   critreriaExpand = false;
-  usersCommittees: UserCommittees[][];
+  usersCommittees: Committee[][];
   volunteers: User[];
-  volunteersCommittees: UserCommittees[][];
+  volunteersCommittees: Committee[][];
   popIntroductionExpand = false;
   popDutyExpand = false;
   popCritreriaExpand  = false;
@@ -57,7 +57,7 @@ export class CommitteesDetailsComponent implements OnInit {
                 // }
                 forkJoin(reqs).subscribe(
                   results => {
-                    this.usersCommittees = results as UserCommittees[][];
+                    this.usersCommittees = results as Committee[][];
                   }
                 );
                 // this.apiService.getUserAssignedCommittees(value.members[i].id).subscribe(
@@ -68,24 +68,30 @@ export class CommitteesDetailsComponent implements OnInit {
                 this.apiService.getCommitteeVolunteers(param.id).subscribe(
                   v => {
                     this.volunteers = v;
-                    for (let i = 0; i < this.volunteers.length; i++) {
-                      // tslint:disable-next-line:prefer-for-of
-                      for (let j = 0; j < this.committee.members.length; j++) {
-                        if (this.volunteers[i].id === this.committee.members[j].id) {
-                          this.volunteers.splice(i, 1);
-                          i--;
-                          break;
-                        }
+                    let i = 0;
+                    this.volunteers.forEach(
+                      value1 => {
+                        this.committee.members.forEach(
+                          value2 => {
+                            i++;
+                            if (value1.id === value2.id) {
+                              this.volunteers.splice(i, 1);
+                              i--;
+                            }
+                          }
+                        );
                       }
-                    }
+                    );
                     const reqs2 = [];
                     this.volunteersCommittees = newArray(v.length);
-                    for (let i = 0; i < v.length; i++) {
-                      reqs2.push( this.apiService.getUserAssignedCommittees(v[i].id));
-                    }
+                    v.forEach(
+                      value1 => {
+                        reqs2.push(this.apiService.getUserAssignedCommittees(value1.id));
+                      }
+                    );
                     forkJoin(reqs2).subscribe(
                       results => {
-                        this.volunteersCommittees = results as UserCommittees[][];
+                        this.volunteersCommittees = results as Committee[][];
                       }
                     );
                     // this.apiService.getUserAssignedCommittees(v[i].id).subscribe(
@@ -119,24 +125,14 @@ export class CommitteesDetailsComponent implements OnInit {
   removeMember(): void {
     this.apiService.removeUserFromCommittee(this.committee.id, this.seletedUserid).subscribe(
       value => {
+        console.log(value);
+        this.apiService.getUserAssignedCommittees(value.id).subscribe(
+          value1 => {
+            this.volunteersCommittees.push(value1);
+          }
+        );
         this.volunteers.push(value);
         this.committee.members = this.committee.members.filter( m => m.id !== value.id );
-        // for (let i = 0; i < this.committee.members.length; i++) {
-        //   if (this.committee.members[i].id === this.seletedUserid) {
-        //     const temp = new User();
-        //     temp.id = this.committee.members[i].id;
-        //     temp.first = this.committee.members[i].first;
-        //     temp.gender = this.committee.members[i].gender;
-        //     temp.soe = this.committee.members[i].soe;
-        //     temp.adminResponsibility = this.committee.members[i].adminResponsibility;
-        //     temp.tenured = this.committee.members[i].tenured;
-        //     temp.last = this.committee.members[i].last;
-        //     temp.rank = this.committee.members[i].rank;
-        //     temp.college = this.committee.members[i].college;
-        //     this.volunteers.push(temp);
-        //     this.committee.members.splice(i , 1 );
-        // }
-        // }
       }
     );
   }
@@ -144,7 +140,12 @@ export class CommitteesDetailsComponent implements OnInit {
   assignVolunteer(): void {
     this.apiService.assignUserToOneCommittee(this.committee.id, this.seletedUserid).subscribe(
       value => {
-        this.volunteers.filter( v => v.id !== value.id );
+        this.apiService.getUserAssignedCommittees(value.id).subscribe(
+          value1 => {
+            this.usersCommittees.push(value1);
+          }
+        );
+        this.volunteers = this.volunteers.filter( v => v.id !== value.id );
         this.committee.members.push(value);
         // for (let i = 0; i < this.volunteers.length; i++) {
         //   if (this.volunteers[i].id === this.seletedUserid) {

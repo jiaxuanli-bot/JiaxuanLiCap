@@ -14,8 +14,8 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
   submitted = false;
-  returnUrl: string;
-  private keepAfterRouteChange = false;
+  // returnUrl: string;
+  // private keepAfterRouteChange = false;
   isNormal = 0;
   isAdmin = 0;
   isNominate = 0;
@@ -28,17 +28,30 @@ export class LoginComponent implements OnInit {
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
-      for (let i = 0; i < this.authenticationService.currentUserValue.roles.length; i++ ) {
-        if (this.authenticationService.currentUserValue.roles[i].role === 'Normal') {
-          this.isNormal = 1;
+      this.authenticationService.currentUserValue.roles.forEach(
+        value => {
+          if (value.role === 'Normal') {
+            this.isNormal = 1;
+          }
+          if (value.role === 'Admin') {
+            this.isAdmin = 1;
+          }
+          if (value.role === 'Nominate') {
+            this.isNominate = 1;
+          }
         }
-        if (this.authenticationService.currentUserValue.roles[i].role === 'Admin') {
-          this.isAdmin = 1;
-        }
-        if (this.authenticationService.currentUserValue.roles[i].role === 'Nominate') {
-          this.isNominate = 1;
-        }
-      }
+      );
+      // for (let i = 0; i < this.authenticationService.currentUserValue.roles.length; i++ ) {
+      //   if (this.authenticationService.currentUserValue.roles[i].role === 'Normal') {
+      //     this.isNormal = 1;
+      //   }
+      //   if (this.authenticationService.currentUserValue.roles[i].role === 'Admin') {
+      //     this.isAdmin = 1;
+      //   }
+      //   if (this.authenticationService.currentUserValue.roles[i].role === 'Nominate') {
+      //     this.isNominate = 1;
+      //   }
+      // }
       if ( this.isAdmin === 1) {
         this.router.navigate(['/faculty']);
       } else if ( this.isNominate) {
@@ -65,17 +78,30 @@ export class LoginComponent implements OnInit {
       .subscribe(
         user => {
           if (user != null) {
-            for (let i = 0; i < user.roles.length; i++ ) {
-              if (user.roles[i].role === 'Normal') {
-                this.isNormal = 1;
+            user.roles.forEach(
+              value => {
+                if (value.role === 'Normal') {
+                  this.isNormal = 1;
+                }
+                if (value.role === 'Admin') {
+                  this.isAdmin = 1;
+                }
+                if (value.role === 'Nominate') {
+                  this.isNominate = 1;
+                }
               }
-              if (user.roles[i].role === 'Admin') {
-                this.isAdmin = 1;
-              }
-              if (user.roles[i].role === 'Nominate') {
-                this.isNominate = 1;
-              }
-            }
+            );
+            // for (let i = 0; i < user.roles.length; i++ ) {
+            //   if (user.roles[i].role === 'Normal') {
+            //     this.isNormal = 1;
+            //   }
+            //   if (user.roles[i].role === 'Admin') {
+            //     this.isAdmin = 1;
+            //   }
+            //   if (user.roles[i].role === 'Nominate') {
+            //     this.isNominate = 1;
+            //   }
+            // }
             if ( this.isAdmin === 1) {
               this.router.navigate(['/faculty']);
             } else if ( this.isNominate) {
