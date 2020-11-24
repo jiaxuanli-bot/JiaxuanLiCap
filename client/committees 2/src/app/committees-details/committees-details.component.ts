@@ -75,7 +75,7 @@ export class CommitteesDetailsComponent implements OnInit {
                           value2 => {
                             i++;
                             if (value1.id === value2.id) {
-                              this.volunteers.splice(i, 1);
+                              this.volunteers = this.volunteers.splice(i, 1);
                               i--;
                             }
                           }
