@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     Feather.replace();
   }
   ngOnInit(): void {
-    this.authenticationService.currentUser.subscribe(
+    this.authenticationService.getUser().subscribe(
       value => {
         this.user = value;
       }
