@@ -128,7 +128,7 @@ export class ApiService {
     return this.http.get<string>(`${AppConstants.API_URL}/committees/${name}/years/${year}`, {} );
   }
 
-  getUserYears(email): Observable<string> {
-    return this.http.get<string>(`${AppConstants.API_URL}/users/email/${email}/years`, {} );
+  getUserYears(email): Observable<string[]> {
+    return this.http.get<string[]>(`${AppConstants.API_URL}/users/email/${email}/years`, {} );
   }
 }

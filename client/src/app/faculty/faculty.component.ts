@@ -127,24 +127,18 @@ export class FacultyComponent implements OnInit {
       soe: [false],
       gender: ['M']
     });
-    this.apiService.getCommitteesYears().subscribe(
-      years => {
-        years.sort();
-        this.yearService.setYears(years);
-        this.yearService.setValue(years[0]);
-        this.year.subscribe( value => {
-          if (value !== '') {
-            this.apiService.getFacultyByYear(value).subscribe(
-              res => {
-                this.faculties = res.content;
-                this.pageNum = res.totalPages;
-                this.currentPage = 0;
-              }
-            );
+    this.apiService.getFacultyByYear(this.yearService.getYearValue).subscribe()
+    this.year.subscribe( value => {
+      if (value !== '') {
+        this.apiService.getFacultyByYear(value).subscribe(
+          res => {
+            this.faculties = res.content;
+            this.pageNum = res.totalPages;
+            this.currentPage = 0;
           }
-        });
+        );
       }
-    );
+    });
   }
 
   changed($event: any): void {

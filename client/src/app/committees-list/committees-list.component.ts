@@ -20,10 +20,6 @@ export class CommitteesListComponent implements OnInit {
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService) {}
 
   ngOnInit(): void {
-    this.apiService.getCommitteesYears().subscribe(
-      years => {
-        this.yearService.setYears(years);
-        this.yearService.setValue(years[0]);
         this.yearService.getValue().subscribe(
           value => {
             this.apiService.getCommitteesByYear(value).subscribe(
@@ -57,7 +53,5 @@ export class CommitteesListComponent implements OnInit {
             );
           }
         );
-      }
-    );
   }
 }

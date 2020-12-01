@@ -46,11 +46,9 @@ export class AuthenticationService {
   public hasRole( role ) {
     return this.roles.indexOf(role) >= 0;
   }
-
   private extractRoles( user ) {
     this.roles = user && (user.roles.map( role => role.role ) );
   }
-
   login( email ) {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const data = {  "email" : email};
@@ -58,6 +56,7 @@ export class AuthenticationService {
       .pipe(map(user => {
         console.log(user);
         // store user details and jwt token in local storage to keep user logged in between page refreshes
+        this.extractRoles(user);
         return this.storeUser( user );
       }));
   }

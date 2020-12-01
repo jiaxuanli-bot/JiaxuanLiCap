@@ -46,7 +46,6 @@ import {GoogleChartsModule} from 'angular-google-charts';
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true},
-    {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
 })

@@ -23,14 +23,16 @@ export class LoginComponent implements OnInit {
   ) {
     // redirect to home if already logged in
     this.authenticationService.getUser().subscribe( user => {
-      this.navigateToDefaultPage();
+      if (user !== null) {
+        this.navigateToDefaultPage();
+      }
     });
   }
 
   navigateToDefaultPage( ) {
-    if( this.authenticationService.hasRole( 'Admin' ) ) {
+    if (this.authenticationService.hasRole( 'Admin' ) ) {
       this.router.navigate(['/faculty']);
-    } else if( this.authenticationService.hasRole('Nominate') ) {
+    } else if (this.authenticationService.hasRole('Nominate') ) {
       this.router.navigate(['/committees']);
     } else {
       this.router.navigate(['/survey']);

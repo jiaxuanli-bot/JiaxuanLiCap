@@ -39,16 +39,9 @@ export class ReportComponent implements OnInit {
   yearForm: FormGroup;
 
 
-  constructor(private yearService: YearService, public authentication: AuthenticationService, private apiservice: ApiService, private formBuilder: FormBuilder) { }
-
+  constructor(private yearService: YearService, public authentication: AuthenticationService,
+              private apiservice: ApiService, private formBuilder: FormBuilder) { }
   ngOnInit(): void {
-    this.apiservice.getCommitteesYears().subscribe(
-      years => {
-        years.sort();
-        this.yearService.setYears(years)
-        this.yearService.setValue(years[0]);
-      }
-    );
     this.yearForm = this.formBuilder.group({
       startYear: [''],
       endYear: ['']

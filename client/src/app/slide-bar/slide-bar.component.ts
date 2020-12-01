@@ -63,7 +63,7 @@ export class SlideBarComponent implements OnInit {
     } else {
       this.routerToSurvey();
     }
-    this.yearsForm =  this.formBuilder.group({
+    this.yearsForm = this.formBuilder.group({
       year: []
     });
   }

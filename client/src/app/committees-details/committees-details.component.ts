@@ -34,9 +34,6 @@ export class CommitteesDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(
       param => {
-        this.apiService.getCommitteeYears(param.id).subscribe(
-          years => {
-            this.yearService.setYears(years);
             this.apiService.getCommitteeById(param.id).subscribe(
               value => {
                 this.committee = value;
@@ -104,8 +101,6 @@ export class CommitteesDetailsComponent implements OnInit {
                 );
               }
             );
-          }
-          );
       }
     );
   }
