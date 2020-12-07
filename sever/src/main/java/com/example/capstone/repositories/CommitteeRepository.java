@@ -13,6 +13,8 @@ public interface CommitteeRepository extends JpaRepository<Committee, Long> {
 
     List<CommitteesWithMembersAndVolunteers> findByYearBetween(String startYear, String endYear);
 
+    List<Committee> findByYear(String year);
+
     List<CommitteeSummary> findByYearBetweenAndIdNotNull(String startYear, String endYear);
 
     List<CommitteesYearsOnly> findDistinctByYearNotNullOrderByYearAsc();

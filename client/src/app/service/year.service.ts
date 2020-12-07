@@ -45,7 +45,6 @@ export class YearService {
           this.apiService.getUserYears(this.authentication.currentUserValue.email).subscribe(
             value => {
               this.years.next(value);
-              this.currentYear.next(value[0]);
             }
           );
         } else {
@@ -56,9 +55,10 @@ export class YearService {
             }
           );
         }
-        console.log('path');
-        console.log(this.path);
       });
+  }
+  setYears(years: string[]) {
+    this.years.next(years);
   }
   getYears(): Observable<string[]> {
     return this.years.asObservable();

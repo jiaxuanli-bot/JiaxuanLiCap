@@ -7,10 +7,10 @@ import java.util.Set;
 
 @Entity
 public class Committee {
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
-
     private String introduction;
     private String name;
     private String year;
@@ -28,6 +28,37 @@ public class Committee {
     @ManyToMany
     @JoinTable(name = "committee_volunteers",joinColumns = { @JoinColumn(name = "committee_id")},inverseJoinColumns = {@JoinColumn(name = "volunteers_id")})
     private Set<User> volunteers;
+
+    public Committee(){
+    }
+
+    private Committee(Builder builder) {
+        setId(builder.id);
+        setIntroduction(builder.introduction);
+        setName(builder.name);
+        setYear(builder.year);
+        setMembers(builder.members);
+        setCriteria(builder.criteria);
+        setDuties(builder.duties);
+        setVolunteers(builder.volunteers);
+    }
+
+    public static Builder build() {
+        return new Builder();
+    }
+
+    public static Builder Builder(Committee copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.introduction = copy.getIntroduction();
+        builder.name = copy.getName();
+        builder.year = copy.getYear();
+        builder.members = copy.getMembers();
+        builder.criteria = copy.getCriteria();
+        builder.duties = copy.getDuties();
+        builder.volunteers = copy.getVolunteers();
+        return builder;
+    }
 
     public Long getId() {
         return id;
@@ -102,5 +133,59 @@ public class Committee {
         a.getCommittees().remove(this);
     }
 
+    public static final class Builder {
+        private Long id;
+        private String introduction;
+        private String name;
+        private String year;
+        private Set<User> members;
+        private List<Criteria> criteria;
+        private List<Duty> duties;
+        private Set<User> volunteers;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder introduction(String introduction) {
+            this.introduction = introduction;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder year(String year) {
+            this.year = year;
+            return this;
+        }
+
+        public Builder members(Set<User> members) {
+            this.members = members;
+            return this;
+        }
+
+        public Builder criteria(List<Criteria> criteria) {
+            this.criteria = criteria;
+            return this;
+        }
+
+        public Builder duties(List<Duty> duties) {
+            this.duties = duties;
+            return this;
+        }
+
+        public Builder volunteers(Set<User> volunteers) {
+            this.volunteers = volunteers;
+            return this;
+        }
+
+        public Committee build() {
+            return new Committee(this);
+        }
+    }
 }
 

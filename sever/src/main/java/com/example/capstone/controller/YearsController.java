@@ -1,10 +1,10 @@
 package com.example.capstone.controller;
 
+import com.example.capstone.entities.User;
+import com.example.capstone.service.CommitteeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
@@ -14,4 +14,13 @@ import java.util.ArrayList;
 @Validated
 public class YearsController {
 
+    @Autowired
+    private CommitteeService committeeService;
+
+    @RequestMapping( value="/years/{year}", method=RequestMethod.POST )
+    public String createSurvey(@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong")  @PathVariable String year) {
+        //Create a new survey that user volunteer one committee
+        committeeService.createYear(year);
+        return year;
+    }
 }

@@ -62,7 +62,7 @@ public class Duty {
 			this.duty = duty;
 			return this;
 		}
-		
+
 		public Builder committee( Committee c ) {
 			this.committee = c;
 			return this;

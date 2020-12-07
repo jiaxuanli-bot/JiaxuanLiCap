@@ -632,9 +632,11 @@ input[type="radio"]{
 }
 
 #year{
+  width: 150px;
   background-color:#444444;
   color: white;
 }
+
 .radio{
   display:inline-block;
   width: 20px!important;

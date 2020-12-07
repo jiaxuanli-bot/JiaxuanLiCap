@@ -1,18 +1,15 @@
 package com.example.capstone.service;
-import com.example.capstone.entities.Committee;
-import com.example.capstone.entities.Survey;
-import com.example.capstone.entities.User;
+import com.example.capstone.entities.*;
 import com.example.capstone.projections.CommitteeSummary;
 import com.example.capstone.projections.CommitteesWithMembersAndVolunteers;
+import com.example.capstone.projections.CommitteesYearsOnly;
 import com.example.capstone.projections.UserSummary;
 import com.example.capstone.repositories.CommitteeRepository;
 import com.example.capstone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.*;
 
 @Service
 public class CommitteeService {
@@ -44,7 +41,7 @@ public class CommitteeService {
     }
 
     public List<String> getCommitteesYears(){
-        ArrayList<String> years = new ArrayList<>();
+         List<String> years = new ArrayList<>();
         committeeRepo.findDistinctByYearNotNullOrderByYearAsc().forEach(
                 committeesYearsOnly -> {
                     years.add(committeesYearsOnly.getYear());
@@ -53,8 +50,46 @@ public class CommitteeService {
         return years;
     }
 
+    public String createYear(String year){
+        List<CommitteesYearsOnly> years  = committeeRepo.findDistinctByYearNotNullOrderByYearAsc();
+        String lastYear = years.get(years.size() - 1).getYear();
+        List<Committee> committees = committeeRepo.findByYear(lastYear);
+        List<Duty> copyDuties = new ArrayList<Duty>();
+        List<Criteria> copyCriterias = new ArrayList<Criteria>();
+        committees.forEach(
+                committee -> {
+                    Committee copy = new Committee.Builder().
+                            introduction(committee.getIntroduction()).
+                            name(committee.getName()).
+                            year(year).build();
+                    copy = committeeRepo.save( copy );
+                    Committee finalCopy = copy;
+                    committee.getDuties().forEach(
+                            duty -> {
+                                Duty copyDuty = new Duty();
+                                copyDuty.setCommittee(finalCopy);
+                                copyDuty.setDuty(duty.getDuty());
+                                copyDuties.add(copyDuty);
+                            }
+                    );
+                    copy.setDuties(copyDuties);
+                    committee.getCriteria().forEach(
+                            criteria -> {
+                                Criteria copyCriteria = new Criteria();
+                                copyCriteria.setCriteria(criteria.getCriteria());
+                                copyCriteria.setCommmittee(finalCopy);
+                                copyCriterias.add(copyCriteria);
+                            }
+                    );
+                    copy.setCriteria(copyCriterias);
+                    committeeRepo.save( copy );
+                }
+        );
+        return year;
+    }
+
     public List<String> getCommitteeYears(Long id){
-        ArrayList<String> years = new ArrayList<String>();
+        List<String> years = new ArrayList<String>();
         String name =  committeeRepo.findById(id).get().getName();
         committeeRepo.findDistinctByNameEquals(name).forEach(
                 committeesYearsOnly -> {

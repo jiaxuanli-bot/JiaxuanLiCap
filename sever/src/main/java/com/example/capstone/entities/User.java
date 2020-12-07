@@ -187,10 +187,10 @@ public class User {
 	   return id.intValue();
 	}
 
-	public String getYear() {
+ public String getYear() {
 		return year;
 	}
-	
+
 	public static class Builder {
 		private Long id;
 		private String first;

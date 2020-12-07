@@ -16,7 +16,6 @@
 #sidebar, #sidebar a ,#smallSidebar,#smallSidebar a{
   color: #bdbdbd;
   background-color:#444444;
-  text-shadow:0 0 2px #000000;
 }
 
 
@@ -68,4 +67,12 @@
   margin-right: 10px;
   border-radius: 5px;
   background-color:#393939;
+}
+
+#crateYear{
+  color: black;
+}
+
+.selYear svg:hover{
+  color: white;
 }

@@ -109,7 +109,6 @@ public class UserController {
     public List<Survey> getUserSurveys(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id, @RequestParam(name="year", required=false) String year) {
         //Get all the survey that user have been volunteered
         User v  = userService.getUserById(Long.valueOf(id));
-        System.out.println("year:" + year);
         v = userService.getUserByEmailAndYear(v.getEmail(), year);
         return userService.getUserSurveys(Long.valueOf(id),v);
     }
@@ -125,10 +124,11 @@ public class UserController {
     @RequestMapping( value="/users/{id}/enlistings/{committeeid}", method=RequestMethod.POST )
     public void createSurvey(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeid, @RequestParam(name="year", required=false) String year) {
        //Create a new survey that user volunteer one committee
+        System.out.print("create Survey");
         User v  = userService.getUserById(Long.valueOf(id));
-        System.out.println("year:" + year);
         v = userService.getUserByEmailAndYear(v.getEmail(), year);
-        System.out.println("id:" + v.getId());
+        System.out.print(committeeid);
+        System.out.print(v.getId());
         userService.createSurvey(Long.valueOf(committeeid),v);
     }
 

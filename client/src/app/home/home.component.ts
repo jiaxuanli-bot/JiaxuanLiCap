@@ -21,8 +21,6 @@ export class HomeComponent implements OnInit {
   selectedCommittee: Committee;
   committees: Committee[] = [];
   surveys: Survey[] = [];
-  surveyRecord: boolean[] = [];
-  selectedYear: string;
   user: User;
 
   constructor(public authentication: AuthenticationService, private yearService: YearService,
@@ -33,45 +31,35 @@ export class HomeComponent implements OnInit {
     this.yearsForm =  this.formBuilder.group({
       year: []
     });
-    this.yearService.getValue().subscribe( value1 => {
-      this.selectedYear = value1;
-      this.apiService.getCommitteesByYear(value1).subscribe(
-        res => {
-          this.committees = res;
-          this.apiService.getSurveys(this.authenticationService.currentUserValue.id, this.yearService.getYearValue).subscribe(
-            survey => {
-              console.log(survey);
-              this.surveys = survey;
-              this.surveyRecord = [];
-              let checked;
-              this.committees.forEach(
-                value2 => {
-                  checked = false;
-                  survey.forEach(
-                    value3 => {
-                      if (value2.id === value3.committeeId) {
-                        checked = true;
-                      }
-                    }
-                  );
-                  this.surveyRecord.push(checked);
-                }
-              );
-              // for (let j = 0; j < this.committees.length; j++) {
-              //   checked = false;
-              //   for (let k = 0; k < survey.length; k++) {
-              //     if (this.committees[j].id === survey[k].committeeId) {
-              //       checked = true;
-              //     }
-              //   }
-              //   this.surveyRecord.push(checked);
-              // }
-            }
-          );
-        }
-      );
-    });
+    this.yearService.getValue().subscribe(
+      value => {
+        this.apiService.getCommitteesByYear(this.authenticationService.currentUserValue.years[0]).subscribe(
+          res => {
+            this.committees = res;
+            this.apiService.getSurveys(this.authenticationService.currentUserValue.id,
+              this.authenticationService.currentUserValue.years[0]).subscribe(
+              survey => {
+                this.surveys = survey;
+              }
+            );
+          }
+        );
+      }
+    );
   }
+
+  contains(committeeId: string): boolean {
+    let res = false;
+    this.surveys.forEach(
+      value1 => {
+        if (committeeId === value1.committeeId) {
+          res = true;
+        }
+      }
+    );
+    return res;
+  }
+
   popUp(committee) {
     this.introductionExpand = true;
     this.dutyExpand = true;
@@ -86,7 +74,9 @@ export class HomeComponent implements OnInit {
   expandDuty() {
     this.dutyExpand = !this.dutyExpand;
   }
-
+  createSurvey(committeeId: string, userId: string) {
+    this.apiService.createSurvey(userId, committeeId, this.yearService.getYearValue).subscribe();
+  }
   expandIntroduction() {
     this.introductionExpand = !this.introductionExpand;
   }

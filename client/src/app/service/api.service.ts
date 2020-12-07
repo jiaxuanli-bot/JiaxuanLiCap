@@ -29,9 +29,6 @@ export class ApiService {
     return this.http.get<HashedCommittees>( `${AppConstants.API_URL}/hashedCommittees?startYear=${startYear}&endYear=${endYear}` );
   }
 
-  createSurvey(userId: string, committeeId: string, year: string): Observable<Survey> {
-    return this.http.post<Survey>(`${AppConstants.API_URL}/users/${userId}/enlistings/${committeeId}?year=${year}`, {} );
-  }
 
   getCommitteesYears(): Observable<string[]> {
     return this.http.get<string[]>(`${AppConstants.API_URL}/committees/years`, {} );
@@ -123,11 +120,17 @@ export class ApiService {
     };
     return this.http.post <User> (`${AppConstants.API_URL}/users`, data, config);
   }
+  createSurvey(userId: string, committeeId: string, year: string): Observable<Survey> {
+    return this.http.post<Survey>(`${AppConstants.API_URL}/users/${userId}/enlistings/${committeeId}?year=${year}`, {} );
+  }
+
+  createYear(year: string): Observable<string> {
+    return this.http.post <string> (`${AppConstants.API_URL}/years/${year}`, {});
+  }
 
   getCommitteeIdByYearAndName(year, name): Observable<string> {
     return this.http.get<string>(`${AppConstants.API_URL}/committees/${name}/years/${year}`, {} );
   }
-
   getUserYears(email): Observable<string[]> {
     return this.http.get<string[]>(`${AppConstants.API_URL}/users/email/${email}/years`, {} );
   }

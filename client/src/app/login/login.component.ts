@@ -4,6 +4,7 @@ import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '
 import { first } from 'rxjs/operators';
 
 import { AuthenticationService } from '../service/authentication.service';
+import {ApiService} from '../service/api.service';
 
 @Component({
   selector: 'app-login',

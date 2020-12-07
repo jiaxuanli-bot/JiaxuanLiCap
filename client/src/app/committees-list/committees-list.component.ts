@@ -16,7 +16,7 @@ import {CommitteeUser} from '../models/committee-user';
   styleUrls: ['./committees-list.component.css']
 })
 export class CommitteesListComponent implements OnInit {
-  committees: CommitteeSummary[];
+  committees: CommitteeSummary[] = [];
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService) {}
 
   ngOnInit(): void {
@@ -27,18 +27,20 @@ export class CommitteesListComponent implements OnInit {
                 this.committees = value1;
                 const reqs2 = [];
                 // tslint:disable-next-line:prefer-for-of
-                this.committees.forEach(
-                  value2 => {
-                    reqs2.push( this.apiService.getCommitteeMember(value2.id));
-                  }
-                );
-                forkJoin(reqs2).subscribe(
-                  results => {
-                    for (let i = 0; i < results.length; i++) {
-                      this.committees[i].members = results[i] as CommitteeUser[];
+                if (this.committees !== undefined ) {
+                  this.committees.forEach(
+                    value2 => {
+                      reqs2.push( this.apiService.getCommitteeMember(value2.id));
                     }
-                  }
-                );
+                  );
+                  forkJoin(reqs2).subscribe(
+                    results => {
+                      for (let i = 0; i < results.length; i++) {
+                        this.committees[i].members = results[i] as CommitteeUser[];
+                      }
+                    }
+                  );
+                }
                // console.log(this.committees);
                //  this.committees.forEach(
                //    value2 => {

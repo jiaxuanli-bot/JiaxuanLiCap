@@ -34,6 +34,7 @@ export class SlideBarComponent implements OnInit {
     isNominate: false,
     isNormal: false
   }
+  newYear =  '2023';
   ngOnInit(): void {
     this.user = this.authenticationService.currentUserValue;
     this.yearService.getYears().subscribe(
@@ -46,7 +47,6 @@ export class SlideBarComponent implements OnInit {
         this.selectedYear = value;
       }
     );
-    console.log(this.user.roles[1]);
     if ( this.authenticationService.hasRole('Normal')) {
         this.roles.isNormal = true;
     }
@@ -68,6 +68,9 @@ export class SlideBarComponent implements OnInit {
     });
   }
 
+  hasRole(role: string): boolean {
+    return this.authenticationService.hasRole(role);
+  }
   changeYear() {
     this.yearService.setValue(this.selectedYear);
   }
@@ -101,5 +104,13 @@ export class SlideBarComponent implements OnInit {
     this.sideBar.homeNavbar = false;
     this.sideBar.facultyNavbar = false;
     this.sideBar.committeesNavbar = false;
+  }
+
+  crateYear() {
+    this.apiService.createYear(this.newYear).subscribe(
+      value => {
+        location.reload();
+      }
+    );
   }
 }

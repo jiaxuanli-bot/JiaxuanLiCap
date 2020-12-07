@@ -16,4 +16,5 @@ export class User {
   committees: UserCommittees[];
   roles: Role[];
   year: string;
+  years: string[];
 }

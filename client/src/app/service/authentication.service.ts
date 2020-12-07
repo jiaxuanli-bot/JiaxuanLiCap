@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { AppConstants } from '../constants/app-constants';
 import { User } from '../models/user';
 import {Router} from '@angular/router';
+import {ApiService} from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -28,7 +29,7 @@ export class AuthenticationService {
     this.extractRoles( user );
   }
 
-  private storeUser( user ) : User {
+  private storeUser( user ): User {
     localStorage.setItem( AuthenticationService.USER_STORE, JSON.stringify(user));
     this.currentUserSubject.next( user );
     return user;
@@ -54,10 +55,15 @@ export class AuthenticationService {
     const data = {  "email" : email};
     return this.http.post<User>(`${AppConstants.LOGIN_URL}`, data, config)
       .pipe(map(user => {
-        console.log(user);
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
-        this.extractRoles(user);
-        return this.storeUser( user );
+        this.http.get<string[]>(`${AppConstants.API_URL}/users/email/${email}/years`, {} ).subscribe(
+          value => {
+            user.years = value;
+            console.log(user);
+            // store user details and jwt token in local storage to keep user logged in between page refreshes
+            this.extractRoles(user);
+            return this.storeUser( user );
+          }
+        );
       }));
   }
 
