@@ -18,6 +18,7 @@ import { CommitteesListComponent } from './committees-list/committees-list.compo
 import { ReportComponent } from './report/report.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {GoogleChartsModule} from 'angular-google-charts';
+import { UWLComponent } from './uwl/uwl.component';
 @NgModule({
 
   imports: [
@@ -43,6 +44,7 @@ import {GoogleChartsModule} from 'angular-google-charts';
     CommitteesDetailsComponent,
     CommitteesListComponent,
     ReportComponent,
+    UWLComponent,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true},

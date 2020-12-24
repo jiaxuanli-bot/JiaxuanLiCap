@@ -65,20 +65,16 @@ public class UserController {
             b.soe((soe.equals("No"))?false:true);
         }
         User u =b.build();
-
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withMatcher("first", m -> m.contains())
                 .withMatcher("last", m -> m.contains());
-
         Example<User> example = Example.of(u, matcher);
-
         Pageable paging = PageRequest.of( pageNo, pageSize, Sort.by(sortBy));
         return userService.getUsers(example, paging );
     }
 
     @RequestMapping( value="/users/{id}", method=RequestMethod.PUT)
     public User modifyUser(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id, @RequestBody(required=true) User user) {
-        System.out.println("in modify");
         User u = userRepo.findByIdEquals(Long.valueOf(id));
         user.setId(u.getId());
         user.setEmail(u.getEmail());
@@ -88,6 +84,7 @@ public class UserController {
 
     @RequestMapping( value="/users/{id}", method=RequestMethod.DELETE )
     public void deleteUser(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(name="year", required=false) String year) {
+        //delete a user
         userService.deleteUser(Long.valueOf(id));
     }
 
@@ -124,11 +121,8 @@ public class UserController {
     @RequestMapping( value="/users/{id}/enlistings/{committeeid}", method=RequestMethod.POST )
     public void createSurvey(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeid, @RequestParam(name="year", required=false) String year) {
        //Create a new survey that user volunteer one committee
-        System.out.print("create Survey");
         User v  = userService.getUserById(Long.valueOf(id));
         v = userService.getUserByEmailAndYear(v.getEmail(), year);
-        System.out.print(committeeid);
-        System.out.print(v.getId());
         userService.createSurvey(Long.valueOf(committeeid),v);
     }
 

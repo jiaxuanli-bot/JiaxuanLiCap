@@ -35,7 +35,7 @@ export class AuthenticationService {
     return user;
   }
 
-  private deleteUser( ) {
+  private deleteUser() {
     localStorage.removeItem( AuthenticationService.USER_STORE );
     this.currentUserSubject.next( null );
   }
@@ -43,7 +43,6 @@ export class AuthenticationService {
   public get currentUserValue(): User {
     return this.currentUserSubject.value;
   }
-
   public hasRole( role ) {
     return this.roles.indexOf(role) >= 0;
   }
@@ -66,7 +65,6 @@ export class AuthenticationService {
         );
       }));
   }
-
   logout() {
     this.deleteUser();
     this.router.navigate(['/']);

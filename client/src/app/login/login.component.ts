@@ -32,11 +32,11 @@ export class LoginComponent implements OnInit {
 
   navigateToDefaultPage( ) {
     if (this.authenticationService.hasRole( 'Admin' ) ) {
-      this.router.navigate(['/faculty']);
+      this.router.navigate(['/uwl/faculty']);
     } else if (this.authenticationService.hasRole('Nominate') ) {
-      this.router.navigate(['/committees']);
+      this.router.navigate(['/uwl/committees']);
     } else {
-      this.router.navigate(['/survey']);
+      this.router.navigate(['/uwl/survey']);
     }
   }
 

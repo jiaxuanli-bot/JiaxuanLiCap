@@ -130,10 +130,8 @@ public class MockService {
                 .range(0,  200 )
                 .mapToObj( i -> committee() )
                 .collect( Collectors.toList() );
-
         return committeeRepo.saveAll( committees );
     }
-
 
     public List<User> users(List<Role> roles) {
         List<User> users = IntStream

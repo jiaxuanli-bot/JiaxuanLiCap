@@ -9,6 +9,9 @@ import {User} from '../models/user';
 import {HashedCommittees} from '../models/hashed-committees';
 import {Page} from '../models/page';
 import {reduce} from 'rxjs/operators';
+import {CommitteeUser} from '../models/committee-user';
+import {Criteria} from '../models/criteria';
+import {Duty} from '../models/duty';
 
 @Injectable({
   providedIn: 'root'
@@ -104,7 +107,6 @@ export class ApiService {
   getCommitteeVolunteers(committeeId): Observable<User[]> {
     return this.http.get<User[]>(`${AppConstants.API_URL}/committees/${committeeId}/volunteers/users`);
   }
-
   createUser(first, last, rank, college, tenured, admin, soe, gender): Observable<User> {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const data = {
@@ -120,6 +122,18 @@ export class ApiService {
     };
     return this.http.post <User> (`${AppConstants.API_URL}/users`, data, config);
   }
+
+  createCommittee(newCommittee: Committee) {
+    const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    const data = {
+      introduction: newCommittee.introduction,
+      name: newCommittee.name,
+      year: newCommittee.year,
+      criteria: newCommittee.criteria,
+      duties: newCommittee.duties,
+    };
+    return this.http.post <User> (`${AppConstants.API_URL}/committees`, data, config);
+  }
   createSurvey(userId: string, committeeId: string, year: string): Observable<Survey> {
     return this.http.post<Survey>(`${AppConstants.API_URL}/users/${userId}/enlistings/${committeeId}?year=${year}`, {} );
   }
@@ -133,5 +147,8 @@ export class ApiService {
   }
   getUserYears(email): Observable<string[]> {
     return this.http.get<string[]>(`${AppConstants.API_URL}/users/email/${email}/years`, {} );
+  }
+  deleteCommittee(committeeId: string) {
+    return this.http.delete<Committee>(`${AppConstants.API_URL}/committees/${committeeId}`);
   }
 }

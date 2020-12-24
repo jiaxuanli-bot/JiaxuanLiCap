@@ -37,12 +37,13 @@ export class CommitteesDetailsComponent implements OnInit {
             this.apiService.getCommitteeById(param.id).subscribe(
               value => {
                 this.committee = value;
+                console.log(value);
                 this.yearService.getValue().subscribe(
                   value5 => {
                     this.apiService.getCommitteeIdByYearAndName(value5, this.committee.name).subscribe(
                       value7 => {
                         if (this.committee !== undefined) {
-                          this.router.navigate(['/committees/' + value7]);
+                          this.router.navigate(['/uwl/committees/' + value7]);
                         }
                       }
                     );
@@ -142,27 +143,6 @@ export class CommitteesDetailsComponent implements OnInit {
         );
         this.volunteers = this.volunteers.filter( v => v.id !== value.id );
         this.committee.members.push(value);
-        // for (let i = 0; i < this.volunteers.length; i++) {
-        //   if (this.volunteers[i].id === this.seletedUserid) {
-        //     const temp = new CommitteeUser();
-        //     temp.college = this.volunteers[i].college;
-        //     temp.last = this.volunteers[i].last;
-        //     temp.rank = this.volunteers[i].rank;
-        //     temp.tenured = this.volunteers[i].tenured;
-        //     temp.adminResponsibility = this.volunteers[i].adminResponsibility;
-        //     temp.soe = this.volunteers[i].soe;
-        //     temp.gender = this.volunteers[i].gender;
-        //     temp.first = this.volunteers[i].first;
-        //     temp.id = this.volunteers[i].id;
-        //     const temp2 = new UserCommittees();
-        //     temp2.id = this.committee.id;
-        //     temp2.introduction = this.committee.introduction;
-        //     temp2.name = this.committee.name;
-        //     temp2.year = this.committee.year;
-        //     this.committee.members.push(temp);
-        //     this.volunteers.splice(i , 1 );
-        //   }
-        // }
       }
       );
   }

@@ -192,7 +192,12 @@
       </ng-container>
       <ul class="mr-auto">
       </ul>
-      <button type="button" class="btn btn-primary mb-5" id="addFaculty" data-toggle="modal" data-target="#userModal">
+
+      <button type="button" class="btn btn-primary mb-5 mr-3" data-toggle="modal" data-target="#addUsersModal">
+        <i class="user-plus-icon ml-2 mr-1" data-feather="user-plus"></i>Add Faculties
+      </button>
+
+      <button type="button" class="btn btn-primary mb-5" data-toggle="modal" data-target="#userModal">
         <i class="user-plus-icon ml-2 mr-1" data-feather="user-plus"></i>Add Faculty
       </button>
     </ul>
@@ -314,6 +319,27 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
           <button type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close" (click)="addFaculty()">Add Faculty</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for cancel add users-->
+  <div class="modal fade" id="addUsersModal" tabindex="-1" role="dialog" aria-labelledby="modifyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add Users From A File</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span class="closeBtn" aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="file" class="ml-4">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" aria-label="Close" (click)="cancleEdit()">Yes</button>
         </div>
       </div>
     </div>

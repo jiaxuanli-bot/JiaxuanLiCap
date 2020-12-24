@@ -1,5 +1,6 @@
 package com.example.capstone.controller;
 
+import com.example.capstone.entities.Committee;
 import com.example.capstone.entities.Survey;
 import com.example.capstone.entities.User;
 import com.example.capstone.projections.*;
@@ -51,6 +52,11 @@ public class CommitteeController {
         return committeeService.getCommittee(Long.valueOf(id));
     }
 
+    @RequestMapping( value="/committees/{id}", method=RequestMethod.DELETE )
+    public void deleteCommittee(@Pattern(regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String id ) {
+        committeeService.deleteCommitteeById(Long.valueOf(id));
+    }
+
     @RequestMapping( value="/committees/{id}/members", method=RequestMethod.GET )
     public List<UserSummary> getCommitteeMembers(@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String id){
         return committeeService.getCommitteeMembers(Long.valueOf(id));
@@ -77,5 +83,12 @@ public class CommitteeController {
     public User removeMember(@Pattern( regexp = "^[0-9]*$", message = "delete the CommitteeID format is wrong")  @PathVariable String id, @Pattern( regexp = "^[0-9]*$", message = "the MemberID format is wrong") @PathVariable String memberId) {
         return committeeService.removeMember(Long.valueOf(id),Long.valueOf(memberId));
     }
+
+    @RequestMapping( value="/committees", method=RequestMethod.POST)
+    public void createUser(@RequestBody(required=true) Committee committee) {
+        //create a new committee
+        this.committeeService.ceateCommittee(committee);
+    }
+
 }
 

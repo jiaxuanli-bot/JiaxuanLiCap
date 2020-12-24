@@ -5,16 +5,26 @@ import com.example.capstone.projections.CommitteesWithMembersAndVolunteers;
 import com.example.capstone.projections.CommitteesYearsOnly;
 import com.example.capstone.projections.UserSummary;
 import com.example.capstone.repositories.CommitteeRepository;
+import com.example.capstone.repositories.CriteriaRepository;
+import com.example.capstone.repositories.DutyRepository;
 import com.example.capstone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class CommitteeService {
     @Autowired
     private CommitteeRepository committeeRepo;
+
+    @Autowired
+    private CriteriaRepository criteriaRepo;
+
+    @Autowired
+    private DutyRepository dutyRepo;
 
     @Autowired
     private UserRepository userRepo;
@@ -164,5 +174,36 @@ public class CommitteeService {
 
     public String getCommitteeIdByYearAndName(String name, String year) {
         return committeeRepo.findByNameEqualsAndYearEquals(name, year).getId().toString();
+    }
+
+    public void deleteCommitteeById(Long id) {
+        this.committeeRepo.deleteById(id);
+    }
+
+    public void ceateCommittee(Committee committee) {
+        Committee c = new Committee();
+        c.setYear(committee.getYear());
+        c.setIntroduction(committee.getIntroduction());
+        c.setName(committee.getName());
+        Committee resC = committeeRepo.save(c);
+        c.setCriteria(new ArrayList<Criteria>());
+        c.setDuties(new ArrayList<Duty>());
+        committee.getCriteria()
+                .forEach(
+                        criteria -> {
+                            criteria.setCommmittee(resC);
+                            c.getCriteria().add(criteria);
+                            criteriaRepo.save(criteria);
+                        }
+                        );
+        committee.getDuties().
+                forEach(
+                        duty -> {
+                            duty.setCommittee(resC);
+                            c.getDuties().add(duty);
+                            dutyRepo.save(duty);
+                        }
+                        );
+        committeeRepo.save(c);
     }
 }

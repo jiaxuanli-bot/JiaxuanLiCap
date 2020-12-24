@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import {YearService} from '../service/year.service';
 import {ApiService} from '../service/api.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Committee} from '../models/committee';
 import {AuthenticationService} from '../service/authentication.service';
 import {CommitteeSummary} from '../models/committee-summary';
-import {newArray} from '@angular/compiler/src/util';
 import {forkJoin} from 'rxjs';
-import {UserCommittees} from '../models/user-committees';
 import {CommitteeUser} from '../models/committee-user';
+import {Committee} from '../models/committee';
+import {Duty} from '../models/duty';
+import {Criteria} from '../models/criteria';
 
 @Component({
   selector: 'app-committees-list',
@@ -16,7 +15,18 @@ import {CommitteeUser} from '../models/committee-user';
   styleUrls: ['./committees-list.component.css']
 })
 export class CommitteesListComponent implements OnInit {
+  newCommittee: Committee = new Committee();
   committees: CommitteeSummary[] = [];
+  modifyNewCommittee = {
+    editName: false,
+    editCriteria: false,
+    editDuties: false,
+    editIntroduction: false,
+  };
+  newIntr = '';
+  Du  = '';
+  newName = '';
+  cri: '';
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService) {}
 
   ngOnInit(): void {
@@ -55,5 +65,62 @@ export class CommitteesListComponent implements OnInit {
             );
           }
         );
+  }
+
+  delete(committee: CommitteeSummary, i: number) {
+    this.apiService.deleteCommittee(committee.id).subscribe();
+    this.committees.splice(i, 1);
+  }
+
+  modifyIntr() {
+    this.modifyNewCommittee.editIntroduction = !this.modifyNewCommittee.editIntroduction;
+  }
+
+  modifyDu() {
+    this.modifyNewCommittee.editDuties = !this.modifyNewCommittee.editDuties;
+  }
+
+  modifyCri() {
+    this.modifyNewCommittee.editCriteria = !this.modifyNewCommittee.editCriteria;
+  }
+
+  modifyName() {
+    this.modifyNewCommittee.editName = !this.modifyNewCommittee.editName;
+  }
+
+  saveIntr() {
+    this.modifyNewCommittee.editIntroduction = !this.modifyNewCommittee.editIntroduction;
+    this.newCommittee.introduction = this.newIntr;
+  }
+
+  addCri() {
+    this.modifyNewCommittee.editCriteria = !this.modifyNewCommittee.editCriteria;
+    const d = new Criteria();
+    if (this.newCommittee.criteria === undefined) {
+      this.newCommittee.criteria = [];
+    }
+    d.criteria = this.cri;
+    this.newCommittee.criteria.push(d);
+    this.cri = '';
+  }
+
+  addDu() {
+    this.modifyNewCommittee.editDuties = !this.modifyNewCommittee.editDuties;
+    const d = new Duty();
+    if (this.newCommittee.duties === undefined) {
+      this.newCommittee.duties = [];
+    }
+    d.duty = this.Du;
+    this.newCommittee.duties.push(d);
+    this.Du = '';
+  }
+
+  saveName() {
+    this.modifyNewCommittee.editName = !this.modifyNewCommittee.editName;
+    this.newCommittee.name = this.newName;
+  }
+  saveAll() {
+    this.newCommittee.year = this.yearService.getYearValue;
+    this.apiService.createCommittee(this.newCommittee).subscribe();
   }
 }

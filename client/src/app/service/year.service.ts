@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {User} from '../models/user';
-import {ActivatedRoute, ActivatedRouteSnapshot, Router, ActivationEnd, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRoute, Router, ActivationEnd} from '@angular/router';
 import { map, filter } from 'rxjs/operators';
 import {ApiService} from './api.service';
 import {AuthenticationService} from './authentication.service';
@@ -45,33 +44,35 @@ export class YearService {
           this.apiService.getUserYears(this.authentication.currentUserValue.email).subscribe(
             value => {
               this.years.next(value);
+              this.currentYear.next(value[0]);
             }
           );
         } else {
+          this.committeeId = null;
           this.apiService.getCommitteesYears().subscribe(
             value => {
               this.years.next(value);
-              this.currentYear.next(value[0]);
+              if (this.currentYear.value === '') {
+                this.currentYear.next(value[0]);
+              }
             }
           );
         }
       });
   }
-  setYears(years: string[]) {
-    this.years.next(years);
-  }
+
   getYears(): Observable<string[]> {
     return this.years.asObservable();
   }
   setValue(newValue): void {
-    if (this.path === 'committees' && this.committeeId !== undefined) {
+    if (this.path === 'committees' && this.committeeId !== undefined && this.committeeId !== null) {
       this.yearForCommitteePage.next(newValue);
     } else {
       this.currentYear.next(newValue);
     }
   }
   getValue(): Observable<string> {
-    if (this.path === 'committees' && this.committeeId !== undefined) {
+    if (this.path === 'committees' && this.committeeId !== undefined && this.committeeId !== null) {
       return this.yearForCommitteePage.asObservable();
     } else {
       return this.currentYear.asObservable();

@@ -4,7 +4,6 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../service/authentication.service';
 import {Committee} from '../models/committee';
-import {Survey} from '../models/survey';
 import {User} from '../models/user';
 import {YearService} from '../service/year.service';
 
@@ -33,13 +32,14 @@ export class SlideBarComponent implements OnInit {
     isAdmin: false,
     isNominate: false,
     isNormal: false
-  }
-  newYear =  '2023';
+  };
+  newYear: number;
   ngOnInit(): void {
     this.user = this.authenticationService.currentUserValue;
     this.yearService.getYears().subscribe(
       value => {
         this.years = value;
+        this.newYear = Number(value[value.length - 1]) + 1;
       }
     );
     this.yearService.getValue().subscribe(
@@ -78,25 +78,25 @@ export class SlideBarComponent implements OnInit {
   routerToFaculty() {
     this.clearBar();
     this.sideBar.facultyNavbar = true;
-    this.router.navigate(['/faculty']);
+    this.router.navigate(['/uwl/faculty']);
   }
 
   routerToSurvey() {
     this.clearBar();
     this.sideBar.surveyNavbar = true;
-    this.router.navigate(['/survey']);
+    this.router.navigate(['/uwl/survey']);
   }
 
   routerCommittees() {
     this.clearBar();
     this.sideBar.committeesNavbar = true;
-    this.router.navigate(['/committees']);
+    this.router.navigate(['/uwl/committees']);
   }
 
   routerToReport() {
     this.clearBar();
     this.sideBar.reportNavbar = true;
-    this.router.navigate(['/report']);
+    this.router.navigate(['/uwl/report']);
   }
   clearBar() {
     this.sideBar.reportNavbar = false;
@@ -107,7 +107,7 @@ export class SlideBarComponent implements OnInit {
   }
 
   crateYear() {
-    this.apiService.createYear(this.newYear).subscribe(
+    this.apiService.createYear(this.newYear.toString()).subscribe(
       value => {
         location.reload();
       }
