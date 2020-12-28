@@ -8,6 +8,7 @@ import {Committee} from '../models/committee';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {AuthenticationService} from '../service/authentication.service';
+import {SummaryUser} from '../models/summary-user';
 
 @Component({
   selector: 'app-faculty',
@@ -21,6 +22,11 @@ export class FacultyComponent implements OnInit {
   pageNum  = 1;
   editIndex: number;
   deleteIndex: number;
+  file: any;
+  fileHeaders = new Array<any>();
+  propertyMapFileName = new Map<any, any>();
+  fileNameMapProperty = new Map<any, any>();
+  facultiesProperty = ['first', 'last', 'rank', 'college', 'tenured', 'soe', 'adminResponsibility', 'gender'];
   queries = {
     first: '',
     last: '',
@@ -39,6 +45,7 @@ export class FacultyComponent implements OnInit {
   ranks = ['Assistant', 'Associate', 'Full'];
   genders = ['F', 'M'];
   colleges = ['CASH', 'CBA', 'CSH'];
+  relation: FormGroup;
 
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
               private router: Router,  private formBuilder: FormBuilder) {
@@ -98,6 +105,16 @@ export class FacultyComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.relation = this.formBuilder.group({
+      first: [''],
+      last: [''],
+      rank: [''],
+      college: [''],
+      tenured: [''],
+      adminResponsibility: [''],
+      soe: [''],
+      gender: ['']
+    });
     this.facultiesForm = this.formBuilder.group({
       first: [''],
       last: [''],
@@ -127,7 +144,7 @@ export class FacultyComponent implements OnInit {
       soe: [false],
       gender: ['M']
     });
-    this.apiService.getFacultyByYear(this.yearService.getYearValue).subscribe()
+    this.apiService.getFacultyByYear(this.yearService.getYearValue).subscribe();
     this.year.subscribe( value => {
       if (value !== '') {
         this.apiService.getFacultyByYear(value).subscribe(
@@ -350,5 +367,73 @@ export class FacultyComponent implements OnInit {
       this.addUserForm.controls.rank.value, this.addUserForm.controls.college.value, Number(this.addUserForm.controls.tenured.value),
       Number(this.addUserForm.controls.admin.value), Number(this.addUserForm.controls.soe.value), this.addUserForm.controls.gender.value).
     subscribe();
+  }
+  fileChanged(e) {
+    this.file = e.target.files[0];
+  }
+  uploadFile() {
+    const fileReader = new FileReader();
+    let fileLines;
+    this.propertyMapFileName = new Map<any, any>();
+    this.fileNameMapProperty = new Map<any, any>();
+    this.fileHeaders = new Array<any>();
+    fileReader.onload = (e) => {
+      fileLines = fileReader.result.toString().split('\n').shift();
+      let index = 0;
+      fileLines.split(',').forEach(
+        value => {
+          this.propertyMapFileName.set(this.facultiesProperty[index], value);
+          this.fileHeaders.push(value);
+          this.fileNameMapProperty.set(value, this.facultiesProperty[index]);
+          index++;
+        }
+      );
+      Object.keys( this.relation.controls ).forEach(
+        value => {
+          this.relation.controls[value].setValue( this.propertyMapFileName.get(value.toString()));
+      });
+    };
+    fileReader.readAsText(this.file);
+  }
+  propertyMapping(key: string) {
+    const temp = this.propertyMapFileName.get(key);
+    if (this.fileNameMapProperty.get(this.relation.controls[key].value) !== undefined) {
+      this.relation.controls[this.fileNameMapProperty.get(this.relation.controls[key].value)].setValue('');
+    }
+    this.propertyMapFileName.set(key, this.relation.controls[key].value);
+    this.propertyMapFileName.delete(this.fileNameMapProperty.get(this.relation.controls[key].value));
+    this.fileNameMapProperty.delete(temp);
+    this.fileNameMapProperty.set(this.relation.controls[key].value, key);
+  }
+  uploadFaculties() {
+    // faculty[`soe`] = true;
+    const uploadedFaculties = new Array<User>();
+    const fileReader = new FileReader();
+    let fileLines;
+    fileReader.onload = (e) => {
+      fileLines = fileReader.result.toString().split('\n');
+      fileLines.slice(1).forEach(
+        value => {
+          let index = 0;
+          const faculty = new User();
+          value.toString().split(',').forEach(
+            value2 => {
+              if (this.fileNameMapProperty.get(this.fileHeaders[index]) === 'tenured' ||
+                this.fileNameMapProperty.get(this.fileHeaders[index]) === 'soe' ||
+                this.fileNameMapProperty.get(this.fileHeaders[index]) === 'adminResponsibility') {
+                faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = Boolean(value2);
+              } else {
+                faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = value2;
+              }
+              index++;
+            }
+          );
+          uploadedFaculties.push(faculty);
+        }
+      );
+      console.log(uploadedFaculties);
+      this.apiService.uploadFacultiesFromCSV(uploadedFaculties).subscribe();
+    };
+    fileReader.readAsText(this.file);
   }
 }

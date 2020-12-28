@@ -1,9 +1,7 @@
 import {UserCommittees} from './user-committees';
 import {Role} from './role';
 
-export class User {
-  id: string;
-  email: string;
+export class SummaryUser {
   first: string;
   last: string;
   rank: string;
@@ -12,8 +10,4 @@ export class User {
   soe: boolean;
   adminResponsibility: boolean;
   gender: string;
-  committees: UserCommittees[];
-  roles: Role[];
-  year: string;
-  years: string[];
 }

@@ -70,11 +70,29 @@ td a {
 
 }
 
+#addUsersModal .modal-content{
+  width: 120%;
+}
+
 .selectPage{
   color: white;
   background-color: #007bff!important;
 }
 
+#fileChoose{
+  width: 76%;
+}
+
 .selectedpageItem{
   color: white!important;
 }
+
+#relations label{
+  font-size: 1.2rem;
+}
+
+#relations select{
+  height: 28px!important;
+  padding: 0px;
+}
+

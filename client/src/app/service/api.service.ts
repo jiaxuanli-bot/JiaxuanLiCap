@@ -12,6 +12,7 @@ import {reduce} from 'rxjs/operators';
 import {CommitteeUser} from '../models/committee-user';
 import {Criteria} from '../models/criteria';
 import {Duty} from '../models/duty';
+import {SummaryUser} from '../models/summary-user';
 
 @Injectable({
   providedIn: 'root'
@@ -122,7 +123,10 @@ export class ApiService {
     };
     return this.http.post <User> (`${AppConstants.API_URL}/users`, data, config);
   }
-
+  uploadFacultiesFromCSV(faculties: SummaryUser[]) {
+    const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    return this.http.post <User> (`${AppConstants.API_URL}/users/csv`, faculties, config);
+  }
   createCommittee(newCommittee: Committee) {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const data = {
