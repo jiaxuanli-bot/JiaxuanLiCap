@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {AuthenticationService} from './authentication.service';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {AppConstants} from '../constants/app-constants';
 import {Committee} from '../models/committee';
 import {Survey} from '../models/survey';
@@ -123,9 +123,17 @@ export class ApiService {
     };
     return this.http.post <User> (`${AppConstants.API_URL}/users`, data, config);
   }
-  uploadFacultiesFromCSV(faculties: SummaryUser[]) {
+  uploadFacultiesFromCSV(faculties: User[]) {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
-    return this.http.post <User> (`${AppConstants.API_URL}/users/csv`, faculties, config);
+    const reqs2 = [];
+    // tslint:disable-next-line:prefer-for-of
+    faculties.forEach(
+      value2 => {
+        reqs2.push(this.http.post <User> (`${AppConstants.API_URL}/users`, value2, config));
+      }
+    );
+    return  forkJoin(reqs2);
+    // return this.http.post <User> (`${AppConstants.API_URL}/user`, faculties, config);
   }
   createCommittee(newCommittee: Committee) {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };

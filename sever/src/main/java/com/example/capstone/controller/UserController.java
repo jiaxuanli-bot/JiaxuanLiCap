@@ -94,13 +94,6 @@ public class UserController {
         return userService.createUser(user);
     }
 
-    @RequestMapping( value="/users/csv", method=RequestMethod.POST)
-    public void uploadUserFromCSV(@RequestBody(required=true) User[] users) {
-        //create a new user
-        System.out.print("get");
-        System.out.print(users);
-    }
-
     @RequestMapping( value="/users/{id}/committees", method=RequestMethod.GET )
     public List<CommitteeSummary> getUserCommittees(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id) {
         //Get all the committees that user have been assigned

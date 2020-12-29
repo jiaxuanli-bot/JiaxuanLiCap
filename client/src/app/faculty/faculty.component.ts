@@ -4,11 +4,12 @@ import {User} from '../models/user';
 import {debounceTime} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {YearService} from '../service/year.service';
+import { Papa } from 'ngx-papaparse';
 import {Committee} from '../models/committee';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {AuthenticationService} from '../service/authentication.service';
-import {SummaryUser} from '../models/summary-user';
+import {Role} from '../models/role';
 
 @Component({
   selector: 'app-faculty',
@@ -26,7 +27,7 @@ export class FacultyComponent implements OnInit {
   fileHeaders = new Array<any>();
   propertyMapFileName = new Map<any, any>();
   fileNameMapProperty = new Map<any, any>();
-  facultiesProperty = ['first', 'last', 'rank', 'college', 'tenured', 'soe', 'adminResponsibility', 'gender'];
+  facultiesProperty = ['first', 'last', 'rank', 'college', 'tenured', 'soe', 'adminResponsibility', 'gender', 'email'];
   queries = {
     first: '',
     last: '',
@@ -48,7 +49,7 @@ export class FacultyComponent implements OnInit {
   relation: FormGroup;
 
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
-              private router: Router,  private formBuilder: FormBuilder) {
+              private router: Router,  private formBuilder: FormBuilder, private papa: Papa) {
     this.searchTextChanged.pipe( debounceTime(1000) ).subscribe(() => {
       if (this.facultiesForm.controls.first.value.length === 0 && this.facultiesForm.controls.last.value.length === 0 &&
         this.facultiesForm.controls.rank.value === 'None' && this.facultiesForm.controls.college.value === 'None' &&
@@ -113,7 +114,8 @@ export class FacultyComponent implements OnInit {
       tenured: [''],
       adminResponsibility: [''],
       soe: [''],
-      gender: ['']
+      gender: [''],
+      email: ['']
     });
     this.facultiesForm = this.formBuilder.group({
       first: [''],
@@ -177,9 +179,6 @@ export class FacultyComponent implements OnInit {
       this.facultiesForm.controls.editGender.setValue('Male');
     }
   }
-  // searchFaculty($event) {
-  //   this.searchTextChanged.next($event.target.value);
-  // }
 
   clear(): void {
     this.facultiesForm.controls.first.setValue('');
@@ -230,6 +229,7 @@ export class FacultyComponent implements OnInit {
         this.deleteIndex = -1;
       }
     );
+    this.getPageItem(this.currentPage);
   }
 
   delete(i: number): void {
@@ -370,30 +370,29 @@ export class FacultyComponent implements OnInit {
   }
   fileChanged(e) {
     this.file = e.target.files[0];
-  }
-  uploadFile() {
-    const fileReader = new FileReader();
-    let fileLines;
     this.propertyMapFileName = new Map<any, any>();
     this.fileNameMapProperty = new Map<any, any>();
     this.fileHeaders = new Array<any>();
-    fileReader.onload = (e) => {
-      fileLines = fileReader.result.toString().split('\n').shift();
-      let index = 0;
-      fileLines.split(',').forEach(
-        value => {
-          this.propertyMapFileName.set(this.facultiesProperty[index], value);
-          this.fileHeaders.push(value);
-          this.fileNameMapProperty.set(value, this.facultiesProperty[index]);
-          index++;
-        }
-      );
-      Object.keys( this.relation.controls ).forEach(
-        value => {
-          this.relation.controls[value].setValue( this.propertyMapFileName.get(value.toString()));
-      });
-    };
-    fileReader.readAsText(this.file);
+  }
+  uploadFile() {
+    this.papa.parse(this.file, {
+      preview: 1,
+      complete: result => {
+        let index = 0;
+        result.data[0].forEach(
+          value => {
+            this.propertyMapFileName.set(this.facultiesProperty[index], value);
+            this.fileHeaders.push(value);
+            this.fileNameMapProperty.set(value, this.facultiesProperty[index]);
+            index++;
+          }
+        );
+        Object.keys( this.relation.controls ).forEach(
+          value => {
+            this.relation.controls[value].setValue( this.propertyMapFileName.get(value.toString()));
+          });
+      }
+    });
   }
   propertyMapping(key: string) {
     const temp = this.propertyMapFileName.get(key);
@@ -406,34 +405,53 @@ export class FacultyComponent implements OnInit {
     this.fileNameMapProperty.set(this.relation.controls[key].value, key);
   }
   uploadFaculties() {
-    // faculty[`soe`] = true;
     const uploadedFaculties = new Array<User>();
-    const fileReader = new FileReader();
-    let fileLines;
-    fileReader.onload = (e) => {
-      fileLines = fileReader.result.toString().split('\n');
-      fileLines.slice(1).forEach(
-        value => {
+    let stop = false;
+    this.papa.parse(this.file, {
+      header: true,
+      complete: result => {
+        console.log(result);
+        for (const value of result.data) {
           let index = 0;
           const faculty = new User();
-          value.toString().split(',').forEach(
-            value2 => {
-              if (this.fileNameMapProperty.get(this.fileHeaders[index]) === 'tenured' ||
-                this.fileNameMapProperty.get(this.fileHeaders[index]) === 'soe' ||
-                this.fileNameMapProperty.get(this.fileHeaders[index]) === 'adminResponsibility') {
-                faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = Boolean(value2);
+          const keys = Object.keys(value);
+          for (const key of keys) {
+            if (  this.isBooleanTypeProperty(this.fileNameMapProperty.get(this.fileHeaders[index]))) {
+              if ( this.isBooleanType(value[key])) {
+                faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = Boolean(value[key]);
               } else {
-                faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = value2;
+                alert(this.fileHeaders[index] + ' is not mapping');
+                stop = true;
+                return false;
               }
-              index++;
+            } else {
+              faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = value[key];
             }
-          );
+            faculty.year = this.yearService.getYearValue;
+            const role = new Role();
+            role.role = 'Normal';
+            const roles = [];
+            roles.push(role);
+            faculty.roles = roles;
+            index++;
+          }
           uploadedFaculties.push(faculty);
         }
-      );
-      console.log(uploadedFaculties);
-      this.apiService.uploadFacultiesFromCSV(uploadedFaculties).subscribe();
-    };
-    fileReader.readAsText(this.file);
+        if (!stop) {
+          console.log(uploadedFaculties);
+          this.apiService.uploadFacultiesFromCSV(uploadedFaculties).subscribe(
+            value => {
+              this.getPageItem(this.currentPage);
+            }
+          );
+        }
+      }
+    });
+  }
+  isBooleanTypeProperty(property: any): boolean {
+    return property === 'tenured' || property === 'soe' || property === 'adminResponsibility';
+  }
+  isBooleanType(value: string): boolean {
+    return value.toLowerCase() === 'true' || value.toLowerCase() === 'false'
   }
 }

@@ -12,8 +12,8 @@ export class User {
   soe: boolean;
   adminResponsibility: boolean;
   gender: string;
+  year: string;
   committees: UserCommittees[];
   roles: Role[];
-  year: string;
   years: string[];
 }

@@ -349,7 +349,7 @@
               </div>
           </div>
         </div>
-        <div class="modal-footer">
+        <div *ngIf="fileHeaders.length > 0" class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
           <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" (click)="uploadFaculties()" aria-label="Close">Save</button>
         </div>

@@ -5,6 +5,7 @@ import com.example.capstone.entities.Survey;
 import com.example.capstone.entities.User;
 import com.example.capstone.projections.CommitteeSummary;
 import com.example.capstone.repositories.CommitteeRepository;
+import com.example.capstone.repositories.RoleRepository;
 import com.example.capstone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -22,6 +23,9 @@ public class UserService {
     private CommitteeRepository committeeRepo;
 
     @Autowired
+    private RoleRepository roleRepo;
+
+    @Autowired
     private UserRepository userRepo;
 
     public Page<User> getUsers(Example<User> example, Pageable paging){
@@ -37,6 +41,7 @@ public class UserService {
     }
 
     public User createUser(User user){
+        roleRepo.saveAll(user.getRoles());
         return userRepo.save(user);
     }
 
