@@ -11,7 +11,6 @@ import {RouterModule} from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Interceptor} from './utilities/interceptor';
 import { SlideBarComponent } from './slide-bar/slide-bar.component';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { FacultyComponent } from './faculty/faculty.component';
 import { CommitteesDetailsComponent } from './committees-details/committees-details.component';
 import { CommitteesListComponent } from './committees-list/committees-list.component';
@@ -47,7 +46,7 @@ import { UWLComponent } from './uwl/uwl.component';
     UWLComponent,
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

@@ -12,8 +12,9 @@ public class Criteria {
 	private Long id;
 	private String criteria;
 
-	@ManyToOne
 	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "committee_id", nullable = false)
 	private Committee committee;
 
 	private Criteria( Builder b ) {
@@ -37,7 +38,7 @@ public class Criteria {
 		return this.committee;
 	}
 	
-	public void setCommmittee( Committee committee ) {
+	public void setCommittee( Committee committee ) {
 		this.committee = committee;
 	}
 

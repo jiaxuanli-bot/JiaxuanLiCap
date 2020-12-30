@@ -2,15 +2,13 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 import { AppConstants } from '../constants/app-constants';
 import { User } from '../models/user';
 import {Router} from '@angular/router';
-import {ApiService} from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-  private static USER_STORE: string = 'coc-user';
+  private static USER_STORE = 'coc-user';
   private currentUserSubject: BehaviorSubject<User>;
   private currentUser: Observable<User>;
   private roles: string[];

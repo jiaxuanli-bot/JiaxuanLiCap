@@ -56,13 +56,6 @@ export class SlideBarComponent implements OnInit {
     if (this.authenticationService.hasRole('Nominate')) {
         this.roles.isNominate = true;
     }
-    if (this.roles.isAdmin) {
-        this.routerToFaculty();
-    } else if ( this.roles.isNominate) {
-        this.routerCommittees();
-    } else {
-      this.routerToSurvey();
-    }
     this.yearsForm = this.formBuilder.group({
       year: []
     });

@@ -108,10 +108,10 @@ export class ApiService {
   getCommitteeVolunteers(committeeId): Observable<User[]> {
     return this.http.get<User[]>(`${AppConstants.API_URL}/committees/${committeeId}/volunteers/users`);
   }
-  createUser(first, last, rank, college, tenured, admin, soe, gender): Observable<User> {
+  createUser(email, first, last, rank, college, tenured, admin, soe, gender, year): Observable<User> {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const data = {
-      "email": '123',
+      "email": email,
       "first" : first,
       "last" : last,
       "rank" : rank,
@@ -119,8 +119,10 @@ export class ApiService {
       "tenured" : tenured,
       "adminResponsibility" : admin,
       "soe" : soe,
-      "gender" : gender
-    };
+      "gender" : gender,
+      "roles": [{ "role" : "Normal"}],
+      "year": year
+    }
     return this.http.post <User> (`${AppConstants.API_URL}/users`, data, config);
   }
   uploadFacultiesFromCSV(faculties: User[]) {

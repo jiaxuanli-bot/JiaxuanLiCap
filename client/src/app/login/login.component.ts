@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 
 import { AuthenticationService } from '../service/authentication.service';
 import {ApiService} from '../service/api.service';
+import {YearService} from '../service/year.service';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
+    private yearService: YearService
   ) {
     // redirect to home if already logged in
     this.authenticationService.getUser().subscribe( user => {

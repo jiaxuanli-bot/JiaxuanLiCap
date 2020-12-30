@@ -30,41 +30,33 @@ export class CommitteesListComponent implements OnInit {
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService) {}
 
   ngOnInit(): void {
-        this.yearService.getValue().subscribe(
-          value => {
-            this.apiService.getCommitteesByYear(value).subscribe(
-              value1 => {
-                this.committees = value1;
-                const reqs2 = [];
-                // tslint:disable-next-line:prefer-for-of
-                if (this.committees !== undefined ) {
-                  this.committees.forEach(
-                    value2 => {
-                      reqs2.push( this.apiService.getCommitteeMember(value2.id));
+    this.yearService.getValue().subscribe(
+      value => {
+        if (value !== undefined && value !== '' && value !== null) {
+          this.apiService.getCommitteesByYear(value).subscribe(
+            value1 => {
+              this.committees = value1;
+              const reqs2 = [];
+              // tslint:disable-next-line:prefer-for-of
+              if (this.committees !== undefined ) {
+                this.committees.forEach(
+                  value2 => {
+                    reqs2.push( this.apiService.getCommitteeMember(value2.id));
+                  }
+                );
+                forkJoin(reqs2).subscribe(
+                  results => {
+                    for (let i = 0; i < results.length; i++) {
+                      this.committees[i].members = results[i] as CommitteeUser[];
                     }
-                  );
-                  forkJoin(reqs2).subscribe(
-                    results => {
-                      for (let i = 0; i < results.length; i++) {
-                        this.committees[i].members = results[i] as CommitteeUser[];
-                      }
-                    }
-                  );
-                }
-               // console.log(this.committees);
-               //  this.committees.forEach(
-               //    value2 => {
-               //      this.apiService.getCommitteeMember(value2.id).subscribe(
-               //        value3 => {
-               //          value2.members = value3;
-               //        }
-               //      );
-               //    }
-               //  );
+                  }
+                );
               }
-            );
-          }
-        );
+            }
+          );
+        }
+      }
+    );
   }
 
   delete(committee: CommitteeSummary, i: number) {

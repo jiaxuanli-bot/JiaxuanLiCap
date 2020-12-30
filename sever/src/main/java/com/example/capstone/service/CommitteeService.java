@@ -10,10 +10,8 @@ import com.example.capstone.repositories.DutyRepository;
 import com.example.capstone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
 
 @Service
 public class CommitteeService {
@@ -72,8 +70,7 @@ public class CommitteeService {
                             introduction(committee.getIntroduction()).
                             name(committee.getName()).
                             year(year).build();
-                    copy = committeeRepo.save( copy );
-                    Committee finalCopy = copy;
+                    Committee finalCopy = committeeRepo.save(copy);
                     committee.getDuties().forEach(
                             duty -> {
                                 Duty copyDuty = new Duty();
@@ -82,17 +79,17 @@ public class CommitteeService {
                                 copyDuties.add(copyDuty);
                             }
                     );
-                    copy.setDuties(copyDuties);
+                    finalCopy.setDuties(dutyRepo.saveAll(copyDuties));
                     committee.getCriteria().forEach(
                             criteria -> {
                                 Criteria copyCriteria = new Criteria();
+                                copyCriteria.setCommittee(finalCopy);
                                 copyCriteria.setCriteria(criteria.getCriteria());
-                                copyCriteria.setCommmittee(finalCopy);
                                 copyCriterias.add(copyCriteria);
                             }
                     );
-                    copy.setCriteria(copyCriterias);
-                    committeeRepo.save( copy );
+                    finalCopy.setCriteria(criteriaRepo.saveAll(copyCriterias));
+                    committeeRepo.save(finalCopy);
                 }
         );
         return year;
@@ -191,7 +188,7 @@ public class CommitteeService {
         committee.getCriteria()
                 .forEach(
                         criteria -> {
-                            criteria.setCommmittee(resC);
+                            criteria.setCommittee(resC);
                             c.getCriteria().add(criteria);
                             criteriaRepo.save(criteria);
                         }

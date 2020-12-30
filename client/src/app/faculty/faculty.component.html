@@ -265,6 +265,15 @@
             <div class="container-fluid">
               <form class="form-horizontal" [formGroup]="addUserForm">
                 <div class="form-group">
+                  <label for="sName" class="col-xs-3 control-label">Email:</label>
+                  <div class="col-xs-8 ">
+                    <input type="email" formControlName="email" class="form-control input-sm" placeholder="">
+                  </div>
+                </div>
+
+
+
+                <div class="form-group">
                   <label for="sName" class="col-xs-3 control-label">First Name:</label>
                   <div class="col-xs-8 ">
                     <input type="email" formControlName="first" class="form-control input-sm" id="sName" placeholder="">
@@ -335,8 +344,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <input id="fileChoose" type="file" class="ml-4" (change)="fileChanged($event)">
-          <button class="btn btn-primary btn-sm" (click)="uploadFile()">Upload File</button>
+          <input id="fileChoose" type="file" class="ml-4" [(ngModel)]="selectedFile" (change)="fileChanged($event)">
           <h3 class="ml-4 mt-4">Faculties Property Mapping</h3>
           <div id="relations" *ngFor="let property of facultiesProperty" [formGroup]="relation" class="form-inline input-group">
             <label class="control-label ml-4 mt-1">{{property}}:</label>
@@ -350,7 +358,7 @@
           </div>
         </div>
         <div *ngIf="fileHeaders.length > 0" class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-secondary closeBtn" aria-hidden="true" data-dismiss="modal" aria-label="Close" (click)="cancelSaveCSV()">Cancel</button>
           <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" (click)="uploadFaculties()" aria-label="Close">Save</button>
         </div>
       </div>
@@ -372,7 +380,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-          <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" aria-label="Close" (click)="cancleEdit()">Yes</button>
+          <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" aria-label="Close" (click)="cancelEdit()">Yes</button>
         </div>
       </div>
     </div>
@@ -403,7 +411,6 @@
               </ul>
               <div class="table-responsive ">
                 <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">
-
                   <tbody class="committeeListClickable">
                   <tr *ngFor = "let committee of userAssignedCommittees;index as i" data-dismiss="modal">
                     <td [routerLink]="['/committees', committee.id]">

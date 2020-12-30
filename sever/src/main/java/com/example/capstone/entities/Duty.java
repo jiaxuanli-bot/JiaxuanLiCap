@@ -12,7 +12,8 @@ public class Duty {
 	private String duty;
 
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "committee_id", nullable = false)
 	private Committee committee;
 
 	private Duty( Builder b ) {

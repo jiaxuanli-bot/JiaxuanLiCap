@@ -19,7 +19,9 @@ export class YearService {
               private route: ActivatedRoute, private apiService: ApiService) {
     this.pos = new BehaviorSubject<string>('');
     this.years = new BehaviorSubject<string[]>([]);
-    this.currentYear = new BehaviorSubject<string>('');
+    if ( this.currentYear === undefined) {
+      this.currentYear = new BehaviorSubject<string>('');
+    }
     this.yearForCommitteePage = new BehaviorSubject<string>('');
     this.router.events
       .pipe(
@@ -30,7 +32,7 @@ export class YearService {
         // @ts-ignore
         this.path = state && state.url && state.url[0] && state.url[0].path;
         // @ts-ignore
-        if (this.path === 'committees' && state.url[1] !== undefined) {
+        if (this.path === 'committees' && state.url[1] !== undefined && state.url[1] !== null) {
           // @ts-ignore
           this.apiService.getCommitteeYears(state.url[1]).subscribe(
             value => {

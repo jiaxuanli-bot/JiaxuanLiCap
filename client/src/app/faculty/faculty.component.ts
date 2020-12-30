@@ -4,7 +4,7 @@ import {User} from '../models/user';
 import {debounceTime} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {YearService} from '../service/year.service';
-import { Papa } from 'ngx-papaparse';
+import {Papa, ParseResult} from 'ngx-papaparse';
 import {Committee} from '../models/committee';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup} from '@angular/forms';
@@ -28,6 +28,7 @@ export class FacultyComponent implements OnInit {
   propertyMapFileName = new Map<any, any>();
   fileNameMapProperty = new Map<any, any>();
   facultiesProperty = ['first', 'last', 'rank', 'college', 'tenured', 'soe', 'adminResponsibility', 'gender', 'email'];
+  uploadedFaculties: User[];
   queries = {
     first: '',
     last: '',
@@ -47,6 +48,7 @@ export class FacultyComponent implements OnInit {
   genders = ['F', 'M'];
   colleges = ['CASH', 'CBA', 'CSH'];
   relation: FormGroup;
+  selectedFile: any;
 
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
               private router: Router,  private formBuilder: FormBuilder, private papa: Papa) {
@@ -137,6 +139,7 @@ export class FacultyComponent implements OnInit {
     });
     this.year = this.yearService.getValue();
     this.addUserForm = this.formBuilder.group({
+      email: [''],
       first: [''],
       last: [''],
       rank: ['Full Professor'],
@@ -148,15 +151,13 @@ export class FacultyComponent implements OnInit {
     });
     this.apiService.getFacultyByYear(this.yearService.getYearValue).subscribe();
     this.year.subscribe( value => {
-      if (value !== '') {
-        this.apiService.getFacultyByYear(value).subscribe(
-          res => {
-            this.faculties = res.content;
-            this.pageNum = res.totalPages;
-            this.currentPage = 0;
-          }
-        );
-      }
+      this.apiService.getFacultyByYear(value).subscribe(
+        res => {
+          this.faculties = res.content;
+          this.pageNum = res.totalPages;
+          this.currentPage = 0;
+        }
+      );
     });
   }
 
@@ -217,11 +218,9 @@ export class FacultyComponent implements OnInit {
       }
     );
   }
-
-  cancleEdit(): void {
+  cancelEdit(): void {
     this.editIndex = -1;
   }
-
   deleteUser(): void {
     this.apiService.deleteUser(this.faculties[this.deleteIndex].id).subscribe(
       res => {
@@ -363,9 +362,10 @@ export class FacultyComponent implements OnInit {
     );
   }
   addFaculty(): void {
-    this.apiService.createUser(this.addUserForm.controls.first.value, this.addUserForm.controls.last.value,
-      this.addUserForm.controls.rank.value, this.addUserForm.controls.college.value, Number(this.addUserForm.controls.tenured.value),
-      Number(this.addUserForm.controls.admin.value), Number(this.addUserForm.controls.soe.value), this.addUserForm.controls.gender.value).
+    this.apiService.createUser( this.addUserForm.controls.email.value, this.addUserForm.controls.first.value,
+      this.addUserForm.controls.last.value, this.addUserForm.controls.rank.value, this.addUserForm.controls.college.value,
+      Number(this.addUserForm.controls.tenured.value), Number(this.addUserForm.controls.admin.value),
+      Number(this.addUserForm.controls.soe.value), this.addUserForm.controls.gender.value, this.yearService.getYearValue).
     subscribe();
   }
   fileChanged(e) {
@@ -373,6 +373,7 @@ export class FacultyComponent implements OnInit {
     this.propertyMapFileName = new Map<any, any>();
     this.fileNameMapProperty = new Map<any, any>();
     this.fileHeaders = new Array<any>();
+    this.uploadFile();
   }
   uploadFile() {
     this.papa.parse(this.file, {
@@ -381,16 +382,25 @@ export class FacultyComponent implements OnInit {
         let index = 0;
         result.data[0].forEach(
           value => {
-            this.propertyMapFileName.set(this.facultiesProperty[index], value);
             this.fileHeaders.push(value);
-            this.fileNameMapProperty.set(value, this.facultiesProperty[index]);
+            this.facultiesProperty.forEach(
+              value1 => {
+                if (value.toString().toLowerCase() === value1.toString().toLowerCase()) {
+                  console.log(value.toString().toLowerCase());
+                  console.log(value1.toString().toLowerCase());
+                  this.propertyMapFileName.set(value1, value);
+                  this.fileNameMapProperty.set(value, value1);
+                  this.relation.controls['' + value1].setValue(value.toString());
+                }
+              }
+            );
             index++;
           }
         );
-        Object.keys( this.relation.controls ).forEach(
-          value => {
-            this.relation.controls[value].setValue( this.propertyMapFileName.get(value.toString()));
-          });
+        // Object.keys( this.relation.controls ).forEach(
+        //   value2 => {
+        //     this.relation.controls[value2].setValue( this.propertyMapFileName.get(value2.toString()));
+        //   });
       }
     });
   }
@@ -405,53 +415,67 @@ export class FacultyComponent implements OnInit {
     this.fileNameMapProperty.set(this.relation.controls[key].value, key);
   }
   uploadFaculties() {
-    const uploadedFaculties = new Array<User>();
-    let stop = false;
+    this.uploadedFaculties = new Array<User>();
     this.papa.parse(this.file, {
       header: true,
       complete: result => {
-        console.log(result);
-        for (const value of result.data) {
-          let index = 0;
-          const faculty = new User();
-          const keys = Object.keys(value);
-          for (const key of keys) {
-            if (  this.isBooleanTypeProperty(this.fileNameMapProperty.get(this.fileHeaders[index]))) {
-              if ( this.isBooleanType(value[key])) {
-                faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = Boolean(value[key]);
-              } else {
-                alert(this.fileHeaders[index] + ' is not mapping');
-                stop = true;
-                return false;
-              }
-            } else {
-              faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = value[key];
-            }
-            faculty.year = this.yearService.getYearValue;
-            const role = new Role();
-            role.role = 'Normal';
-            const roles = [];
-            roles.push(role);
-            faculty.roles = roles;
-            index++;
-          }
-          uploadedFaculties.push(faculty);
-        }
-        if (!stop) {
-          console.log(uploadedFaculties);
-          this.apiService.uploadFacultiesFromCSV(uploadedFaculties).subscribe(
+        if (this.mapTheProperty(result)) {
+          this.apiService.uploadFacultiesFromCSV(this.uploadedFaculties).subscribe(
             value => {
-              this.getPageItem(this.currentPage);
+              this.apiService.getFacultyByYear( this.yearService.getYearValue ).subscribe(
+                res => {
+                  this.faculties = res.content;
+                  this.pageNum = res.totalPages;
+                  this.apiService.getCommitteesByPagation( this.yearService.getYearValue , this.currentPage).subscribe(
+                    res2 => {
+                      this.currentPage = this.currentPage;
+                    }
+                  );
+                }
+              );
             }
           );
         }
       }
     });
   }
+  mapTheProperty(result: ParseResult): boolean {
+    for (const value of result.data) {
+      let index = 0;
+      const faculty = new User();
+      const keys = Object.keys(value);
+      for (const key of keys) {
+        if (  this.isBooleanTypeProperty(this.fileNameMapProperty.get(this.fileHeaders[index]))) {
+          if ( this.isBooleanType(value[key])) {
+            faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = Boolean(value[key]);
+          } else {
+            alert(this.fileHeaders[index] + ' is not mapping');
+            return false;
+          }
+        } else {
+          faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = value[key];
+        }
+        faculty.year = this.yearService.getYearValue;
+        const role = new Role();
+        role.role = 'Normal';
+        const roles = [];
+        roles.push(role);
+        faculty.roles = roles;
+        index++;
+      }
+      this.uploadedFaculties.push(faculty);
+    }
+    return true;
+  }
   isBooleanTypeProperty(property: any): boolean {
     return property === 'tenured' || property === 'soe' || property === 'adminResponsibility';
   }
   isBooleanType(value: string): boolean {
-    return value.toLowerCase() === 'true' || value.toLowerCase() === 'false'
+    return value.toLowerCase() === 'true' || value.toLowerCase() === 'false';
+  }
+  cancelSaveCSV() {
+    this.selectedFile = null;
+    this.propertyMapFileName = new Map<any, any>();
+    this.fileNameMapProperty = new Map<any, any>();
   }
 }
