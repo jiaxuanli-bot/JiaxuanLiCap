@@ -3,7 +3,7 @@
     <div class="selYear nav d-none d-lg-block d-xl-block ml-4 mt-2 mt-2">
         <form [formGroup]="yearsForm" class="form-inline">
           <select [(ngModel)]="selectedYear" formControlName="year" id="year" class= "form-control mr-2" (change)="changeYear()">
-            <option *ngFor="let year of years">{{year}}</option>
+            <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
           </select>
           <svg data-toggle="modal" data-backdrop="false"  data-target="#crateYear" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square view-link plus-square-icon pluss" href="#"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
             <line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>

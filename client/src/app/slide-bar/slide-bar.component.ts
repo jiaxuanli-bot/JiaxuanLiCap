@@ -21,11 +21,10 @@ export class SlideBarComponent implements OnInit {
     reportNavbar:  false,
   }
 
-  constructor(private yearService: YearService, private apiService: ApiService, private formBuilder: FormBuilder,
+  constructor(public yearService: YearService, private apiService: ApiService, private formBuilder: FormBuilder,
               private router: Router, private authenticationService: AuthenticationService) { }
   yearsForm: FormGroup;
   committees: Committee[] = [];
-  years: string[] = [];
   selectedYear: string;
   user: User;
   roles = {
@@ -34,14 +33,9 @@ export class SlideBarComponent implements OnInit {
     isNormal: false
   };
   newYear: number;
+  years: any;
   ngOnInit(): void {
     this.user = this.authenticationService.currentUserValue;
-    this.yearService.getYears().subscribe(
-      value => {
-        this.years = value;
-        this.newYear = Number(value[value.length - 1]) + 1;
-      }
-    );
     this.yearService.getValue().subscribe(
       value => {
         this.selectedYear = value;
@@ -59,6 +53,11 @@ export class SlideBarComponent implements OnInit {
     this.yearsForm = this.formBuilder.group({
       year: []
     });
+    this.yearService.getYears.subscribe(
+      value => {
+        this.years = value;
+      }
+    );
   }
 
   hasRole(role: string): boolean {
@@ -66,30 +65,31 @@ export class SlideBarComponent implements OnInit {
   }
   changeYear() {
     this.yearService.setValue(this.selectedYear);
+    window.location.hash = this.selectedYear;
   }
 
   routerToFaculty() {
     this.clearBar();
     this.sideBar.facultyNavbar = true;
-    this.router.navigate(['/uwl/faculty']);
+    this.router.navigate(['/uwl/faculty'], { fragment: this.selectedYear });
   }
 
   routerToSurvey() {
     this.clearBar();
     this.sideBar.surveyNavbar = true;
-    this.router.navigate(['/uwl/survey']);
+    this.router.navigate(['/uwl/survey'], { fragment: this.selectedYear });
   }
 
   routerCommittees() {
     this.clearBar();
     this.sideBar.committeesNavbar = true;
-    this.router.navigate(['/uwl/committees']);
+    this.router.navigate(['/uwl/committees'], { fragment: this.selectedYear });
   }
 
   routerToReport() {
     this.clearBar();
     this.sideBar.reportNavbar = true;
-    this.router.navigate(['/uwl/report']);
+    this.router.navigate(['/uwl/report'], { fragment: this.selectedYear });
   }
   clearBar() {
     this.sideBar.reportNavbar = false;
