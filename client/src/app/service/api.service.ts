@@ -77,10 +77,6 @@ export class ApiService {
     return this.http.delete(`${AppConstants.API_URL}/users/${userId}`);
   }
 
-  getCommitteesByPagation(year , pageNo: number): Observable<Page>{
-    return this.http.get<Page>(`${AppConstants.API_URL}/users?year=${year}&pageNo=${pageNo}`, {} );
-  }
-
   getUserVolunteeredCommittees(userId): Observable<Committee[]> {
     return this.http.get<Committee[]>(`${AppConstants.API_URL}/users/${userId}/enlistings/committees`, {} );
   }

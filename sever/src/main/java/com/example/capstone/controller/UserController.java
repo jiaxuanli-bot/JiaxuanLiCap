@@ -32,43 +32,32 @@ public class UserController {
             @RequestParam(name="pageLength", required=false) String pageLength,
             @Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(name="year", required=true) String year,
             @Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @RequestParam(name="id", required=false) String id,
-            @RequestParam(name="first", required=false) String first, @RequestParam(name="last", required=false) String last,
+            @RequestParam(required=false) String first, 
+            @RequestParam(required=false) String last,
             @Pattern( regexp = "Full|Associate|Assistant", message = "the rank format is wrong") @RequestParam(name="rank", required=false) String rank,
             @Pattern( regexp = "CASH|CSH|CBA", message = "the college format is wrong") @RequestParam(name="college", required=false) String college,
-            @Pattern( regexp = "Yes|No", message = "the tenured format is wrong") @RequestParam(name="tenured", required=false) String tenured,
-            @Pattern( regexp = "Yes|No", message = "the soe format is wrong") @RequestParam(name="soe", required=false) String soe,
-            @Pattern( regexp = "Yes|No", message = "the admin format is wrong") @RequestParam(name="adminResponsibility", required=false) String admin_responsibility,
-            @Pattern( regexp = "F|M", message = "the gender format is wrong") @RequestParam(name="gender", required=false) String gender
-    ) {
-        User.Builder b =new User.Builder();
-        b.year(year)
+            @RequestParam(required=false) Boolean tenured,
+            @RequestParam(required=false) Boolean soe,
+            @RequestParam(required=false) Boolean admin,
+            @Pattern( regexp = "F|M", message = "the gender format is wrong") @RequestParam(name="gender", required=false) String gender) {
+ 
+    	rank = rank != null ? rank + " Professor" : null;
+        User user = new User.Builder()
+        		.year(year)
                 .first(first)
                 .last(last)
                 .college(college)
-                .gender(gender);
-        if (admin_responsibility!=null) {
-            b.adminResponsibility((admin_responsibility.equals("No"))?false:true);
-        }
-        if (rank!=null) {
-            if (rank.equals("Full")) {
-                b.rank("Full Professor");
-            }else if (rank.equals("Associate")) {
-                b.rank("Associate Professor");
-            }else {
-                b.rank("Assistant Professor");
-            }
-        }
-        if (tenured!=null){
-           b.tenured((tenured.equals("No"))?false:true);
-        }
-        if (soe!=null){
-            b.soe((soe.equals("No"))?false:true);
-        }
-        User u =b.build();
+                .gender(gender)
+                .adminResponsibility( admin )
+                .rank( rank )
+                .tenured( tenured )
+                .soe( soe )
+                .build();
+
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withMatcher("first", m -> m.contains())
                 .withMatcher("last", m -> m.contains());
-        Example<User> example = Example.of(u, matcher);
+        Example<User> example = Example.of(user, matcher);
         Pageable paging = PageRequest.of( pageNo, pageSize, Sort.by(sortBy));
         return userService.getUsers(example, paging );
     }
@@ -139,7 +128,6 @@ public class UserController {
     }
 
 }
-
 
 
 

@@ -27,41 +27,18 @@
       <thead>
       <tr id="searchTr">
           <th>
-            <input type="text" class="form-control searchInput" formControlName="first" placeholder="First Name" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
+            <input type="text" class="form-control searchInput" formControlName="first" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
           </th>
           <th>
-            <input type="text" class="form-control searchInput" formControlName="last" placeholder="Last Name" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
+            <input type="text" class="form-control searchInput" formControlName="last" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
           </th>
-          <th>
-            <select formControlName="rank" class= "form-control" (ngModelChange)="changed($event)">
-              <option *ngFor="let rank of ['Associate Professor','Assistant Professor','Full Professor','None']">{{rank}}</option>
+
+          <th *ngFor="let controlName of ['rank', 'college', 'tenured', 'soe', 'admin', 'gender']">
+            <select [formControlName]="controlName" class= "form-control" (ngModelChange)="changed($event)">
+              <option *ngFor="let opt of options[controlName]">{{opt}}</option>
             </select>
           </th>
-          <th>
-            <select formControlName="college" class= "form-control" (ngModelChange)="changed($event)">
-              <option *ngFor="let college of ['CASH','CBA','CSH','None']">{{college}}</option>
-            </select>
-          </th>
-          <th>
-            <select formControlName="tenured" class= "form-control" (ngModelChange)="changed($event)">
-              <option *ngFor="let tenured of ['Yes','No','None']">{{tenured}}</option>
-            </select>
-          </th>
-          <th>
-            <select formControlName="soe" class= "form-control" (ngModelChange)="changed($event)">
-              <option *ngFor="let soe of ['Yes','No','None']">{{soe}}</option>
-            </select>
-          </th>
-          <th>
-            <select formControlName="admin" class= "form-control" (ngModelChange)="changed($event)">
-              <option *ngFor="let admin of ['Yes','No','None']">{{admin}}</option>
-            </select>
-          </th>
-          <th>
-            <select formControlName="gender" class= "form-control" (ngModelChange)="changed($event)">
-              <option *ngFor="let gender of ['Female','Male','None']">{{gender}}</option>
-            </select>
-          </th>
+        
           <th>
             <div class="btn btn-primary btn-sm" (click)="clear()">
               Clear
@@ -162,30 +139,30 @@
   <div class="table-buttons mt-4" id="tableFooterGroup">
     <ul class="pagination">
       <ng-container *ngIf="faculties&&faculties.length>0">
-        <li [ngClass]="currentPage === 0?['page-item', 'disabledPagation']:['page-item']" (click)="firstPage()">
-          <a [ngClass]="currentPage ===0?['page-link', 'disabledPagation']:['page-link']" aria-label="Previous">
+        <li [ngClass]="page.first?['page-item', 'disabledPagation']:['page-item']" (click)="firstPage()">
+          <a [ngClass]="page.first?['page-link', 'disabledPagation']:['page-link']" aria-label="Previous">
             <span aria-hidden="true">|<</span>
           </a>
         </li>
 
-        <li [ngClass] = "currentPage === 0?['page-item', 'disabledPagation']:['page-item']" (click)="prevoiusPage()">
-          <a [ngClass] = "currentPage === 0?['page-link', 'disabledPagation']:['page-link']" aria-label="Previous">
+        <li [ngClass] = "page.first?['page-item', 'disabledPagation']:['page-item']" (click)="prevoiusPage()">
+          <a [ngClass] = "page.first?['page-link', 'disabledPagation']:['page-link']" aria-label="Previous">
             <span aria-hidden="true"><</span>
           </a>
         </li>
 
-        <ng-container *ngFor="let i of [].constructor(pageNum);index as j;">
-          <li *ngIf="currentPage !== j " class="page-item" (click)="getPageItem(j)"><a class="page-link">{{j+1}}</a></li>
-          <li *ngIf="currentPage === j " class="page-item selectedpageItem" (click)="getPageItem(j)"><a class="page-link selectPage">{{j+1}}</a></li>
+        <ng-container *ngFor="let i of [].constructor(page.totalPages);index as j;">
+          <li *ngIf="page.number !== j " class="page-item" (click)="gotoPage(j)"><a class="page-link">{{j+1}}</a></li>
+          <li *ngIf="page.number === j " class="page-item selectedpageItem" (click)="gotoPage(j)"><a class="page-link selectPage">{{j+1}}</a></li>
         </ng-container>
 
-        <li [ngClass]="currentPage === pageNum - 1?['page-item', 'disabledPagation']:['page-item']" (click)="nextPage()">
-          <a [ngClass]="currentPage === pageNum - 1?['page-link', 'disabledPagation']:['page-link']" aria-label="Next">
+        <li [ngClass]="page.last?['page-item', 'disabledPagation']:['page-item']" (click)="nextPage()">
+          <a [ngClass]="page.last?['page-link', 'disabledPagation']:['page-link']" aria-label="Next">
             <span aria-hidden="true">></span>
           </a>
         </li>
-        <li [ngClass]="currentPage === pageNum - 1?['page-item', 'disabledPagation']:['page-item']" (click)="lastPage()">
-          <a [ngClass]="currentPage === pageNum - 1?['page-link', 'disabledPagation']:['page-link']" aria-label="Next">
+        <li [ngClass]="page.last?['page-item', 'disabledPagation']:['page-item']" (click)="lastPage()">
+          <a [ngClass]="page.last?['page-link', 'disabledPagation']:['page-link']" aria-label="Next">
             <span aria-hidden="true">>|</span>
           </a>
         </li>
@@ -346,7 +323,7 @@
         <div class="modal-body">
           <input id="fileChoose" type="file" class="ml-4" [(ngModel)]="selectedFile" (change)="fileChanged($event)">
           <h3 class="ml-4 mt-4">Faculties Property Mapping</h3>
-          <div id="relations" *ngFor="let property of facultiesProperty" [formGroup]="relation" class="form-inline input-group">
+          <div id="relations" *ngFor="let property of csvProperties" [formGroup]="relation" class="form-inline input-group">
             <label class="control-label ml-4 mt-1">{{property}}:</label>
               <div *ngIf="fileNameMapProperty.size > 0" class="w-25 ml-4 ml-auto input-group mt-2">
                 <select formControlName="{{property}}" class="form-control" (change)="propertyMapping(property)">

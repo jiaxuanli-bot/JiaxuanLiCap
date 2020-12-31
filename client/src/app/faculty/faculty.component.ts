@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {ApiService} from '../service/api.service';
-import {User} from '../models/user';
-import {debounceTime} from 'rxjs/operators';
-import {Observable, Subject} from 'rxjs';
-import {YearService} from '../service/year.service';
-import {Papa, ParseResult} from 'ngx-papaparse';
-import {Committee} from '../models/committee';
-import {Router} from '@angular/router';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {AuthenticationService} from '../service/authentication.service';
-import {Role} from '../models/role';
+import { ApiService } from '../service/api.service';
+import { User } from '../models/user';
+import { debounceTime } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { YearService } from '../service/year.service';
+import { Papa, ParseResult } from 'ngx-papaparse';
+import { Committee } from '../models/committee';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { AuthenticationService } from '../service/authentication.service';
+import { Role } from '../models/role';
 
 @Component({
   selector: 'app-faculty',
@@ -17,18 +17,36 @@ import {Role} from '../models/role';
   styleUrls: ['./faculty.component.css']
 })
 export class FacultyComponent implements OnInit {
+
+  options = {
+    rank: ['', 'Associate Professor', 'Assistant Professor', 'Full Professor'],
+    college: ['', 'CASH', 'CBA', 'CSH'],
+    tenured: ['', 'Yes', 'No'],
+    soe: ['', 'Yes', 'No'],
+    admin: ['', 'Yes', 'No'],
+    gender: ['', 'F', 'M']
+  }
+
+  page : any = {
+    first : false,
+    last : false,
+    number : 0,
+    totalPages : 0
+  }
+
   userVolunteeredCommittees: Committee[];
   userAssignedCommittees: Committee[];
-  currentPage = 0;
-  pageNum  = 1;
+
   editIndex: number;
   deleteIndex: number;
   file: any;
   fileHeaders = new Array<any>();
   propertyMapFileName = new Map<any, any>();
   fileNameMapProperty = new Map<any, any>();
-  facultiesProperty = ['first', 'last', 'rank', 'college', 'tenured', 'soe', 'adminResponsibility', 'gender', 'email'];
+
+  csvProperties = ['first', 'last', 'rank', 'college', 'tenured', 'soe', 'adminResponsibility', 'gender', 'email'];
   uploadedFaculties: User[];
+
   queries = {
     first: '',
     last: '',
@@ -51,60 +69,41 @@ export class FacultyComponent implements OnInit {
   selectedFile: any;
 
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
-              private router: Router,  private formBuilder: FormBuilder, private papa: Papa) {
-    this.searchTextChanged.pipe( debounceTime(1000) ).subscribe(() => {
-      if (this.facultiesForm.controls.first.value.length === 0 && this.facultiesForm.controls.last.value.length === 0 &&
-        this.facultiesForm.controls.rank.value === 'None' && this.facultiesForm.controls.college.value === 'None' &&
-        this.facultiesForm.controls.tenured.value === 'None' && this.facultiesForm.controls.soe.value === 'None' &&
-        this.facultiesForm.controls.admin.value === 'None' && this.facultiesForm.controls.gender.value === 'None') {
-        this.year.subscribe(
-          value => {
-            if (value !== '') {
-              this.apiService.getFacultyByYear( value ).subscribe(
-                res => {
-                  this.faculties = res.content;
-                  this.pageNum = res.totalPages;
-                  this.apiService.getCommitteesByPagation(value , 0).subscribe(
-                    res2 => {
-                      this.currentPage = 0;
-                    }
-                  );
-                }
-              );
-            }
-          }
-        );
+    private router: Router, private formBuilder: FormBuilder, private papa: Papa) {
+    this.searchTextChanged.pipe(debounceTime(1000)).subscribe( () => this.getFaculty() );
+  }
+
+  getFaculty() {
+    this.queries = {
+      first: '',
+      last: '',
+      rank: '',
+      college: '',
+      tenured: '',
+      soe: '',
+      admin: '',
+      gender: ''
+    };
+
+    // @ts-ignore
+    this.queries = Object.keys(this.facultiesForm.controls)
+      .filter(key => this.facultiesForm.controls[key].value)
+      .reduce((acc, key) => {
+        acc[key] = this.facultiesForm.controls[key].value;
+        return acc;
+      }, {});
+
+    this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue, this.queries, this.page.number).subscribe(
+      value => {
+        this.faculties = value.content;
+        this.page = {
+          first : value.first,
+          last : value.last,
+          totalPages : value.totalPages,
+          number : value.number          
+        }
       }
-      this.queries = {
-        first: '',
-        last: '',
-        rank: '',
-        college: '',
-        tenured: '',
-        soe: '',
-        admin: '',
-        gender: ''
-      };
-      let nonEmpty = false;
-      // @ts-ignore
-      this.queries =  Object.keys( this.facultiesForm.controls )
-        .filter(key => this.facultiesForm.controls[key].value.length > 0
-                && this.facultiesForm.controls[key].value !== 'None')
-        .reduce( (acc, key) => {
-                nonEmpty = true;
-                acc[key] = this.facultiesForm.controls[key].value;
-                return acc;
-          }, {} );
-      if (nonEmpty) {
-        this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue, this.queries, 0).subscribe(
-          value => {
-            this.faculties = value.content;
-            this.pageNum = value.totalPages;
-            this.currentPage = 0;
-          }
-        );
-      }
-    });
+    );
   }
 
   ngOnInit(): void {
@@ -122,12 +121,12 @@ export class FacultyComponent implements OnInit {
     this.facultiesForm = this.formBuilder.group({
       first: [''],
       last: [''],
-      rank: ['None'],
-      college: ['None'],
-      tenured: ['None'],
-      admin: ['None'],
-      soe: ['None'],
-      gender: ['None'],
+      rank: [''],
+      college: [''],
+      tenured: [''],
+      admin: [''],
+      soe: [''],
+      gender: [''],
       editFirst: [''],
       editLast: [''],
       editRank: [''],
@@ -149,15 +148,12 @@ export class FacultyComponent implements OnInit {
       soe: [false],
       gender: ['M']
     });
+
+
     this.apiService.getFacultyByYear(this.yearService.getYearValue).subscribe();
-    this.year.subscribe( value => {
-      this.apiService.getFacultyByYear(value).subscribe(
-        res => {
-          this.faculties = res.content;
-          this.pageNum = res.totalPages;
-          this.currentPage = 0;
-        }
-      );
+
+    this.year.subscribe(value => {
+      this.getFaculty();
     });
   }
 
@@ -182,171 +178,65 @@ export class FacultyComponent implements OnInit {
   }
 
   clear(): void {
-    this.facultiesForm.controls.first.setValue('');
-    this.facultiesForm.controls.last.setValue('');
-    this.facultiesForm.controls.rank.setValue('None');
-    this.facultiesForm.controls.college.setValue('None');
-    this.facultiesForm.controls.tenured.setValue('None');
-    this.facultiesForm.controls.soe.setValue('None');
-    this.facultiesForm.controls.admin.setValue('None');
-    this.facultiesForm.controls.gender.setValue('None');
-    this.yearService.getValue().subscribe(
-      value => {
-        this.apiService.getCommitteesByPagation(value , 0).subscribe(
-          res => {
-            this.faculties = res.content;
-            this.currentPage = 0;
-          }
-        );
-      }
-    );
+    Object.keys(this.facultiesForm.controls).forEach( key => this.facultiesForm.controls[key].setValue(''));
+    this.getFaculty();
   }
-  ifFiltered(): boolean {
-    return this.queries.gender.length > 0 || this.queries.admin.length > 0 || this.queries.college.length > 0
-      || this.queries.first.length > 0 || this.queries.last.length > 0 || this.queries.rank.length > 0
-      || this.queries.soe.length > 0 || this.queries.tenured.length > 0;
-  }
+
   modifyUser(): void {
-    this.apiService.modifyUser( this.facultiesForm.controls.editFirst.value,  this.facultiesForm.controls.editLast.value,
+    this.apiService.modifyUser(this.facultiesForm.controls.editFirst.value, this.facultiesForm.controls.editLast.value,
       this.facultiesForm.controls.editRank.value, this.facultiesForm.controls.editCollege.value,
-      this.facultiesForm.controls.editTenured.value,  this.facultiesForm.controls.editSoe.value,
+      this.facultiesForm.controls.editTenured.value, this.facultiesForm.controls.editSoe.value,
       this.facultiesForm.controls.editAdmin.value, this.facultiesForm.controls.editGender.value.substring(0, 1),
       this.faculties[this.editIndex].id).subscribe(
-      res => {
-        this.faculties[this.editIndex] = res;
-        this.editIndex = -1;
-      }
-    );
+        res => {
+          this.faculties[this.editIndex] = res;
+          this.editIndex = -1;
+        }
+      );
   }
+
   cancelEdit(): void {
     this.editIndex = -1;
   }
+
   deleteUser(): void {
     this.apiService.deleteUser(this.faculties[this.deleteIndex].id).subscribe(
       res => {
-        this.faculties.splice(this.deleteIndex , 1);
+        this.faculties.splice(this.deleteIndex, 1);
         this.deleteIndex = -1;
       }
     );
-    this.getPageItem(this.currentPage);
+
+    this.gotoPage(this.page.number);
   }
 
   delete(i: number): void {
     this.deleteIndex = i;
   }
 
-  getPageItem(pageIndex: number): void {
-    if (this.ifFiltered()) {
-      this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue , this.queries, pageIndex).subscribe(
-        value => {
-          this.faculties = value.content;
-          this.currentPage = pageIndex;
-        }
-      );
-    } else {
-      this.yearService.getValue().subscribe(
-        value => {
-          this.apiService.getCommitteesByPagation(value , pageIndex ).subscribe(
-            res => {
-              this.faculties = res.content;
-              this.currentPage = pageIndex;
-            }
-          );
-        }
-      );
-    }
+  gotoPage(pageIndex: number): void {
+    this.page.number = pageIndex;
+    this.getFaculty();
   }
 
   nextPage(): void {
-    if (this.currentPage !== this.pageNum - 1) {
-      if (this.ifFiltered()) {
-        this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue , this.queries, this.currentPage + 1).subscribe(
-          value => {
-            this.faculties = value.content;
-            this.currentPage ++;
-          }
-        );
-      } else {
-        this.yearService.getValue().subscribe(
-          value => {
-            this.apiService.getCommitteesByPagation(value , this.currentPage + 1).subscribe(
-              res => {
-                this.faculties = res.content;
-                this.currentPage ++;
-              }
-            );
-          }
-        );
-      }
-    }
+    if( !this.page.last ) this.page.number++;
+    this.getFaculty();
   }
 
   prevoiusPage(): void {
-    if (this.currentPage !== 0) {
-    if (this.ifFiltered()) {
-      this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue , this.queries, this.currentPage - 1).subscribe(
-        value => {
-          this.faculties = value.content;
-          this.currentPage --;
-        }
-      );
-    } else {
-        this.yearService.getValue().subscribe(
-          value => {
-            this.apiService.getCommitteesByPagation(value , this.currentPage - 1).subscribe(
-              res => {
-                this.faculties = res.content;
-                this.currentPage --;
-              }
-            );
-          }
-        );
-      }
-    }
+    if( !this.page.first ) this.page.number--;
+    this.getFaculty();
   }
 
   firstPage(): void {
-    if (this.ifFiltered()) {
-      this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue , this.queries,  0).subscribe(
-        value => {
-          this.faculties = value.content;
-          this.currentPage  = 0;
-        }
-      );
-    } else {
-      this.yearService.getValue().subscribe(
-        value => {
-          this.apiService.getCommitteesByPagation(value , 0).subscribe(
-            res => {
-              this.faculties = res.content;
-              this.currentPage = 0;
-            }
-          );
-        }
-      );
-    }
+    this.page.number = 0;
+    this.getFaculty();    
   }
 
   lastPage(): void {
-    if (this.ifFiltered()) {
-      this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue , this.queries, this.pageNum - 1).subscribe(
-        value => {
-          this.faculties = value.content;
-          this.currentPage = this.pageNum - 1;
-        }
-      );
-    } else {
-      this.yearService.getValue().subscribe(
-        value => {
-          this.apiService.getCommitteesByPagation(value , this.pageNum - 1).subscribe(
-            res => {
-              this.faculties = res.content;
-              this.currentPage  = this.pageNum - 1;
-            }
-          );
-        }
-      );
-    }
+    this.page.number = this.page.totalPages - 1;
+    this.getFaculty();
   }
 
   getUserCommittees(i: number): void {
@@ -361,49 +251,46 @@ export class FacultyComponent implements OnInit {
       }
     );
   }
+
   addFaculty(): void {
-    this.apiService.createUser( this.addUserForm.controls.email.value, this.addUserForm.controls.first.value,
+    this.apiService.createUser(this.addUserForm.controls.email.value, this.addUserForm.controls.first.value,
       this.addUserForm.controls.last.value, this.addUserForm.controls.rank.value, this.addUserForm.controls.college.value,
       Number(this.addUserForm.controls.tenured.value), Number(this.addUserForm.controls.admin.value),
       Number(this.addUserForm.controls.soe.value), this.addUserForm.controls.gender.value, this.yearService.getYearValue).
-    subscribe();
+      subscribe();
   }
+
   fileChanged(e) {
     this.file = e.target.files[0];
     this.propertyMapFileName = new Map<any, any>();
     this.fileNameMapProperty = new Map<any, any>();
     this.fileHeaders = new Array<any>();
-    this.uploadFile();
+    this.parseCSVFile();
   }
-  uploadFile() {
+
+  parseCSVFile() {
     this.papa.parse(this.file, {
       preview: 1,
       complete: result => {
-        let index = 0;
+        // iterate over every column in the first row
         result.data[0].forEach(
-          value => {
-            this.fileHeaders.push(value);
-            this.facultiesProperty.forEach(
+          header => {
+            this.fileHeaders.push(header);
+            this.csvProperties.forEach(
               value1 => {
-                if (value.toString().toLowerCase() === value1.toString().toLowerCase()) {
-                  console.log(value.toString().toLowerCase());
-                  console.log(value1.toString().toLowerCase());
-                  this.propertyMapFileName.set(value1, value);
-                  this.fileNameMapProperty.set(value, value1);
-                  this.relation.controls['' + value1].setValue(value.toString());
+                if (header.toString().toLowerCase() === value1.toString().toLowerCase()) {
+                  this.propertyMapFileName.set(value1, header);
+                  this.fileNameMapProperty.set(header, value1);
+                  this.relation.controls['' + value1].setValue(header.toString());
                 }
               }
             );
-            index++;
           }
         );
-        // Object.keys( this.relation.controls ).forEach(
-        //   value2 => {
-        //     this.relation.controls[value2].setValue( this.propertyMapFileName.get(value2.toString()));
-        //   });
       }
     });
   }
+
   propertyMapping(key: string) {
     const temp = this.propertyMapFileName.get(key);
     if (this.fileNameMapProperty.get(this.relation.controls[key].value) !== undefined) {
@@ -414,6 +301,7 @@ export class FacultyComponent implements OnInit {
     this.fileNameMapProperty.delete(temp);
     this.fileNameMapProperty.set(this.relation.controls[key].value, key);
   }
+
   uploadFaculties() {
     this.uploadedFaculties = new Array<User>();
     this.papa.parse(this.file, {
@@ -422,31 +310,22 @@ export class FacultyComponent implements OnInit {
         if (this.mapTheProperty(result)) {
           this.apiService.uploadFacultiesFromCSV(this.uploadedFaculties).subscribe(
             value => {
-              this.apiService.getFacultyByYear( this.yearService.getYearValue ).subscribe(
-                res => {
-                  this.faculties = res.content;
-                  this.pageNum = res.totalPages;
-                  this.apiService.getCommitteesByPagation( this.yearService.getYearValue , this.currentPage).subscribe(
-                    res2 => {
-                      this.currentPage = this.currentPage;
-                    }
-                  );
-                }
-              );
+             this.getFaculty();
             }
           );
         }
       }
     });
   }
+
   mapTheProperty(result: ParseResult): boolean {
     for (const value of result.data) {
       let index = 0;
       const faculty = new User();
       const keys = Object.keys(value);
       for (const key of keys) {
-        if (  this.isBooleanTypeProperty(this.fileNameMapProperty.get(this.fileHeaders[index]))) {
-          if ( this.isBooleanType(value[key])) {
+        if (this.isBooleanTypeProperty(this.fileNameMapProperty.get(this.fileHeaders[index]))) {
+          if (this.isBooleanType(value[key])) {
             faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = Boolean(value[key]);
           } else {
             alert(this.fileHeaders[index] + ' is not mapping');
@@ -467,12 +346,15 @@ export class FacultyComponent implements OnInit {
     }
     return true;
   }
+
   isBooleanTypeProperty(property: any): boolean {
     return property === 'tenured' || property === 'soe' || property === 'adminResponsibility';
   }
+
   isBooleanType(value: string): boolean {
     return value.toLowerCase() === 'true' || value.toLowerCase() === 'false';
   }
+
   cancelSaveCSV() {
     this.selectedFile = null;
     this.propertyMapFileName = new Map<any, any>();
