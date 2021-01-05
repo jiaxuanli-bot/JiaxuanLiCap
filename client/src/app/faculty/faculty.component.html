@@ -38,7 +38,7 @@
               <option *ngFor="let opt of options[controlName]">{{opt}}</option>
             </select>
           </th>
-        
+
           <th>
             <div class="btn btn-primary btn-sm" (click)="clear()">
               Clear
@@ -182,185 +182,27 @@
 
   <!-- Modal for delete-->
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="exampleModalLabel">Delete Faculty</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span class="closeBtn" aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Are you sure you want to delete this faculty?
-          <p>This faculty will also remove from these committees:</p>
-          <li class="ml-2">General Education Assessment Committee</li>
-          <li class="ml-2">Nominating Committee</li>
-          <li class="ml-2">Senate Committees</li>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary closeBtn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-          <button type="button" class="btn btn-primary closeBtn" data-dismiss="modal" aria-hidden="true" (click)="deleteUser()">Delete</button>
-        </div>
-      </div>
-    </div>
+    <app-delete-user (deleteUser)="deleteUser()"></app-delete-user>
   </div>
 
   <!-- Modal for modify-->
   <div class="modal fade" id="modifyModal" tabindex="-1" role="dialog" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Save Modifications</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span class="closeBtn" aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Are you sure you want to save these modification？
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary closeBtn" aria-hidden="true" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" (click)="modifyUser()">Save</button>
-        </div>
-      </div>
-    </div>
+    <app-modify-user (modifyUser) = "modifyUser()"></app-modify-user>
   </div>
 
   <!-- Modal for add user-->
   <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="addUserModalLabel">Add Faculty</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span class="closeBtn" aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-
-          <div class="modal-body">
-            <div class="container-fluid">
-              <form class="form-horizontal" [formGroup]="addUserForm">
-                <div class="form-group">
-                  <label for="sName" class="col-xs-3 control-label">Email:</label>
-                  <div class="col-xs-8 ">
-                    <input type="email" formControlName="email" class="form-control input-sm" placeholder="">
-                  </div>
-                </div>
-
-
-
-                <div class="form-group">
-                  <label for="sName" class="col-xs-3 control-label">First Name:</label>
-                  <div class="col-xs-8 ">
-                    <input type="email" formControlName="first" class="form-control input-sm" id="sName" placeholder="">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="sLink" class="col-xs-3 control-label">Last Name:</label>
-                  <div class="col-xs-8 ">
-                    <input type="" formControlName="last" class="form-control input-sm" id="sLink" placeholder="">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-xs-3 control-label">Rank:</label>
-                  <div class="col-xs-8">
-                    <select formControlName="rank" class="form-control select-duiqi">
-                      <option *ngFor="let rank of ['Assistant Professor','Associate Professor','Full Professor']">{{rank}}</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-xs-3 control-label">College Affiliation:</label>
-                  <div class="col-xs-8">
-                    <select formControlName="college" class="form-control select-duiqi">
-                      <option *ngFor="let college of ['CASH','CBA','CSH']">{{college}}</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group mt-4">
-                  <div class="col-xs-8 checkInline">
-                    <input type="checkbox" formControlName="tenured" class="align-middle">  <span class="align-middle"> Tenured</span>
-                  </div>
-                </div>
-
-                <div class="form-group mt-4">
-                  <input type="checkbox" formControlName="admin" class="align-middle">  <span class="align-middle">  Administrative Responsibilities Over 50%</span>
-                </div>
-
-                <div class="form-group mt-4">
-                  <input type="checkbox" formControlName="soe" class="align-middle">  <span class="align-middle">  School Of Ed Affiliation</span>
-                </div>
-
-                <div class="form-group mt-4">
-                  <span>Male:</span><input type="radio" class="radio" value="M" formControlName="gender">Female:<input value="F" type="radio" class="radio" formControlName="gender">
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close" (click)="addFaculty()">Add Faculty</button>
-        </div>
-      </div>
-    </div>
+    <app-add-user (addUser) = "this.gotoPage(this.page.number);"></app-add-user>
   </div>
 
-  <!-- Modal for cancel add users-->
+  <!-- Modal add users from csv-->
   <div class="modal fade" id="addUsersModal" tabindex="-1" role="dialog" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Upload Faculties From CSV File:</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span class="closeBtn" aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <input id="fileChoose" type="file" class="ml-4" [(ngModel)]="selectedFile" (change)="fileChanged($event)">
-          <h3 class="ml-4 mt-4">Faculties Property Mapping</h3>
-          <div id="relations" *ngFor="let property of csvProperties" [formGroup]="relation" class="form-inline input-group">
-            <label class="control-label ml-4 mt-1">{{property}}:</label>
-              <div *ngIf="fileNameMapProperty.size > 0" class="w-25 ml-4 ml-auto input-group mt-2">
-                <select formControlName="{{property}}" class="form-control" (change)="propertyMapping(property)">
-                  <ng-container *ngFor="let head of fileHeaders">
-                    <option [value]="head">{{head}}</option>
-                  </ng-container>
-                </select>
-              </div>
-          </div>
-        </div>
-        <div *ngIf="fileHeaders.length > 0" class="modal-footer">
-          <button type="button" class="btn btn-secondary closeBtn" aria-hidden="true" data-dismiss="modal" aria-label="Close" (click)="cancelSaveCSV()">Cancel</button>
-          <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" (click)="uploadFaculties()" aria-label="Close">Save</button>
-        </div>
-      </div>
-    </div>
+    <app-add-user-from-csv (addUserFromCSV) = "this.gotoPage(this.page.number);"></app-add-user-from-csv>
   </div>
 
   <!-- Modal for cancel modify user-->
   <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="Modify">Discard Modifications</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span class="closeBtn" aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Are you sure you want to discard these modifications？
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-          <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" aria-label="Close" (click)="cancelEdit()">Yes</button>
-        </div>
-      </div>
-    </div>
+    <app-cancel-modify [(editIndex)]="editIndex"></app-cancel-modify>
   </div>
 
   <div class="modal fade" id="committeeListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

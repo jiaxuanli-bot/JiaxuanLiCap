@@ -18,6 +18,11 @@ import { ReportComponent } from './report/report.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {GoogleChartsModule} from 'angular-google-charts';
 import { UWLComponent } from './uwl/uwl.component';
+import { CancelModifyComponent } from './faculty/cancel-modify/cancel-modify.component';
+import { DeleteUserComponent } from './faculty/delete-user/delete-user.component';
+import { ModifyUserComponent } from './faculty/modify-user/modify-user.component';
+import { AddUserComponent } from './faculty/add-user/add-user.component';
+import { AddUserFromCSVComponent } from './faculty/add-user-from-csv/add-user-from-csv.component';
 @NgModule({
 
   imports: [
@@ -44,6 +49,11 @@ import { UWLComponent } from './uwl/uwl.component';
     CommitteesListComponent,
     ReportComponent,
     UWLComponent,
+    CancelModifyComponent,
+    DeleteUserComponent,
+    ModifyUserComponent,
+    AddUserComponent,
+    AddUserFromCSVComponent,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true}
