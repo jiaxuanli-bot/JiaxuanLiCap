@@ -8,9 +8,13 @@ import com.example.capstone.repositories.CommitteeRepository;
 import com.example.capstone.repositories.CriteriaRepository;
 import com.example.capstone.repositories.DutyRepository;
 import com.example.capstone.repositories.UserRepository;
+import com.example.capstone.utils.CriteriaPredicateFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -26,8 +30,16 @@ public class CommitteeService {
 
     @Autowired
     private UserRepository userRepo;
+    
+    
+    public List<Criteria> failingCriteria(Committee c) {
+    	return c.getCriteria()
+    			.stream()
+    			.filter( crit -> !CriteriaPredicateFactory.build( crit ).test( c ) )
+    			.collect( Collectors.toList() );    	
+    }
 
-    public Map<String, List<CommitteesWithMembersAndVolunteers>> getCommittees(String start, String end){
+	public Map<String, List<CommitteesWithMembersAndVolunteers>> getCommittees(String start, String end){
         List<CommitteesWithMembersAndVolunteers> committeesWithMembersList =  committeeRepo.findByYearBetween(start, end);
         Map<String, List<CommitteesWithMembersAndVolunteers>> committeeMap = new HashMap<String,List<CommitteesWithMembersAndVolunteers>>();
         committeesWithMembersList.stream().forEach(

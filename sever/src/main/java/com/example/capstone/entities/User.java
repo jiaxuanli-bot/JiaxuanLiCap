@@ -22,6 +22,7 @@ public class User {
 	private String gender;
 	private String year;
 	private Boolean tenured;
+	private Boolean gradStatus;
 
 	private Boolean soe;
 
@@ -116,6 +117,10 @@ public class User {
 
 	public Boolean getTenured() {
 		return tenured;
+	}
+	
+	public Boolean getGradStatus() {
+		return this.gradStatus;
 	}
 
 	public void setTenured(Boolean tenured) {
