@@ -73,7 +73,7 @@ public class MockService {
                 .college( one( colleges ) )
                 .email( email() )
                 .committees( new HashSet<>())
-                .volunteeredCommittees(new ArrayList<>())
+                .volunteeredCommittees(new HashSet<>())
                 .gender( Math.random() < .5 ? "M" : "F" )
                 .adminResponsibility(Math.random() < .6)
                 .year( year() )

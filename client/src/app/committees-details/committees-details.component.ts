@@ -50,19 +50,11 @@ export class CommitteesDetailsComponent implements OnInit {
                   }
                 );
                 const reqs = value.members.map( m => this.apiService.getUserAssignedCommittees(m.id) );
-                // for (let i = 0; i < value.members.length; i++) {
-                //   reqs.push( this.apiService.getUserAssignedCommittees(value.members[i].id));
-                // }
                 forkJoin(reqs).subscribe(
                   results => {
                     this.usersCommittees = results as Committee[][];
                   }
                 );
-                // this.apiService.getUserAssignedCommittees(value.members[i].id).subscribe(
-                //   value2 => {
-                //     this.usersCommittees[i] = value2;
-                //   }
-                // );
                 this.apiService.getCommitteeVolunteers(param.id).subscribe(
                   v => {
                     let contains = false;

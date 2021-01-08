@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<UserSummary> findByCommitteesEquals(Committee c);
 
-    User findByEmailEquals(String email);
+    List<User> findByEmailEquals(String email);
 
     List<UserSummary> findByVolunteeredCommitteesEquals(Committee c);
 

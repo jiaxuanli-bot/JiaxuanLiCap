@@ -134,10 +134,10 @@ public class CommitteeService {
         List<Survey> res = new ArrayList<Survey>();
         List<UserSummary> list = userRepo.findByVolunteeredCommitteesEquals(c);
         list.forEach(
-                committeeSummary -> {
+                userSummary -> {
                     Survey s =new Survey();
-                    s.setUserId(Long.valueOf(id));
-                    s.setCommitteeId(committeeSummary.getId());
+                    s.setUserId(userSummary.getId());
+                    s.setCommitteeId(id);
                     res.add(s);
                 }
         );

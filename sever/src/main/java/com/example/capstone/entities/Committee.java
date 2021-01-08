@@ -63,6 +63,19 @@ public class Committee {
         return builder;
     }
 
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Committee))
+            return false;
+        if (obj == this)
+            return true;
+        return this.id == ((Committee) obj).id;
+    }
+
+    public int hashCode() {
+        return id.intValue();
+    }
+
+
     public Long getId() {
         return id;
     }

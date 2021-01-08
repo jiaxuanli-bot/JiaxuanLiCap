@@ -34,7 +34,7 @@ public class User {
 	@JsonIgnore
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "committee_volunteers",joinColumns = { @JoinColumn(name = "volunteers_id")},inverseJoinColumns = {@JoinColumn(name = "committee_id")})
-	private List<Committee> volunteeredCommittees;
+	private Set<Committee> volunteeredCommittees;
 
     @ManyToMany(fetch=FetchType.LAZY)
 	private List<Role> roles;
@@ -91,11 +91,11 @@ public class User {
 		this.last = last;
 	}
 
-	public List<Committee> getVolunteeredCommittees() {
+	public Set<Committee> getVolunteeredCommittees() {
 		return volunteeredCommittees;
 	}
 
-	public void setVolunteeredCommittees(List<Committee> volunteeredComiittees) {
+	public void setVolunteeredCommittees(Set<Committee> volunteeredComiittees) {
 		this.volunteeredCommittees = volunteeredComiittees;
 	}
 
@@ -176,7 +176,6 @@ public class User {
 		if( year == null ) {
 			year = String.valueOf( Calendar.getInstance().get( Calendar.YEAR ) );
 		}
-		
 		this.year = year;
 	}
 
@@ -208,7 +207,7 @@ public class User {
 		private Boolean tenured;
 		private Boolean soe;
 		private Set<Committee> committees;
-		private List<Committee> volunteeredCommittees;
+		private Set<Committee> volunteeredCommittees;
 		private List<Role> roles;
 		private Boolean adminResponsibility;
 
@@ -217,7 +216,7 @@ public class User {
 			return this;
 		}
 
-		public Builder volunteeredCommittees(List<Committee> committees){
+		public Builder volunteeredCommittees(Set<Committee> committees){
 			this.volunteeredCommittees = committees;
 			return this;
 		}
