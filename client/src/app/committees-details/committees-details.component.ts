@@ -38,7 +38,7 @@ export class CommitteesDetailsComponent implements OnInit {
               value => {
                 this.committee = value;
                 console.log(value);
-                this.yearService.getValue().subscribe(
+                this.yearService.committeeGetValue().subscribe(
                   value5 => {
                     this.apiService.getCommitteeIdByYearAndName(value5, this.committee.name).subscribe(
                       value7 => {
@@ -65,21 +65,19 @@ export class CommitteesDetailsComponent implements OnInit {
                 // );
                 this.apiService.getCommitteeVolunteers(param.id).subscribe(
                   v => {
-                    this.volunteers = v;
-                    let i = 0;
-                    this.volunteers.forEach(
-                      value1 => {
-                        this.committee.members.forEach(
-                          value2 => {
-                            i++;
-                            if (value1.id === value2.id) {
-                              this.volunteers = this.volunteers.splice(i, 1);
-                              i--;
-                            }
+                    let contains = false;
+                    v.forEach(value1 => {
+                      this.committee.members.forEach(
+                        value2 => {
+                          if (value1.id === value2.id) {
+                            contains = true;
                           }
-                        );
+                        }
+                      );
+                      if (!contains) {
+                        this.volunteers.push(value1);
                       }
-                    );
+                    });
                     const reqs2 = [];
                     this.volunteersCommittees = newArray(v.length);
                     v.forEach(

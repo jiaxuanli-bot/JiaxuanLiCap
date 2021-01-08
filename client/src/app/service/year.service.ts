@@ -80,12 +80,12 @@ export class YearService {
       this.currentYear.next(newValue);
     }
   }
+  committeeGetValue(): Observable<string> {
+    return this.yearForCommitteePage.asObservable();
+  }
   getValue(): Observable<string> {
-    if (this.path === 'committees' && this.committeeId !== undefined && this.committeeId !== null) {
-      return this.yearForCommitteePage.asObservable();
-    } else {
-      return this.currentYear.asObservable();
-    }
+    //  alert(this.committeeId);
+    return this.currentYear.asObservable();
   }
   public get getYearValue(): string {
     return this.currentYear.value;

@@ -121,7 +121,7 @@
         <table *ngIf="committee.members" class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12" id="memberTable">
           <thead>
           <tr>
-            <th *ngFor="let property of ['Last','First','Rank','College','Tenured','SOE','Admin','Gender','CommitteeMembers','Action']">
+            <th *ngFor="let property of ['Last','First','Rank','College','Tenured','SOE','Admin','Gender','AssignedCommittees','Action']">
               {{property}}
             </th>
           </tr>
@@ -163,7 +163,7 @@
               {{user.gender}}
             </td>
             <td>
-              <button *ngFor="let committee of usersCommittees[i];index as j" class="btn btn-link"  routerLink="/committees/{{committee.id}}" routerLinkActive="active">
+              <button *ngFor="let committee of usersCommittees[i];index as j" class="btn btn-link"  routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">
                 {{committee.name}},
               </button>
             </td>
@@ -192,7 +192,7 @@
           <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12" id="memberTable">
           <thead>
           <tr>
-            <th *ngFor="let property of ['Last','First','Rank','College','Tenured','SOE','Admin','Gender','CommitteeMembers','Action']">
+            <th *ngFor="let property of ['Last','First','Rank','College','Tenured','SOE','Admin','Gender','AssignedCommittees','Action']">
               {{property}}
             </th>
           </tr>
@@ -235,7 +235,7 @@
               {{user.gender}}
             </td>
             <td>
-              <button *ngFor="let committee of usersCommittees[i];index as j" data-toggle="modal" class="btn btn-link" routerLink="/committees/{{committee.id}}" routerLinkActive="active">
+              <button *ngFor="let committee of usersCommittees[i];index as j" data-toggle="modal" class="btn btn-link" routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">
                 {{committee.name}},
               </button>
             </td>
@@ -283,7 +283,7 @@
               </td>
               <td>
                 <ng-container *ngIf="volunteers&&volunteersCommittees">
-                  <button *ngFor="let committee of volunteersCommittees[i];index as j" class="btn btn-link" data-toggle="modal" routerLink="/committees/{{committee.id}}" routerLinkActive="active">
+                  <button *ngFor="let committee of volunteersCommittees[i];index as j" class="btn btn-link" data-toggle="modal" routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">
                    {{committee.name}},
                   </button>
                 </ng-container>
