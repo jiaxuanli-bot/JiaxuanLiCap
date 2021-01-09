@@ -21,7 +21,7 @@ public class CriteriaPredicateFactory {
 		
 		parser.advance( expected.length );
 	}
-		
+
 	// (all tenured)
 	// (all full-time)
 	// (all grad-status)
@@ -41,16 +41,16 @@ public class CriteriaPredicateFactory {
 	}
 	
 		
-	// (college cls 3) 
+	// (college cls 3)
 	// (college csh 3) 
 	// (college cba 1)
 	public static Predicate<Committee> college( ExpressionParser parser ) {
 		consume( parser, "(", "college" );
 		String college = parser.nextToken();
 		Integer count = Integer.parseInt( parser.nextToken() );
-		Predicate<User> userCheck = u -> u.getCollege() != null && u.getCollege().equals( college );
+		Predicate<User> userCheck = u -> u.getCollege() != null && u.getCollege().toLowerCase().equals( college );
 		consume( parser, ")");
-		
+	
 		return committee -> 
 		committee
 			.getMembers()
@@ -58,14 +58,13 @@ public class CriteriaPredicateFactory {
 				.filter( userCheck )
 				.count() >= count;
 	}
-	
 	// (soe 1)
 	public static Predicate<Committee> soe( ExpressionParser parser ) {
 		consume( parser, "(", "soe" );
 		Integer count = Integer.parseInt( parser.nextToken() );
 		Predicate<User> userCheck = User::getSoe;
 		consume( parser, ")");
-		
+
 		return committee -> 
 		committee
 			.getMembers()
@@ -73,7 +72,7 @@ public class CriteriaPredicateFactory {
 				.filter( userCheck )
 				.count() >= count;
 	}
-		
+
 	// (size 9)
 	public static Predicate<Committee> sizeOf( ExpressionParser parser ) {
 		consume( parser, "(", "size" );
@@ -87,7 +86,7 @@ public class CriteriaPredicateFactory {
 	public static Predicate<Committee> expression( ExpressionParser parser ) {
 		validate( parser, "(" );
 		String type = parser.peek( 1 );
-		
+
 		Predicate<Committee> result = null;
 		switch( type ) {
 			case "all" : result = all( parser ); break;

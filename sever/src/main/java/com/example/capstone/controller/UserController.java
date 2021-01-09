@@ -40,8 +40,8 @@ public class UserController {
             @RequestParam(required=false) Boolean soe,
             @RequestParam(required=false) Boolean admin,
             @Pattern( regexp = "F|M", message = "the gender format is wrong") @RequestParam(name="gender", required=false) String gender) {
- 
-    	rank = rank != null ? rank + " Professor" : null;
+
+        rank = rank != null ? rank + " Professor" : null;
         User user = new User.Builder()
         		.year(year)
                 .first(first)

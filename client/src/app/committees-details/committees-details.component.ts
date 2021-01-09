@@ -1,15 +1,14 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {YearService} from '../service/year.service';
 import {ApiService} from '../service/api.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Committee} from '../models/committee';
-import {forkJoin, of} from 'rxjs';
-import {UserCommittees} from '../models/user-committees';
+import {forkJoin} from 'rxjs';
 import {newArray} from '@angular/compiler/src/util';
 import {User} from '../models/user';
-import {CommitteeUser} from '../models/committee-user';
 import {AuthenticationService} from '../service/authentication.service';
 import {HttpClient} from '@angular/common/http';
+import {Criteria} from '../models/criteria';
 
 @Component({
   selector: 'app-committees-details',
@@ -21,6 +20,7 @@ export class CommitteesDetailsComponent implements OnInit {
   introductionExpand = false;
   committee: Committee;
   dutyExpand = false;
+  unsatisfiedCriteria: string[] = [];
   critreriaExpand = false;
   usersCommittees: Committee[][];
   volunteers: User[];
@@ -37,6 +37,15 @@ export class CommitteesDetailsComponent implements OnInit {
             this.apiService.getCommitteeById(param.id).subscribe(
               value => {
                 this.committee = value;
+                this.apiService.getUnSatisfiedCriteria(param.id).subscribe(
+                  criteria => {
+                    criteria.forEach(
+                      criteria2 => {
+                        this.unsatisfiedCriteria.push(criteria2.criteria);
+                      }
+                    );
+                  }
+                );
                 console.log(value);
                 this.yearService.committeeGetValue().subscribe(
                   value5 => {
@@ -82,11 +91,6 @@ export class CommitteesDetailsComponent implements OnInit {
                         this.volunteersCommittees = results as Committee[][];
                       }
                     );
-                    // this.apiService.getUserAssignedCommittees(v[i].id).subscribe(
-                    //   value2 => {
-                    //     this.volunteersCommittees[i] = value2;
-                    //   }
-                    // );
                     console.log(this.volunteersCommittees);
                   }
                 );
@@ -140,7 +144,6 @@ export class CommitteesDetailsComponent implements OnInit {
   selectUser(id): void {
     this.seletedUserid = id;
   }
-
   closePop(): void {
     this.popIntroductionExpand = false;
     this.popDutyExpand = false;

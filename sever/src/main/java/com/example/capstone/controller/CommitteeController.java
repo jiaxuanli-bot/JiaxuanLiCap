@@ -1,6 +1,7 @@
 package com.example.capstone.controller;
 
 import com.example.capstone.entities.Committee;
+import com.example.capstone.entities.Criteria;
 import com.example.capstone.entities.Survey;
 import com.example.capstone.entities.User;
 import com.example.capstone.projections.*;
@@ -90,5 +91,10 @@ public class CommitteeController {
         this.committeeService.ceateCommittee(committee);
     }
 
+    @RequestMapping( value="/committees/{id}/unsatisfiedCriteria", method=RequestMethod.GET)
+    public List<Criteria> unsatisfiedCriteria(@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String id) {
+        //checking if all criteria is meted
+        return this.committeeService.failingCriteria(this.committeeService.getCommitteeDetail(Long.valueOf(id)));
+    }
 }
 

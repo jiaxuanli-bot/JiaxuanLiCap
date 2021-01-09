@@ -26,6 +26,37 @@ public class MockService {
     @Autowired
     private RoleRepository roleRepo;
 
+    public String randomCriteriaCollege() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("(college ");
+        if (Math.random() < 0.33){
+            sb.append("csh ");
+        } else if (Math.random() < 0.66) {
+            sb.append("cash ");
+        } else {
+            sb.append("cba ");
+        }
+        sb.append((int) (Math.random() * 3  + 1));
+        sb.append(')');
+        return sb.toString();
+    }
+
+    public String randomCriteriaSoe() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("(soe ");
+        sb.append((int) (Math.random() * 3 + 1));
+        sb.append(')');
+        return sb.toString();
+    }
+
+    public String randomCriteriaSize() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("(size ");
+        sb.append((int) (Math.random() * 7 + 3));
+        sb.append(')');
+        return sb.toString();
+    }
+
     public String randomString() {
         int length = (int)(Math.random() * 10 + 5);
 
@@ -84,15 +115,28 @@ public class MockService {
     }
 
     public List<Criteria> criteria(final Committee committee) {
-        List<Criteria> criteria = IntStream
-                .range(0,  (int)(Math.random() * 5 + 10 ) )
-                .mapToObj( i -> {
-                    Criteria c = new Criteria.Builder()
-                            .criteria( randomString() )
-                            .committee(committee)
-                            .build();
-                    return criteriaRepo.save( c );
-                }).collect(Collectors.toList());
+        List<Criteria> criteria = new ArrayList<Criteria>();
+        if(Math.random() > 0.3){
+            Criteria c = new Criteria.Builder()
+                    .criteria( this.randomCriteriaSoe() )
+                    .committee(committee)
+                    .build();
+            criteria.add(c);
+        }
+        if(Math.random() > 0.3){
+            Criteria c = new Criteria.Builder()
+                    .criteria( this.randomCriteriaCollege() )
+                    .committee(committee)
+                    .build();
+            criteria.add(c);
+        }
+        if(Math.random() > 0.3){
+            Criteria c = new Criteria.Builder()
+                    .criteria( this.randomCriteriaSize() )
+                    .committee(committee)
+                    .build();
+            criteria.add(c);
+        }
         return criteriaRepo.saveAll( criteria );
     }
 
@@ -158,7 +202,7 @@ public class MockService {
         committees
                 .stream()
                 .forEach( c -> {
-                    List<User> members = choose( userRepo.findByYear(c.getYear()) , (int)(Math.random() * 5 ) );
+                    List<User> members = choose( userRepo.findByYear(c.getYear()) , (int)(Math.random() * 10 ) );
                     Set memberSet =  new HashSet();
                     Set volunteerSet = new HashSet();
                     members.forEach(

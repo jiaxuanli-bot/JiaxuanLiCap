@@ -67,17 +67,7 @@ export class HomeComponent implements OnInit {
     this.selectedCommittee = committee;
     console.log(this.selectedCommittee.criteria);
   }
-  expandCriteria() {
-    this.critreriaExpand = !this.critreriaExpand;
-  }
-
-  expandDuty() {
-    this.dutyExpand = !this.dutyExpand;
-  }
   createSurvey(committeeId: string, userId: string) {
     this.apiService.createSurvey(userId, committeeId, this.yearService.getYearValue).subscribe();
-  }
-  expandIntroduction() {
-    this.introductionExpand = !this.introductionExpand;
   }
 }

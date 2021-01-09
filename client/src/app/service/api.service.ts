@@ -161,4 +161,7 @@ export class ApiService {
   deleteCommittee(committeeId: string) {
     return this.http.delete<Committee>(`${AppConstants.API_URL}/committees/${committeeId}`);
   }
+  getUnSatisfiedCriteria(committeeId: string): Observable<Criteria[]> {
+    return this.http.get<Criteria[]>( `${AppConstants.API_URL}/committees/${committeeId}/unsatisfiedCriteria`);
+  }
 }

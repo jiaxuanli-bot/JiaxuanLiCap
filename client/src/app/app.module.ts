@@ -23,6 +23,10 @@ import { DeleteUserComponent } from './faculty/delete-user/delete-user.component
 import { ModifyUserComponent } from './faculty/modify-user/modify-user.component';
 import { AddUserComponent } from './faculty/add-user/add-user.component';
 import { AddUserFromCSVComponent } from './faculty/add-user-from-csv/add-user-from-csv.component';
+import { RemoveMemberComponent } from './committees-details/remove-member/remove-member.component';
+import { AssignMemberComponent } from './committees-details/assign-member/assign-member.component';
+import { AddCommitteeComponent } from './committees-list/add-committee/add-committee.component';
+import { SelectedCommitteeComponent } from './home/selected-committee/selected-committee.component';
 @NgModule({
 
   imports: [
@@ -54,6 +58,10 @@ import { AddUserFromCSVComponent } from './faculty/add-user-from-csv/add-user-fr
     ModifyUserComponent,
     AddUserComponent,
     AddUserFromCSVComponent,
+    RemoveMemberComponent,
+    AssignMemberComponent,
+    AddCommitteeComponent,
+    SelectedCommitteeComponent,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true}

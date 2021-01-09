@@ -36,7 +36,7 @@ public class CommitteeService {
     	return c.getCriteria()
     			.stream()
     			.filter( crit -> !CriteriaPredicateFactory.build( crit ).test( c ) )
-    			.collect( Collectors.toList() );    	
+    	     	.collect( Collectors.toList() );
     }
 
 	public Map<String, List<CommitteesWithMembersAndVolunteers>> getCommittees(String start, String end){
@@ -54,6 +54,10 @@ public class CommitteeService {
                     }
                 });
         return committeeMap;
+    }
+
+    public Committee getCommitteeDetail(Long id){
+        return this.committeeRepo.findById(id).get();
     }
 
     public List<CommitteeSummary> getYearsCommittees(String startYear, String endYear){
@@ -197,22 +201,26 @@ public class CommitteeService {
         Committee resC = committeeRepo.save(c);
         c.setCriteria(new ArrayList<Criteria>());
         c.setDuties(new ArrayList<Duty>());
-        committee.getCriteria()
-                .forEach(
-                        criteria -> {
-                            criteria.setCommittee(resC);
-                            c.getCriteria().add(criteria);
-                            criteriaRepo.save(criteria);
-                        }
-                        );
-        committee.getDuties().
-                forEach(
-                        duty -> {
-                            duty.setCommittee(resC);
-                            c.getDuties().add(duty);
-                            dutyRepo.save(duty);
-                        }
-                        );
+        if (committee.getCriteria().size() > 0) {
+            committee.getCriteria()
+                    .forEach(
+                            criteria -> {
+                                criteria.setCommittee(resC);
+                                c.getCriteria().add(criteria);
+                                criteriaRepo.save(criteria);
+                            }
+                    );
+        }
+        if (committee.getDuties().size() > 0) {
+            committee.getDuties().
+                    forEach(
+                            duty -> {
+                                duty.setCommittee(resC);
+                                c.getDuties().add(duty);
+                                dutyRepo.save(duty);
+                            }
+                    );
+        }
         committeeRepo.save(c);
     }
 }
