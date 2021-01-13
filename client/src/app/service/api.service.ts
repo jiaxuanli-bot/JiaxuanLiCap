@@ -8,11 +8,8 @@ import {Survey} from '../models/survey';
 import {User} from '../models/user';
 import {HashedCommittees} from '../models/hashed-committees';
 import {Page} from '../models/page';
-import {reduce} from 'rxjs/operators';
-import {CommitteeUser} from '../models/committee-user';
 import {Criteria} from '../models/criteria';
-import {Duty} from '../models/duty';
-import {SummaryUser} from '../models/summary-user';
+import {ApplicationComment} from '../models/application-comment';
 
 @Injectable({
   providedIn: 'root'
@@ -158,10 +155,20 @@ export class ApiService {
   getUserYears(email): Observable<string[]> {
     return this.http.get<string[]>(`${AppConstants.API_URL}/users/email/${email}/years`, {} );
   }
-  deleteCommittee(committeeId: string) {
+  deleteCommittee(committeeId: string): Observable<Committee> {
     return this.http.delete<Committee>(`${AppConstants.API_URL}/committees/${committeeId}`);
   }
   getUnSatisfiedCriteria(committeeId: string): Observable<Criteria[]> {
     return this.http.get<Criteria[]>( `${AppConstants.API_URL}/committees/${committeeId}/unsatisfiedCriteria`);
+  }
+  createComment(comment: string, userId: string, committeeId: string) {
+    const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    const data = {
+      comment,
+    };
+    return this.http.post (`${AppConstants.API_URL}/users/${userId}/enlistings/committees/${committeeId}/comment`, data, config);
+  }
+  getComment(userId: string, committeeId: string): Observable<ApplicationComment> {
+    return this.http.get<ApplicationComment>(`${AppConstants.API_URL}/users/${userId}/enlistings/committees/${committeeId}/comment`);
   }
 }

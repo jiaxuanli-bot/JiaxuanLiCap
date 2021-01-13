@@ -81,6 +81,11 @@ td a {
   margin-left: 78.8%;
 }
 
+#editCommittee{
+  margin-top: 0px!important;
+  margin-bottom: 0px!important;
+}
+
 .clickAble{
   cursor: pointer;
 }

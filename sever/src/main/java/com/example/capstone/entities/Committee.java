@@ -1,5 +1,7 @@
 package com.example.capstone.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +33,11 @@ public class Committee {
     @ManyToMany
     @JoinTable(name = "committee_volunteers",joinColumns = { @JoinColumn(name = "committee_id")},inverseJoinColumns = {@JoinColumn(name = "volunteers_id")})
     private Set<User> volunteers;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "committee", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     public Committee(){
     }

@@ -80,7 +80,11 @@ export class FacultyComponent implements OnInit {
     this.queries = Object.keys(this.facultiesForm.controls)
       .filter(key => this.facultiesForm.controls[key].value)
       .reduce((acc, key) => {
-        acc[key] = this.facultiesForm.controls[key].value;
+        if (key === `rank`) {
+          acc[key] = this.facultiesForm.controls[key].value.split(' ')[0];
+        } else {
+          acc[key] = this.facultiesForm.controls[key].value;
+        }
         return acc;
       }, {});
 

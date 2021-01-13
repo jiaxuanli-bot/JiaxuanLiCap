@@ -54,7 +54,6 @@ export class ReportComponent implements OnInit {
     this.apiservice.getHashedCommitteesByYears(this.f.startYear.value, this.f.endYear.value).subscribe(
       value => {
         this.committees = value;
-        console.log(value);
         this.committeeMemberMaxLength(value);
         this.initPiecgart(value);
         this.years =  newArray( this.f.endYear.value - this.f.startYear.value + 1);

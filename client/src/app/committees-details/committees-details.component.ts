@@ -8,7 +8,6 @@ import {newArray} from '@angular/compiler/src/util';
 import {User} from '../models/user';
 import {AuthenticationService} from '../service/authentication.service';
 import {HttpClient} from '@angular/common/http';
-import {Criteria} from '../models/criteria';
 
 @Component({
   selector: 'app-committees-details',
@@ -23,7 +22,7 @@ export class CommitteesDetailsComponent implements OnInit {
   unsatisfiedCriteria: string[] = [];
   critreriaExpand = false;
   usersCommittees: Committee[][];
-  volunteers: User[];
+  volunteers: User[] = [];
   volunteersCommittees: Committee[][];
   popIntroductionExpand = false;
   popDutyExpand = false;

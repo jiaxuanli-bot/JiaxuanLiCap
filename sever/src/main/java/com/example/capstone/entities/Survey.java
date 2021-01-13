@@ -1,6 +1,5 @@
 package com.example.capstone.entities;
 
-
 public class Survey {
   private Long userId;
   private Long committeeId;

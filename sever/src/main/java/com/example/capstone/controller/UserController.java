@@ -1,9 +1,13 @@
 package com.example.capstone.controller;
 
+import com.example.capstone.entities.Comment;
+import com.example.capstone.entities.Committee;
 import com.example.capstone.entities.Survey;
 import com.example.capstone.entities.User;
+import com.example.capstone.projections.CommentInterface;
 import com.example.capstone.projections.CommitteeSummary;
 import com.example.capstone.repositories.UserRepository;
+import com.example.capstone.service.CommentService;
 import com.example.capstone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private UserRepository userRepo;
@@ -63,7 +70,8 @@ public class UserController {
     }
 
     @RequestMapping( value="/users/{id}", method=RequestMethod.PUT)
-    public User modifyUser(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id, @RequestBody(required=true) User user) {
+    public User modifyUser(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,
+                           @RequestBody(required=true) User user) {
         User u = userRepo.findByIdEquals(Long.valueOf(id));
         user.setId(u.getId());
         user.setEmail(u.getEmail());
@@ -72,7 +80,8 @@ public class UserController {
     }
 
     @RequestMapping( value="/users/{id}", method=RequestMethod.DELETE )
-    public void deleteUser(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(name="year", required=false) String year) {
+    public void deleteUser(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,
+                           @Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(name="year", required=false) String year) {
         //delete a user
         userService.deleteUser(Long.valueOf(id));
     }
@@ -92,7 +101,8 @@ public class UserController {
     }
 
     @RequestMapping( value="/users/{id}/enlistings", method=RequestMethod.GET )
-    public List<Survey> getUserSurveys(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id, @RequestParam(name="year", required=false) String year) {
+    public List<Survey> getUserSurveys(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,
+                                       @RequestParam(name="year", required=false) String year) {
         //Get all the survey that user have been volunteered
         User v  = userService.getUserById(Long.valueOf(id));
         v = userService.getUserByEmailAndYear(v.getEmail(), year);
@@ -105,6 +115,27 @@ public class UserController {
         User v =new User();
         v.setId(Long.valueOf(id));
         return userService.getUserSurveysCommittees(v);
+    }
+
+    @RequestMapping( value="/users/{id}/enlistings/committees/{committeeId}/comment", method=RequestMethod.GET )
+    public CommentInterface getUserSurveysCommitteesComment(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,
+                                                            @Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeId) {
+        //Get all comments that user have been created
+        return commentService.getCommentByCommitteeAndUser(new User.Builder().id(Long.valueOf(id)).build(),
+                new Committee.Builder().id(Long.valueOf(committeeId)).build());
+    }
+
+    @RequestMapping( value="/users/{id}/enlistings/committees/{committeeId}/comment", method=RequestMethod.POST )
+    public void createComment(@RequestBody(required=true) Comment commentContext,
+                              @Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,
+                              @Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeId) {
+        //Create a comment for a survey
+        Comment comment = new Comment.Builder()
+                .comment(commentContext.getComment())
+                .committee(new Committee.Builder().id(Long.valueOf(committeeId)).build())
+                .user(new User.Builder().id(Long.valueOf(id)).build())
+                .build();
+        commentService.save(comment);
     }
 
     @RequestMapping( value="/users/{id}/enlistings/{committeeid}", method=RequestMethod.POST )
@@ -128,8 +159,3 @@ public class UserController {
     }
 
 }
-
-
-
-
-
