@@ -1,5 +1,5 @@
 package com.example.capstone.projections;
 
-public interface CommitteesYearsOnly {
+public interface CommitteeYear {
     public String getYear();
 }

@@ -11,7 +11,7 @@ public class Gender {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
-    private String gender;
+    private String name;
     private String year;
 
     public Gender() {
@@ -19,16 +19,16 @@ public class Gender {
 
     private Gender( Builder b ) {
         this.id = b.id;
-        this.gender = b.gender;
+        this.name = b.name;
         this.year = b.year;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getGender() {
-        return gender;
+    public String getName() {
+        return name;
     }
 
     public void setYear(String year){
@@ -49,7 +49,7 @@ public class Gender {
 
     public static class Builder {
         private Long id;
-        private String gender;
+        private String name;
         private String year;
 
         public Builder id( Long id ) {
@@ -57,8 +57,8 @@ public class Gender {
             return this;
         }
 
-        public Builder gender(String gender){
-            this.gender = gender;
+        public Builder name(String name){
+            this.name = name;
             return this;
         }
 

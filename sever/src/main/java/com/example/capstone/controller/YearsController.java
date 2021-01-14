@@ -1,13 +1,11 @@
 package com.example.capstone.controller;
 
-import com.example.capstone.entities.User;
 import com.example.capstone.service.CommitteeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
 
 @RestController
 @RequestMapping( "/api/v1" )

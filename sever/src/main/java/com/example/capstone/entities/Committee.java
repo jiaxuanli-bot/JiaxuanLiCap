@@ -1,7 +1,5 @@
 package com.example.capstone.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
@@ -9,6 +7,13 @@ import java.util.Set;
 
 @Entity
 public class Committee {
+
+	@Override
+	public String toString() {
+		return "Committee [id=" + id + ", introduction=" + introduction + ", name=" + name + ", year=" + year
+				+ ", members=" + members + ", criteria=" + criteria + ", duties=" + duties + ", volunteers="
+				+ volunteers + "]";
+	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

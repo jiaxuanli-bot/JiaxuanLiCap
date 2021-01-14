@@ -22,6 +22,7 @@ public class User {
 	private Boolean tenured;
 	private Boolean gradStatus;
 	private Boolean soe;
+	private Boolean chair;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_college",
@@ -45,10 +46,7 @@ public class User {
 					{ @JoinColumn(name = "user_id", referencedColumnName = "id") },
 			inverseJoinColumns =
 					{ @JoinColumn(name = "dept_id", referencedColumnName = "id") })
-	private Dept dept;
-
-	private Boolean chair;
-	private String comment;
+	private Department dept;
 
 	@JsonIgnore
 	@ManyToMany(fetch=FetchType.LAZY)
@@ -83,7 +81,6 @@ public class User {
 		this.adminResponsibility = b.adminResponsibility;
 	    this.volunteeredCommittees = b.volunteeredCommittees;
 	    this.dept = b.dept;
-	    this.comment = b.comment;
 	    this.chair = b.chair;
 	    this.gradStatus = b.gradStatus;
 	}
@@ -201,14 +198,6 @@ public class User {
 		a.getMembers().remove(this);
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
 	public void setChair(Boolean chair) {
 		this.chair = chair;
 	}
@@ -221,11 +210,11 @@ public class User {
 		this.gradStatus = gradStatus;
 	}
 
-	public Dept getDept() {
+	public Department getDept() {
 		return dept;
 	}
 
-	public void setDept(Dept dept) {
+	public void setDept(Department dept) {
 		this.dept = dept;
 	}
 
@@ -267,9 +256,8 @@ public class User {
 		private Set<Committee> volunteeredCommittees;
 		private List<Role> roles;
 		private Boolean adminResponsibility;
-		private Dept dept;
+		private Department dept;
 		private Boolean chair;
-		private String comment;
 		private Boolean gradStatus;
 
 		public Builder id( Long id ) {
@@ -287,18 +275,13 @@ public class User {
 			return this;
 		}
 
-		public Builder dept(Dept dept){
+		public Builder dept(Department dept){
 			this.dept = dept;
 			return this;
 		}
 
 		public Builder chair(Boolean chair){
 			this.chair = chair;
-			return this;
-		}
-
-		public Builder comment(String comment){
-			this.comment = comment;
 			return this;
 		}
 

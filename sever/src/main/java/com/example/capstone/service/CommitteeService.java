@@ -1,8 +1,8 @@
 package com.example.capstone.service;
 import com.example.capstone.entities.*;
 import com.example.capstone.projections.CommitteeSummary;
-import com.example.capstone.projections.CommitteesWithMembersAndVolunteers;
-import com.example.capstone.projections.CommitteesYearsOnly;
+import com.example.capstone.projections.CommitteeWithUserSummaries;
+import com.example.capstone.projections.CommitteeYear;
 import com.example.capstone.projections.UserSummary;
 import com.example.capstone.repositories.CommitteeRepository;
 import com.example.capstone.repositories.CriteriaRepository;
@@ -13,7 +13,6 @@ import com.example.capstone.utils.CriteriaPredicateFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
@@ -39,16 +38,16 @@ public class CommitteeService {
     	     	.collect( Collectors.toList() );
     }
 
-	public Map<String, List<CommitteesWithMembersAndVolunteers>> getCommittees(String start, String end){
-        List<CommitteesWithMembersAndVolunteers> committeesWithMembersList =  committeeRepo.findByYearBetween(start, end);
-        Map<String, List<CommitteesWithMembersAndVolunteers>> committeeMap = new HashMap<String,List<CommitteesWithMembersAndVolunteers>>();
+	public Map<String, List<Committee>> getCommittees(String start, String end){
+        List<Committee> committeesWithMembersList =  committeeRepo.findByYearBetween(start, end);
+        Map<String, List<Committee>> committeeMap = new HashMap<String,List<Committee>>();
         committeesWithMembersList.stream().forEach(
                 c->{
                     if (committeeMap.keySet().contains(c.getName()))
                     {
                         committeeMap.get(c.getName()).add(c);
                     } else {
-                        List<CommitteesWithMembersAndVolunteers> list = new ArrayList();
+                        List<Committee> list = new ArrayList<>();
                         list.add(c);
                         committeeMap.put(c.getName(),list);
                     }
@@ -75,7 +74,7 @@ public class CommitteeService {
     }
 
     public String createYear(String year){
-        List<CommitteesYearsOnly> years  = committeeRepo.findDistinctByYearNotNullOrderByYearAsc();
+        List<CommitteeYear> years  = committeeRepo.findDistinctByYearNotNullOrderByYearAsc();
         String lastYear = years.get(years.size() - 1).getYear();
         List<Committee> committees = committeeRepo.findByYear(lastYear);
         List<Duty> copyDuties = new ArrayList<Duty>();
@@ -122,14 +121,20 @@ public class CommitteeService {
         return years;
     }
 
-    public CommitteesWithMembersAndVolunteers getCommittee(Long id){
+    public CommitteeWithUserSummaries getCommittee(Long id){
         return committeeRepo.findByIdEqualsAndIdNotNull(id);
     }
 
-    public List<UserSummary> getCommitteeMembers(Long id){
-        Committee c = new Committee();
-        c.setId(Long.valueOf(id));
-        return userRepo.findByCommitteesEquals(c);
+    public List<UserSummary> getCommitteeMembers(Long id) {    	
+    	Committee c = committeeRepo.findById(id).orElse( null );
+    	
+    	System.out.println("committeeSevice.getCommitteeMembers::" + c );
+    	if( c == null ) throw new IllegalArgumentException("invalid committee id");
+    	    	
+        List<UserSummary> result = userRepo.findByCommitteesEquals(c);
+        System.out.println( "RESULT=>" + result );
+        
+        return result;
     }
 
     public List<Survey> getCommitteeVolunteers(Long id){

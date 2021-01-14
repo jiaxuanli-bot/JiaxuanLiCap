@@ -30,40 +30,30 @@ public class MockService {
     private CollegeRepository collegeRepo;
 
     @Autowired
-    private DeptRepository deptRepo;
+    private DepartmentRepository departmentRepo;
 
     @Autowired
     private GenderRepository genderRepo;
-
-    public String randomCriteriaCollege() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("(college ");
-        if (Math.random() < 0.33){
-            sb.append("csh ");
-        } else if (Math.random() < 0.66) {
-            sb.append("cash ");
-        } else {
-            sb.append("cba ");
-        }
-        sb.append((int) (Math.random() * 3  + 1));
-        sb.append(')');
-        return sb.toString();
+    
+    
+    private List<String> ranks = Arrays.asList( "Associate Professor", "Assistant Professor", "Full Professor" );
+    private List<String> committeeNames = IntStream.range(0, 50).mapToObj( i -> randomString() ).collect( Collectors.toList() );
+    
+    public static <T> T one( List<T> ts ) {
+        int index = (int)(Math.random() * ts.size() );
+        return ts.get(index);
     }
 
-    public String randomCriteriaSoe() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("(soe ");
-        sb.append((int) (Math.random() * 3 + 1));
-        sb.append(')');
-        return sb.toString();
+    
+    public <T> List<T> choose( List<T> ts, int n ) {
+        if( n > ts.size() ) return ts;
+        List<T> copy = new ArrayList<T>( ts );
+        Collections.shuffle(copy);
+        return copy.subList(0,  n);
     }
-
-    public String randomCriteriaSize() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("(size ");
-        sb.append((int) (Math.random() * 7 + 3));
-        sb.append(')');
-        return sb.toString();
+    
+    public int randomBetween( int low, int high ) { // inclusive
+    	return (int)(Math.random() * ( high - low + 1 ) + low );
     }
 
     public String randomString() {
@@ -81,210 +71,221 @@ public class MockService {
         return String.valueOf( (int)( Math.random() * 20 + 2000 ) );
     }
 
-    public static String staticYear() {
-        return String.valueOf( (int)( Math.random() * 20 + 2000 ) );
+    public List<Role> roles() {        
+        List<Role> roles = Arrays
+        		.asList("Admin", "Normal", "Nominate")
+        		.stream()
+        		.map( roleName -> new Role.Builder().role(roleName).build() )
+        		.collect( Collectors.toList() );
+        
+        return roleRepo.saveAll( roles );
+    }
+    
+
+    public List<College> colleges(List<String> years) {
+    	List<College> allYears = new ArrayList<>();
+    	years.forEach( year -> {
+    		List<College> colleges = Arrays
+    				.asList("CSH", "CASSH", "CBA", "SOE")
+    				.stream()
+    				.map( name -> new College.Builder().name(name).year(year).build() )
+    				.collect( Collectors.toList() );
+    		allYears.addAll( colleges );    		
+         } );
+    	
+    	return collegeRepo.saveAll( allYears );
     }
 
-    public List<Role> roles() {
-        return Arrays.asList("Admin", "Normal", "Nominate" )
-                .stream()
-                .map( roleName -> {
-                    Role role = new Role();
-                    role.setRole(roleName);
-                    return roleRepo.save(role);
-                })
-                .collect( Collectors.toList() );
+    public List<Department> departments(List<College> colleges ) {
+    	List<Department> allYears = new ArrayList<>();
+    	
+    	HashMap<String, List<String>> collegeNameToListOfDepartmentNames = new HashMap<>();
+    	collegeNameToListOfDepartmentNames.put( "CSH", Arrays.asList("CS", "MTH", "BIO", "ESS", "HEHP", "CHM", "CPE", "PHY" ));
+       	collegeNameToListOfDepartmentNames.put( "CASSH", Arrays.asList("ENG", "EDS", "CHM", "MUS", "SOC", "PHY", "POL") );
+       	collegeNameToListOfDepartmentNames.put( "CBA", Arrays.asList("FIN", "ECO", "MGT", "ACT") );
+       	collegeNameToListOfDepartmentNames.put( "SOE", Arrays.asList("EDS") );
+       	
+    	colleges.forEach( college -> {
+    		List<Department> departments = 
+    				collegeNameToListOfDepartmentNames.get( college.getName() )
+    				.stream()
+    				.filter( name -> Math.random() < .85 ) // FOR TESTING PURPOSES ENSURE THAT DEPTS ARE NOT THE SAME FOR ALL YEARS
+    				.map( departmentName ->     					
+    					new Department.Builder()
+    						.name(departmentName)
+    						.year( college.getYear() )
+    						.college(college)
+    						.build()
+    				)
+    				.collect( Collectors.toList() );                
+             
+    		allYears.addAll( departments );
+    	});
+    	
+    	return departmentRepo.saveAll( allYears );
     }
 
-    public List<College> colleges() {
-        return Arrays.asList("CSH", "CASSH", "CBA", "SOE")
-                .stream()
-                .map( collegeName -> {
-                    College college = new College();
-                    college.setCollege(collegeName);
-                    college.setYear(year());
-                    return collegeRepo.save(college);
-                })
-                .collect( Collectors.toList() );
-    }
-
-    public List<Dept> depts() {
-        return Arrays.asList("A", "B", "C", "D")
-                .stream()
-                .map(  deptName -> {
-                    Dept dept = new Dept();
-                    dept.setDeptName(deptName);
-                    dept.setYear(year());
-                    return deptRepo.save(dept);
-                })
-                .collect( Collectors.toList() );
-    }
-
-    public List<Gender> genders() {
-        return Arrays.asList("M", "F")
-                .stream()
-                .map(  genderName -> {
-                    Gender gender = new Gender();
-                    gender.setGender(genderName);
-                    gender.setYear(year());
-                    return genderRepo.save(gender);
-                })
-                .collect( Collectors.toList() );
-    }
-
-    public static List<String> ranks = Arrays.asList( "Associate Professor", "Assistant Professor", "Full Professor" );
-    public static List<College> colleges = Arrays.asList(
-            new College.Builder().college("CSH").year("2018").build(),
-            new College.Builder().college("CASSH").year("2018").build(),
-            new College.Builder().college("CBA").year("2018").build(),
-            new College.Builder().college("CSH").year("2019").build(),
-            new College.Builder().college("CASSH").year("2019").build(),
-            new College.Builder().college("CBA").year("2019").build(),
-            new College.Builder().college("SOE").year("2019").build());
-    public static List<Gender> genders = Arrays.asList(
-            new Gender.Builder().gender("M").year(staticYear()).build(),
-            new Gender.Builder().gender("F").year(staticYear()).build());
-    public static List<Dept> depts = Arrays.asList(
-            new Dept.Builder().deptName("A").year(staticYear()).build(),
-            new Dept.Builder().deptName("B").year(staticYear()).build(),
-            new Dept.Builder().deptName("C").year(staticYear()).build(),
-            new Dept.Builder().deptName("D").year(staticYear()).build()
-    );
-
-    public static <T> T one( List<T> ts ) {
-        int index = (int)(Math.random() * ts.size() );
-        return ts.get(index);
+    public List<Gender> genders(List<String> years) {
+    	List<Gender> allYears = new ArrayList<>();
+    	years.forEach( year -> {
+    		List<Gender> genders = Arrays
+    				.asList("M", "F", "L", "G", "B", "T", "X", "Y", "Z" )
+    				.stream()
+    				.filter( name -> Math.random() < .85 )
+    				.map( name -> new Gender.Builder().name(name).year(year).build() )
+    				.collect(Collectors.toList() );
+    		allYears.addAll( genders );
+    		
+    	});
+    	
+    	return genderRepo.saveAll( allYears );
     }
 
     public String email() {
         return randomString() + "@uwlax.edu";
     }
 
-    public User user(List<Role> roles) {
-        //Builder design modal
+    public User user(List<Role> roles, List<Gender> genders, List<Department> departments) {
+    	final Department department = one( departments );
+    	final String year = department.getYear();
+    	final Gender gender = one( genders.stream().filter( g -> g.getYear().equals( year ) ).collect( Collectors.toList() ) );
+    	
         return new User.Builder()
                 .first( randomString() )
                 .last( randomString() )
                 .rank( one( ranks ) )
-                .college( one( colleges ) )
+                .college( department.getCollege() )
                 .email( email() )
                 .committees( new HashSet<>())
                 .volunteeredCommittees(new HashSet<>())
-                .gender( one( genders ))
-                .dept( one( depts ) )
+                .gender( gender )
+                .dept( department )
                 .adminResponsibility(Math.random() < .6)
-                .year( year() )
+                .year( year )
                 .tenured( Math.random() < .6 )
                 .soe( Math.random() < .35 )
                 .gradStatus( Math.random() < .35 )
-                .chair(Math.random() < .35)
+                .chair(Math.random() < .15)
                 .roles( choose( roles, (int)(Math.random() * 2 + 1 ) ) )
                 .build();
     }
 
-    public List<Criteria> criteria(final Committee committee) {
-        List<Criteria> criteria = new ArrayList<Criteria>();
-        if(Math.random() > 0.3){
-            Criteria c = new Criteria.Builder()
-                    .criteria( this.randomCriteriaSoe() )
-                    .committee(committee)
-                    .build();
-            criteria.add(c);
-        }
-        if(Math.random() > 0.3){
-            Criteria c = new Criteria.Builder()
-                    .criteria( this.randomCriteriaCollege() )
-                    .committee(committee)
-                    .build();
-            criteria.add(c);
-        }
-        if(Math.random() > 0.3){
-            Criteria c = new Criteria.Builder()
-                    .criteria( this.randomCriteriaSize() )
-                    .committee(committee)
-                    .build();
-            criteria.add(c);
-        }
-        return criteriaRepo.saveAll( criteria );
+
+    // THIS FUNCTION DOESN"T SAVE IN REPO.  WE DEFER FOR FASTER BATCH SAVE LATER
+    public List<Criteria> criteria(final Committee committee, List<College> colleges ) {
+        // COLLEGES MUST MATCH COMMITTEE YEAR
+    	colleges = colleges.stream().filter( c -> c.getYear().equals( committee.getYear() )).collect(Collectors.toList() );
+    	
+    	// COLLEGE CRITERIA
+    	List<Criteria> criteria = colleges
+    		.stream()
+    		.map( c -> new Criteria.Builder().criteria( "(college " + c.getName() + " " + randomBetween(3, 5) + ")" ).committee( committee ).build() )
+    		.collect(Collectors.toList() );
+    	
+    	// SOE AFFILIATION
+    	criteria.add( new Criteria.Builder().criteria( "(soe " + randomBetween( 1, 2 ) + ")" ).committee( committee ).build()  );
+    	
+    	
+    	// FILTER OUT SOME FOR TESTING PURPOSES
+    	criteria = criteria.stream().filter( c -> Math.random() < .7 ).collect( Collectors.toList() );
+    	
+    	// SIZE IS REQUIRED
+    	criteria.add( new Criteria.Builder().criteria( "(size " + randomBetween(9, 12) + ")").committee( committee ).build() );
+        return criteria;
     }
 
+    
+    // THIS FUNCTION DOESN"T SAVE IN THE REPO.  WE DEFER FOR FASTER BATCH SAVE LATER
     public List<Duty> duties(Committee committee) {
         List<Duty> duties = IntStream
                 .range(0,  (int)(Math.random() * 5 + 10 ) )
-                .mapToObj( i -> {
-                    Duty duty = new Duty.Builder()
+                .mapToObj( i -> new Duty.Builder()
                             .duty( randomString() )
                             .committee(committee)
-                            .build();
-                    return dutyRepo.save( duty );
-                })
+                            .build() )
                 .collect(Collectors.toList());
 
-        return dutyRepo.saveAll( duties );
+        return duties;
     }
 
-    public Committee committee( ) {
-        Committee committee = new Committee();
-        committee.setIntroduction(randomString());
-        committee.setName(randomString());
-        committee.setYear( year() );
-        committee = committeeRepo.save( committee );
+    public List<Committee> committees( List<String> years, List<College> colleges, List<Department> departments, List<Gender> genders ) {
+    	final List<Committee> allYears = new ArrayList<>();
+    	years.forEach( year -> {
+    		List<Committee> committees = committeeNames
+    				.stream()
+    				.filter( name -> Math.random() < .9 ) // FOR TESTING ... MAKE SURE THAT COMMITTEES AREN'T THE SAME EVERY YEAR
+    				.map( name -> new Committee
+    						.Builder()
+    						.name( name )
+    						.year( year )
+    						.introduction( randomString() )
+    						.criteria( new ArrayList<>() )
+    						.duties( new ArrayList<>() )
+    						.members( new HashSet<>() )
+    						.build() )
+    				.collect( Collectors.toList() );
+    		allYears.addAll( committees );
+    	});
 
-        committee.setCriteria( criteria( committee ) );
-        committee.setDuties( duties( committee ) );
-        committee.setMembers( new HashSet<>() );
-
-        return committeeRepo.save( committee );
+    	// attach criteria
+        List<Committee> committeesWithIds = committeeRepo.saveAll( allYears );
+        List<Criteria> allCriteria = new ArrayList<>();
+        committeesWithIds        		
+        		.forEach( committee -> allCriteria.addAll( criteria( committee, colleges )  ) );
+        
+        criteriaRepo.saveAll( allCriteria );
+        
+        
+        // attach duties
+        List<Duty> allDuties = new ArrayList<>();
+        committeesWithIds
+        	.forEach( committee -> allDuties.addAll( duties( committee )));
+        dutyRepo.saveAll( allDuties );
+        
+        return committeesWithIds;
     }
 
-    public List<Committee> committees( ) {
-        List<Committee> committees = IntStream
-                .range(0,  200 )
-                .mapToObj( i -> committee() )
-                .collect( Collectors.toList() );
-        return committeeRepo.saveAll( committees );
-    }
-
-    public List<User> users(List<Role> roles) {
+    public List<User> users(List<Role> roles, List<Gender> genders, List<Department> departments) {
         List<User> users = IntStream
-                .range(0,  200 )
-                .mapToObj( i -> user(roles) )
+                .range(0,  500 )
+                .mapToObj( i -> user(roles, genders, departments ) )
                 .collect( Collectors.toList() );
 
         return userRepo.saveAll( users );
     }
 
-    public <T> List<T> choose( List<T> ts, int n ) {
-        if( n > ts.size() ) return ts;
-        List<T> copy = new ArrayList<T>( ts );
-        Collections.shuffle(copy);
-        return copy.subList(0,  n);
+
+    public List<String> years(int from, int to ) {
+    	return IntStream.range(from, to).mapToObj( val -> String.valueOf( val ) ).collect(Collectors.toList() );
     }
 
     //	@PostConstruct
     public void makeData() {
+    	// ROLES are not year-based
         List<Role> roles = roles();
-        List<Committee> committees = committees();
-        List<Gender> genders = genders();
-        List<Dept> depts = depts();
-        List<User> users = users(roles);
+        
+        // EVERYTHING ELSE IS year-based so construct years first
+    	List<String> years = years( 1998, 2023 );
+    	
+    	// YEAR-BASED DATA
+        List<Gender> genders = genders( years );
+    	List<College> colleges = colleges( years );
+    	List<Department> departments = departments( colleges );
+        List<Committee> committees = committees( years, colleges, departments, genders );
+        
+        // The USERS are aware of years via departments
+        
+        @SuppressWarnings("unused")
+		List<User> users = users(roles, genders, departments);
 
         committees
                 .stream()
                 .forEach( c -> {
-                    List<User> members = choose( userRepo.findByYear(c.getYear()) , (int)(Math.random() * 10 ) );
-                    Set memberSet =  new HashSet();
-                    Set volunteerSet = new HashSet();
-                    members.forEach(
-                            member->{
-                                if (!memberSet.contains(member)){
-                                    memberSet.add(member);
-                                    volunteerSet.add(member);
-                                }
-                            }
-                    );
-                    c.setMembers( memberSet );
-                    c.setVolunteers( volunteerSet );
+                    List<User> volunteers = choose( userRepo.findByYear(c.getYear()) , randomBetween( 0, 20 ) );
+                    List<User> members = choose( volunteers, randomBetween(0, volunteers.size() ) );
+                                        
+                    c.setMembers( new HashSet<>( members ) );
+                    c.setVolunteers( new HashSet<>( volunteers ) );
                 });
         committeeRepo.saveAll( committees );
     }

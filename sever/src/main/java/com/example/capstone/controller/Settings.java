@@ -1,10 +1,10 @@
 package com.example.capstone.controller;
 
 import com.example.capstone.entities.College;
-import com.example.capstone.entities.Dept;
+import com.example.capstone.entities.Department;
 import com.example.capstone.entities.Gender;
 import com.example.capstone.repositories.CollegeRepository;
-import com.example.capstone.repositories.DeptRepository;
+import com.example.capstone.repositories.DepartmentRepository;
 import com.example.capstone.repositories.GenderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +19,7 @@ import java.util.List;
 public class Settings {
 
     @Autowired
-    DeptRepository deptRepo;
+    DepartmentRepository deptRepo;
 
     @Autowired
     CollegeRepository collegeRepo;
@@ -28,7 +28,7 @@ public class Settings {
     GenderRepository genderRepo;
 
     @RequestMapping( value="/setting/{year}/dept", method= RequestMethod.GET)
-    public List<Dept> getDeptByYear(@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @PathVariable String year) {
+    public List<Department> getDeptByYear(@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @PathVariable String year) {
         //get depts by year
         return this.deptRepo.getByYear(year);
     }

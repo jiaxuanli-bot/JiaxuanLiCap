@@ -11,20 +11,11 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
     User findByIdEquals(Long id);
-
     List<UserYearsOnly> findDistinctByEmailOrderByYearAsc(String email);
-
     List<UserSummary> findByCommitteesEquals(Committee c);
-
     List<User> findByEmailEquals(String email);
-
     List<UserSummary> findByVolunteeredCommitteesEquals(Committee c);
-
-    User save(User u);
-
     User findByEmailEqualsAndYearEquals(String email, String year);
-
-    List<User> findByYear( String year);
+    List<User> findByYear(String year);
 }

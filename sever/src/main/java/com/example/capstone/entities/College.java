@@ -12,7 +12,7 @@ public class College {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
-    private String college;
+    private String name;
     private String year;
 
     public College() {
@@ -20,16 +20,16 @@ public class College {
 
     private College( Builder b ) {
         this.id = b.id;
-        this.college = b.college;
+        this.name = b.name;
         this.year = b.year;
     }
 
-    public void setCollege(String college) {
-        this.college = college;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getCollege() {
-        return college;
+    public String getName() {
+        return name;
     }
 
     public void setYear(String year){
@@ -50,7 +50,7 @@ public class College {
 
     public static class Builder {
         private Long id;
-        private String college;
+        private String name;
         private String year;
 
         public Builder id( Long id ) {
@@ -58,8 +58,8 @@ public class College {
             return this;
         }
 
-        public Builder college(String college){
-            this.college = college;
+        public Builder name(String name){
+            this.name = name;
             return this;
         }
 

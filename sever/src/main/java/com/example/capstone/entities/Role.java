@@ -15,6 +15,11 @@ public class Role {
 	public Role() {
 	}
 	
+	private Role( Builder b ) {
+		this.id = b.id;
+		this.role = b.role;
+	}
+	
 	public void setRole( String role ) {
 		this.role = role;
 	}
@@ -29,5 +34,24 @@ public class Role {
 	
 	public Long getId() {
 		return this.id;
+	}
+	
+	public static class Builder {
+		public String role;
+		public Long id;
+		
+		public Builder id( Long id ) {
+			this.id = id;
+			return this;
+		}
+		
+		public Builder role( String role ) {
+			this.role = role;
+			return this;
+		}
+		
+		public Role build() {
+			return new Role( this );
+		}		
 	}
 }

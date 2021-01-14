@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface CriteriaRepository extends JpaRepository<Criteria, Long> {
-    Criteria save(Criteria c);
     List<Criteria> findByCommitteeEquals(Committee c);
 }

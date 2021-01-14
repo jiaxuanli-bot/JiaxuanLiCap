@@ -11,21 +11,21 @@ import java.util.List;
 @Repository
 public interface CommitteeRepository extends JpaRepository<Committee, Long> {
 
-    List<CommitteesWithMembersAndVolunteers> findByYearBetween(String startYear, String endYear);
+    List<Committee> findByYearBetween(String startYear, String endYear);
 
     List<Committee> findByYear(String year);
 
     List<CommitteeSummary> findByYearBetweenAndIdNotNull(String startYear, String endYear);
 
-    List<CommitteesYearsOnly> findDistinctByYearNotNullOrderByYearAsc();
+    List<CommitteeYear> findDistinctByYearNotNullOrderByYearAsc();
 
-    List<CommitteesYearsOnly> findDistinctByYearNotNullAndIdEqualsOrderByYearAsc(Long id);
+    List<CommitteeYear> findDistinctByYearNotNullAndIdEqualsOrderByYearAsc(Long id);
 
-    List<CommitteesYearsOnly> findDistinctByNameEquals(String name);
+    List<CommitteeYear> findDistinctByNameEquals(String name);
 
-    CommitteesWithMembersAndVolunteers findByIdEqualsAndIdNotNull(Long id);
+    CommitteeWithUserSummaries findByIdEqualsAndIdNotNull(Long id);
 
-    CommitteesMembers findByIdEquals(Long id);
+    CommitteeMembers findByIdEquals(Long id);
 
     CommitteeVolunteers findByIdIs(Long id);
 

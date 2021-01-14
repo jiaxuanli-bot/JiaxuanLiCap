@@ -9,7 +9,5 @@ import java.util.List;
 
 @Repository
 public interface DutyRepository extends JpaRepository<Duty, Long> {
-    Duty save(Duty c);
-
     List<Duty> findByCommitteeEquals(Committee c);
 }

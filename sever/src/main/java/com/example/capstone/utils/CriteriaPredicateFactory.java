@@ -48,7 +48,7 @@ public class CriteriaPredicateFactory {
 		consume( parser, "(", "college" );
 		String college = parser.nextToken();
 		Integer count = Integer.parseInt( parser.nextToken() );
-		Predicate<User> userCheck = u -> u.getCollege() != null && u.getCollege().getCollege().toLowerCase().equals( college );
+		Predicate<User> userCheck = u -> u.getCollege() != null && u.getCollege().getName().toLowerCase().equals( college );
 		consume( parser, ")");
 	
 		return committee -> 

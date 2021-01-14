@@ -29,7 +29,7 @@ public class CommitteeController {
     }
 
     @RequestMapping( value="/hashedCommittees", method=RequestMethod.GET )
-    public Map<String,List<CommitteesWithMembersAndVolunteers>> getYearsCommitteesWithGroup(@Pattern( regexp = "\\b\\d{4}\\b", message = "the start year format is wrong") @RequestParam(name="startYear", required=true) String startYear, @Pattern(regexp = "\\b\\d{4}\\b", message = "the end year format is wrong") @RequestParam(name="endYear",required = true)String endYear) {
+    public Map<String,List<Committee>> getYearsCommitteesWithGroup(@Pattern( regexp = "\\b\\d{4}\\b", message = "the start year format is wrong") @RequestParam(name="startYear", required=true) String startYear, @Pattern(regexp = "\\b\\d{4}\\b", message = "the end year format is wrong") @RequestParam(name="endYear",required = true)String endYear) {
         return committeeService.getCommittees(startYear, endYear);
     }
 
@@ -49,7 +49,7 @@ public class CommitteeController {
     }
 
     @RequestMapping( value="/committees/{id}", method=RequestMethod.GET )
-    public CommitteesWithMembersAndVolunteers getCommittee(@Pattern(regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String id ) {
+    public CommitteeWithUserSummaries getCommittee(@Pattern(regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String id ) {
         return committeeService.getCommittee(Long.valueOf(id));
     }
 
@@ -59,7 +59,7 @@ public class CommitteeController {
     }
 
     @RequestMapping( value="/committees/{id}/members", method=RequestMethod.GET )
-    public List<UserSummary> getCommitteeMembers(@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String id){
+    public List<UserSummary> getCommitteeMembers(@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String id) {
         return committeeService.getCommitteeMembers(Long.valueOf(id));
     }
 

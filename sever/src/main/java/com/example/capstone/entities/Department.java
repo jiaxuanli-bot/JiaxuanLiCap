@@ -1,31 +1,44 @@
 package com.example.capstone.entities;
 
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
 
 @Entity
-public class Dept {
+public class Department {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    private String deptName;
+    private String name;
     private String year;
+    
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinTable(name = "dept_college",
+			joinColumns =
+					{ @JoinColumn(name = "dept_id", referencedColumnName = "id") },
+			inverseJoinColumns =
+					{ @JoinColumn(name = "college_id", referencedColumnName = "id") })
+	private College college;
 
-    public Dept() {
+    public Department() {
     }
 
-    private Dept( Builder b ) {
+    private Department( Builder b ) {
         this.id = b.id;
-        this.deptName = b.deptName;
+        this.name = b.name;
         this.year = b.year;
+        this.college = b.college;
     }
 
-    public void setDeptName(String deptName){
-        this.deptName = deptName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setYear(String year){
@@ -36,8 +49,8 @@ public class Dept {
         this.id = id;
     }
 
-    public String getDeptName() {
-        return deptName;
+    public String getName() {
+        return name;
     }
 
     public Long getId() {
@@ -47,20 +60,33 @@ public class Dept {
     public String getYear() {
         return year;
     }
+    
+    public void setCollege( College college ) {
+    	this.college = college;    	
+    }
+    
+    public College getCollege( ) {
+    	return this.college;
+    }
 
     public static class Builder {
         private Long id;
-        private String deptName;
+        private String name;
         private String year;
-
+        private College college;
 
         public Builder id( Long id ) {
             this.id = id;
             return this;
         }
+        
+        public Builder college( College college ) {
+        	this.college = college;
+        	return this;
+        }
 
-        public Builder deptName(String deptName){
-            this.deptName = deptName;
+        public Builder name(String name){
+            this.name = name;
             return this;
         }
 
@@ -69,8 +95,8 @@ public class Dept {
             return this;
         }
 
-        public Dept build() {
-            return new Dept( this );
+        public Department build() {
+            return new Department( this );
         }
     }
 }
