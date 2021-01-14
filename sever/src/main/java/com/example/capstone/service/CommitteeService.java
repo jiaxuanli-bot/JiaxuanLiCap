@@ -38,16 +38,16 @@ public class CommitteeService {
     	     	.collect( Collectors.toList() );
     }
 
-	public Map<String, List<Committee>> getCommittees(String start, String end){
-        List<Committee> committeesWithMembersList =  committeeRepo.findByYearBetween(start, end);
-        Map<String, List<Committee>> committeeMap = new HashMap<String,List<Committee>>();
+	public Map<String, List<CommitteeWithUserSummaries>> getCommittees(String start, String end){
+        List<CommitteeWithUserSummaries> committeesWithMembersList =  committeeRepo.findByYearBetween(start, end);
+        Map<String, List<CommitteeWithUserSummaries>> committeeMap = new HashMap<String,List<CommitteeWithUserSummaries>>();
         committeesWithMembersList.stream().forEach(
                 c->{
                     if (committeeMap.keySet().contains(c.getName()))
                     {
                         committeeMap.get(c.getName()).add(c);
                     } else {
-                        List<Committee> list = new ArrayList<>();
+                        List<CommitteeWithUserSummaries> list = new ArrayList<>();
                         list.add(c);
                         committeeMap.put(c.getName(),list);
                     }
@@ -64,47 +64,48 @@ public class CommitteeService {
     }
 
     public List<String> getCommitteesYears(){
-         List<String> years = new ArrayList<>();
-        committeeRepo.findDistinctByYearNotNullOrderByYearAsc().forEach(
-                committeesYearsOnly -> {
-                    years.add(committeesYearsOnly.getYear());
-                }
-        );
-        return years;
+        return committeeRepo.findDistinctByYearNotNullOrderByYearAsc()
+        		.stream()
+        		.map( committee -> committee.getYear() )
+        		.collect( Collectors.toList() );
     }
 
     public String createYear(String year){
-        List<CommitteeYear> years  = committeeRepo.findDistinctByYearNotNullOrderByYearAsc();
+        List<CommitteeYear> years  = committeeRepo.findDistinctByYearNotNullOrderByYearAsc();        
         String lastYear = years.get(years.size() - 1).getYear();
         List<Committee> committees = committeeRepo.findByYear(lastYear);
-        List<Duty> copyDuties = new ArrayList<Duty>();
-        List<Criteria> copyCriterias = new ArrayList<Criteria>();
+        
         committees.forEach(
                 committee -> {
-                    Committee copy = new Committee.Builder().
-                            introduction(committee.getIntroduction()).
-                            name(committee.getName()).
-                            year(year).build();
+                	// SAVE THE NEW COMMITTEE
+                    Committee copy = new Committee.Builder()
+                            .introduction( committee.getIntroduction() )
+                            .name( committee.getName())
+                            .year(year)
+                            .build();                    
                     Committee finalCopy = committeeRepo.save(copy);
-                    committee.getDuties().forEach(
-                            duty -> {
-                                Duty copyDuty = new Duty();
-                                copyDuty.setCommittee(finalCopy);
-                                copyDuty.setDuty(duty.getDuty());
-                                copyDuties.add(copyDuty);
-                            }
-                    );
-                    finalCopy.setDuties(dutyRepo.saveAll(copyDuties));
-                    committee.getCriteria().forEach(
-                            criteria -> {
-                                Criteria copyCriteria = new Criteria();
-                                copyCriteria.setCommittee(finalCopy);
-                                copyCriteria.setCriteria(criteria.getCriteria());
-                                copyCriterias.add(copyCriteria);
-                            }
-                    );
-                    finalCopy.setCriteria(criteriaRepo.saveAll(copyCriterias));
-                    committeeRepo.save(finalCopy);
+                    
+                    // ASSIGN DUTIES
+                    List<Duty> newDuties = committee.getDuties()
+                    	.stream()
+                    	.map( duty -> new Duty.Builder()
+                                		.committee( finalCopy )
+                                		.duty( duty.getDuty() )
+                                		.build() )
+                    	.collect( Collectors.toList() );                    
+                    finalCopy.setDuties(dutyRepo.saveAll(newDuties));
+                    
+                    // ASSIGN CRITERIA
+                    List<Criteria> newCriteria = committee.getCriteria()
+                    		.stream()
+                    		.map( crit -> new Criteria.Builder()
+                    				.committee( finalCopy )
+                    				.criteria( crit.getCriteria() )
+                    				.build() )
+                    		.collect( Collectors.toList() );
+                    		
+                    finalCopy.setCriteria( criteriaRepo.saveAll( newCriteria ) );
+                    committeeRepo.save( finalCopy );
                 }
         );
         return year;
@@ -198,34 +199,40 @@ public class CommitteeService {
         this.committeeRepo.deleteById(id);
     }
 
-    public void ceateCommittee(Committee committee) {
-        Committee c = new Committee();
-        c.setYear(committee.getYear());
-        c.setIntroduction(committee.getIntroduction());
-        c.setName(committee.getName());
-        Committee resC = committeeRepo.save(c);
-        c.setCriteria(new ArrayList<Criteria>());
-        c.setDuties(new ArrayList<Duty>());
-        if (committee.getCriteria().size() > 0) {
-            committee.getCriteria()
-                    .forEach(
-                            criteria -> {
-                                criteria.setCommittee(resC);
-                                c.getCriteria().add(criteria);
-                                criteriaRepo.save(criteria);
-                            }
-                    );
-        }
-        if (committee.getDuties().size() > 0) {
-            committee.getDuties().
-                    forEach(
-                            duty -> {
-                                duty.setCommittee(resC);
-                                c.getDuties().add(duty);
-                                dutyRepo.save(duty);
-                            }
-                    );
-        }
-        committeeRepo.save(c);
+    public CommitteeSummary createCommittee(Committee c) {
+    	// Save the basic entity
+    	Committee copy = new Committee.Builder()
+    			.year( c.getYear() )
+    			.name( c.getName() )
+    			.introduction( c.getIntroduction() )
+    			.build();
+    	
+    	// Fill in the missing parts 
+    	Committee committee = committeeRepo.save( copy );
+    	
+    	List<Criteria> criteria = c.getCriteria()
+    		.stream()
+    		.map( crit -> {
+    			crit.setCommittee( committee );
+    			return crit;
+    		})
+    		.collect( Collectors.toList() );
+
+    	List<Duty> duties = c.getDuties()
+        		.stream()
+        		.map( duty -> {
+        			duty.setCommittee( committee );
+        			return duty;
+        		})
+        		.collect( Collectors.toList() );
+    	
+    	criteriaRepo.saveAll( criteria );
+    	dutyRepo.saveAll( duties );
+    	
+    	committee.setCriteria(criteria);
+    	committee.setDuties( duties );
+        committeeRepo.save(committee);
+        
+        return committeeRepo.findByNameEqualsAndYearEquals( committee.getName(), committee.getYear() );
     }
 }

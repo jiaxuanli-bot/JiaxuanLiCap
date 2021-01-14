@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface CommitteeRepository extends JpaRepository<Committee, Long> {
 
-    List<Committee> findByYearBetween(String startYear, String endYear);
+    List<CommitteeWithUserSummaries> findByYearBetween(String startYear, String endYear);
 
     List<Committee> findByYear(String year);
 

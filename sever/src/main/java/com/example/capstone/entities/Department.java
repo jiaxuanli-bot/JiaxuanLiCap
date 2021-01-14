@@ -4,6 +4,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+
+import org.springframework.lang.NonNull;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,9 +19,13 @@ public class Department {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+    
+    @NonNull
     private String name;
+    @NonNull
     private String year;
     
+    @NonNull
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinTable(name = "dept_college",
 			joinColumns =

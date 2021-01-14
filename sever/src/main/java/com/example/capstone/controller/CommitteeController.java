@@ -29,7 +29,7 @@ public class CommitteeController {
     }
 
     @RequestMapping( value="/hashedCommittees", method=RequestMethod.GET )
-    public Map<String,List<Committee>> getYearsCommitteesWithGroup(@Pattern( regexp = "\\b\\d{4}\\b", message = "the start year format is wrong") @RequestParam(name="startYear", required=true) String startYear, @Pattern(regexp = "\\b\\d{4}\\b", message = "the end year format is wrong") @RequestParam(name="endYear",required = true)String endYear) {
+    public Map<String,List<CommitteeWithUserSummaries>> getYearsCommitteesWithGroup(@Pattern( regexp = "\\b\\d{4}\\b", message = "the start year format is wrong") @RequestParam(name="startYear", required=true) String startYear, @Pattern(regexp = "\\b\\d{4}\\b", message = "the end year format is wrong") @RequestParam(name="endYear",required = true)String endYear) {
         return committeeService.getCommittees(startYear, endYear);
     }
 
@@ -86,9 +86,9 @@ public class CommitteeController {
     }
 
     @RequestMapping( value="/committees", method=RequestMethod.POST)
-    public void createUser(@RequestBody(required=true) Committee committee) {
+    public CommitteeSummary createCommitte(@RequestBody(required=true) Committee committee) {
         //create a new committee
-        this.committeeService.ceateCommittee(committee);
+        return this.committeeService.createCommittee(committee);
     }
 
     @RequestMapping( value="/committees/{id}/unsatisfiedCriteria", method=RequestMethod.GET)
