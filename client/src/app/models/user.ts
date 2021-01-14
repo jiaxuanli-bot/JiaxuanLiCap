@@ -1,5 +1,8 @@
 import {UserCommittees} from './user-committees';
 import {Role} from './role';
+import {Gender} from './gender';
+import {College} from './college';
+import {Dept} from './dept';
 
 export class User {
   id: string;
@@ -7,13 +10,15 @@ export class User {
   first: string;
   last: string;
   rank: string;
-  college: string;
+  college: College;
   tenured: boolean;
   soe: boolean;
   adminResponsibility: boolean;
-  gender: string;
+  gender: Gender;
   year: string;
   committees: UserCommittees[];
   roles: Role[];
+  dept: Dept;
+  chair: boolean;
   years: string[];
 }

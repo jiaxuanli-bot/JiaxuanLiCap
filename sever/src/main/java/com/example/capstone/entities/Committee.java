@@ -34,11 +34,6 @@ public class Committee {
     @JoinTable(name = "committee_volunteers",joinColumns = { @JoinColumn(name = "committee_id")},inverseJoinColumns = {@JoinColumn(name = "volunteers_id")})
     private Set<User> volunteers;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "committee", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private List<Comment> comments;
-
     public Committee(){
     }
 

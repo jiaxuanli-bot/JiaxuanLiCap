@@ -154,7 +154,7 @@ export class FacultyComponent implements OnInit {
     this.facultiesForm.controls.editTenured.setValue(this.faculties[i].tenured);
     this.facultiesForm.controls.editSoe.setValue(this.faculties[i].soe);
     this.facultiesForm.controls.editAdmin.setValue(this.faculties[i].adminResponsibility);
-    if (this.faculties[i].gender === 'F') {
+    if (this.faculties[i].gender.gender === 'F') {
       this.facultiesForm.controls.editGender.setValue('Female');
     } else {
       this.facultiesForm.controls.editGender.setValue('Male');

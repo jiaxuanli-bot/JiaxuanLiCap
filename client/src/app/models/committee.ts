@@ -7,6 +7,7 @@ export class Committee {
   name: string;
   year: string;
   members: CommitteeUser[];
+  volunteer: CommitteeUser[];
   criteria: Criteria[];
   duties: Duty[];
 }

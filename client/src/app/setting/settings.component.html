@@ -1,0 +1,125 @@
+<div id="main">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Settings</a>
+
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="navbar-nav mr-auto">
+      </ul>
+      <ul class="navbar-nav ml-auto mr-3">
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn btn-outline-primary" id="dropdownMenuButton" ngbDropdownToggle>{{authentication.currentUserValue.first}} {{authentication.currentUserValue.last}}</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
+            <button ngbDropdownItem (click)="authentication.logout()">Logout</button>
+          </div>
+        </div>
+      </ul>
+    </div>
+  </nav>
+  <div class="table-responsive ml-5 mt-5 mb-5">
+    <div class="row">
+      <div class="col-5">
+        <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">
+          <thead>
+          <tr>
+            <th>
+              <div class="input-group">
+                  Department Name
+                <ul class="ml-auto">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square view-link plus-square-icon pluss"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                </ul>
+              </div>
+            </th>
+          </tr>
+          </thead>
+
+          <tbody *ngIf="depts" id="committeeListClickable">
+          <tr *ngFor="let dept of depts;index as i">
+            <td>
+              <div class="input-group">
+                <h5>
+                  {{dept.deptName}}
+                </h5>
+                <ul class="ml-auto">
+                  <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3 view-link file-edit-icon"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                </ul>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-5">
+        <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">
+          <thead>
+          <tr>
+            <th>
+              <div class="input-group">
+                Genders
+                <ul class="ml-auto">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square view-link plus-square-icon pluss"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                </ul>
+              </div>
+            </th>
+          </tr>
+          </thead>
+
+          <tbody *ngIf="genders">
+          <tr *ngFor="let gender of genders;index as i">
+            <td>
+              <div class="input-group">
+                <h5>
+                  {{gender.gender}}
+                </h5>
+                <ul class="ml-auto">
+                  <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" href="#" class="feather feather-edit-3 view-link file-edit-icon"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                </ul>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-5">
+        <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">
+          <thead>
+          <tr>
+            <th>
+              <div class="input-group">
+                College
+                <ul class="ml-auto">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square view-link plus-square-icon pluss"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                </ul>
+              </div>
+            </th>
+          </tr>
+          </thead>
+
+          <tbody *ngIf="colleges">
+          <tr *ngFor="let college of colleges;index as i">
+            <td>
+              <div class="input-group">
+                <h5>
+                  {{college.college}}
+                </h5>
+                <ul class="ml-auto">
+                  <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3 view-link file-edit-icon"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                </ul>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container" id="footerText">
+        <span class="text-dark">UWLAX</span>
+      </div>
+    </footer>
+  </div>
+</div>

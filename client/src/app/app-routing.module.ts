@@ -9,6 +9,7 @@ import {CommitteesListComponent} from './committees-list/committees-list.compone
 import {ReportComponent} from './report/report.component';
 import {AuthGuard} from './utilities/auth-guard';
 import {UWLComponent} from './uwl/uwl.component';
+import {SettingsComponent} from './setting/settings.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -17,7 +18,8 @@ const routes: Routes = [
       { path: 'faculty', component: FacultyComponent, canActivate: [AuthGuard]},
       { path: 'survey', component: HomeComponent, canActivate: [AuthGuard]},
       { path: 'committees', component: CommitteesListComponent, canActivate: [AuthGuard]},
-      { path: 'report', component : ReportComponent, canActivate: [AuthGuard]}
+      { path: 'report', component : ReportComponent, canActivate: [AuthGuard]},
+      { path: 'setting', component : SettingsComponent, canActivate: [AuthGuard]}
     ]},
 ];
 

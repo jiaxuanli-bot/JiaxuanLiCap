@@ -27,6 +27,7 @@ import { RemoveMemberComponent } from './committees-details/remove-member/remove
 import { AssignMemberComponent } from './committees-details/assign-member/assign-member.component';
 import { AddCommitteeComponent } from './committees-list/add-committee/add-committee.component';
 import { SelectedCommitteeComponent } from './home/selected-committee/selected-committee.component';
+import { SettingsComponent } from './setting/settings.component';
 @NgModule({
 
   imports: [
@@ -62,6 +63,7 @@ import { SelectedCommitteeComponent } from './home/selected-committee/selected-c
     AssignMemberComponent,
     AddCommitteeComponent,
     SelectedCommitteeComponent,
+    SettingsComponent,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true}

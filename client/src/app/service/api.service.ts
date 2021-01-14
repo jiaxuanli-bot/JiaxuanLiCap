@@ -10,6 +10,10 @@ import {HashedCommittees} from '../models/hashed-committees';
 import {Page} from '../models/page';
 import {Criteria} from '../models/criteria';
 import {ApplicationComment} from '../models/application-comment';
+import {Gender} from '../models/gender';
+import {Dept} from '../models/dept';
+import {College} from '../models/college';
+import {CommitteeSummary} from '../models/committee-summary';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +26,8 @@ export class ApiService {
     return this.http.get<Committee[]>( `${AppConstants.API_URL}/committees` );
   }
 
-  getCommitteesByYear(year: string): Observable<Committee[]> {
-      return this.http.get<Committee[]>( `${AppConstants.API_URL}/committees?startYear=${year}&endYear=${year}` );
+  getCommitteesByYear(year: string): Observable<CommitteeSummary[]> {
+      return this.http.get<CommitteeSummary[]>( `${AppConstants.API_URL}/committees?startYear=${year}&endYear=${year}` );
   }
 
   getHashedCommitteesByYears(startYear: string, endYear: string): Observable<HashedCommittees> {
@@ -170,5 +174,14 @@ export class ApiService {
   }
   getComment(userId: string, committeeId: string): Observable<ApplicationComment> {
     return this.http.get<ApplicationComment>(`${AppConstants.API_URL}/users/${userId}/enlistings/committees/${committeeId}/comment`);
+  }
+  getGendersByYear(year: string): Observable<Gender[]> {
+    return this.http.get<Gender[]>(`${AppConstants.API_URL}/setting/${year}/gender`);
+  }
+  getDeptByYear(year: string): Observable<Dept[]> {
+    return this.http.get<Dept[]>(`${AppConstants.API_URL}/setting/${year}/dept`);
+  }
+  getCollegeByYear(year: string): Observable<College[]> {
+    return this.http.get<College[]>(`${AppConstants.API_URL}/setting/${year}/college`);
   }
 }

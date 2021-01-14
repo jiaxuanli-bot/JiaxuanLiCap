@@ -17,14 +17,38 @@ public class User {
 	private Boolean adminResponsibility;
 	@Column(name="user_rank") // I think MySQL has a "rank" keyword that clashes here.
 	private String rank;
-	private String college;
 	private String email;
-	private String gender;
 	private String year;
 	private Boolean tenured;
 	private Boolean gradStatus;
-
 	private Boolean soe;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinTable(name = "user_college",
+			joinColumns =
+					{ @JoinColumn(name = "user_id", referencedColumnName = "id") },
+			inverseJoinColumns =
+					{ @JoinColumn(name = "college_id", referencedColumnName = "id") })
+	private College college;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinTable(name = "user_gender",
+			joinColumns =
+					{ @JoinColumn(name = "user_id", referencedColumnName = "id") },
+			inverseJoinColumns =
+					{ @JoinColumn(name = "gender_id", referencedColumnName = "id") })
+	private Gender gender;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinTable(name = "user_dept",
+			joinColumns =
+					{ @JoinColumn(name = "user_id", referencedColumnName = "id") },
+			inverseJoinColumns =
+					{ @JoinColumn(name = "dept_id", referencedColumnName = "id") })
+	private Dept dept;
+
+	private Boolean chair;
+	private String comment;
 
 	@JsonIgnore
 	@ManyToMany(fetch=FetchType.LAZY)
@@ -39,10 +63,6 @@ public class User {
     @ManyToMany(fetch=FetchType.LAZY)
 	private List<Role> roles;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY,
-			cascade = CascadeType.ALL)
-	private List<Comment> comments;
 
 	public User() {
 	}
@@ -62,6 +82,10 @@ public class User {
 		this.soe = b.soe;
 		this.adminResponsibility = b.adminResponsibility;
 	    this.volunteeredCommittees = b.volunteeredCommittees;
+	    this.dept = b.dept;
+	    this.comment = b.comment;
+	    this.chair = b.chair;
+	    this.gradStatus = b.gradStatus;
 	}
 
 	public Long getId() {
@@ -112,11 +136,11 @@ public class User {
 		this.rank = rank;
 	}
 
-	public String getCollege() {
+	public College getCollege() {
 		return college;
 	}
 
-	public void setCollege(String college) {
+	public void setCollege(College college) {
 		this.college = college;
 	}
 
@@ -140,11 +164,11 @@ public class User {
 		this.soe = soe;
 	}
 
-	public String getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 
@@ -177,6 +201,34 @@ public class User {
 		a.getMembers().remove(this);
 	}
 
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setChair(Boolean chair) {
+		this.chair = chair;
+	}
+
+	public Boolean getChair() {
+		return chair;
+	}
+
+	public void setGradStatus(Boolean gradStatus) {
+		this.gradStatus = gradStatus;
+	}
+
+	public Dept getDept() {
+		return dept;
+	}
+
+	public void setDept(Dept dept) {
+		this.dept = dept;
+	}
+
 	public void setYear(String year) {
 		if( year == null ) {
 			year = String.valueOf( Calendar.getInstance().get( Calendar.YEAR ) );
@@ -196,7 +248,7 @@ public class User {
 	   return id.intValue();
 	}
 
- public String getYear() {
+	public String getYear() {
 		return year;
 	}
 
@@ -205,9 +257,9 @@ public class User {
 		private String first;
 		private String last;
 		private String rank;
-		private String college;
+		private College college;
 		private String email;
-		private String gender;
+		private Gender gender;
 		private String year;
 		private Boolean tenured;
 		private Boolean soe;
@@ -215,9 +267,18 @@ public class User {
 		private Set<Committee> volunteeredCommittees;
 		private List<Role> roles;
 		private Boolean adminResponsibility;
+		private Dept dept;
+		private Boolean chair;
+		private String comment;
+		private Boolean gradStatus;
 
 		public Builder id( Long id ) {
 			this.id = id;
+			return this;
+		}
+
+		public Builder gradStatus( Boolean gradStatus){
+			this.gradStatus = gradStatus;
 			return this;
 		}
 
@@ -226,6 +287,20 @@ public class User {
 			return this;
 		}
 
+		public Builder dept(Dept dept){
+			this.dept = dept;
+			return this;
+		}
+
+		public Builder chair(Boolean chair){
+			this.chair = chair;
+			return this;
+		}
+
+		public Builder comment(String comment){
+			this.comment = comment;
+			return this;
+		}
 
 		public Builder first( String first ) {
 			this.first = first;
@@ -242,7 +317,7 @@ public class User {
 			return this;
 		}
 		
-		public Builder college( String college ) {
+		public Builder college(College college ) {
 			this.college = college;
 			return this;
 		}
@@ -252,7 +327,7 @@ public class User {
 			return this;
 		}
 		
-		public Builder gender( String gender ) {
+		public Builder gender(Gender gender ) {
 			this.gender = gender;
 			return this;
 		}

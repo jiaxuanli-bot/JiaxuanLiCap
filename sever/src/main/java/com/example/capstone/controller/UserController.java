@@ -1,13 +1,8 @@
 package com.example.capstone.controller;
 
-import com.example.capstone.entities.Comment;
-import com.example.capstone.entities.Committee;
-import com.example.capstone.entities.Survey;
-import com.example.capstone.entities.User;
-import com.example.capstone.projections.CommentInterface;
+import com.example.capstone.entities.*;
 import com.example.capstone.projections.CommitteeSummary;
 import com.example.capstone.repositories.UserRepository;
-import com.example.capstone.service.CommentService;
 import com.example.capstone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,9 +19,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private CommentService commentService;
 
     @Autowired
     private UserRepository userRepo;
@@ -53,8 +45,8 @@ public class UserController {
         		.year(year)
                 .first(first)
                 .last(last)
-                .college(college)
-                .gender(gender)
+                .college(new College.Builder().college(college).build())
+                .gender(new Gender.Builder().gender(gender).build())
                 .adminResponsibility( admin )
                 .rank( rank )
                 .tenured( tenured )
@@ -117,25 +109,11 @@ public class UserController {
         return userService.getUserSurveysCommittees(v);
     }
 
-    @RequestMapping( value="/users/{id}/enlistings/committees/{committeeId}/comment", method=RequestMethod.GET )
-    public CommentInterface getUserSurveysCommitteesComment(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,
-                                                            @Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeId) {
-        //Get all comments that user have been created
-        return commentService.getCommentByCommitteeAndUser(new User.Builder().id(Long.valueOf(id)).build(),
-                new Committee.Builder().id(Long.valueOf(committeeId)).build());
-    }
-
     @RequestMapping( value="/users/{id}/enlistings/committees/{committeeId}/comment", method=RequestMethod.POST )
-    public void createComment(@RequestBody(required=true) Comment commentContext,
+    public void createComment(@RequestBody(required=true) String commentContext,
                               @Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,
                               @Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeId) {
         //Create a comment for a survey
-        Comment comment = new Comment.Builder()
-                .comment(commentContext.getComment())
-                .committee(new Committee.Builder().id(Long.valueOf(committeeId)).build())
-                .user(new User.Builder().id(Long.valueOf(id)).build())
-                .build();
-        commentService.save(comment);
     }
 
     @RequestMapping( value="/users/{id}/enlistings/{committeeid}", method=RequestMethod.POST )
@@ -157,5 +135,4 @@ public class UserController {
         //get all years of users which have same email
         return userService.getUserYears(email);
     }
-
 }

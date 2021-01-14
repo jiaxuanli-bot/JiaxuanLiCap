@@ -19,6 +19,7 @@ export class SlideBarComponent implements OnInit {
     surveyNavbar: false,
     committeesNavbar: false,
     reportNavbar:  false,
+    settingNavbar: false
   }
 
   constructor(public yearService: YearService, private apiService: ApiService, private formBuilder: FormBuilder,
@@ -91,12 +92,14 @@ export class SlideBarComponent implements OnInit {
     this.sideBar.reportNavbar = true;
     this.router.navigate(['/uwl/report'], { fragment: this.selectedYear });
   }
+
   clearBar() {
     this.sideBar.reportNavbar = false;
     this.sideBar.surveyNavbar = false;
     this.sideBar.homeNavbar = false;
     this.sideBar.facultyNavbar = false;
     this.sideBar.committeesNavbar = false;
+    this.sideBar.settingNavbar = false;
   }
 
   crateYear() {
@@ -105,5 +108,11 @@ export class SlideBarComponent implements OnInit {
         location.reload();
       }
     );
+  }
+
+  routerToSettings() {
+    this.clearBar();
+    this.sideBar.settingNavbar = true;
+    this.router.navigate(['/uwl/setting'], { fragment: this.selectedYear });
   }
 }

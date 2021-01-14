@@ -26,6 +26,15 @@ public class MockService {
     @Autowired
     private RoleRepository roleRepo;
 
+    @Autowired
+    private CollegeRepository collegeRepo;
+
+    @Autowired
+    private DeptRepository deptRepo;
+
+    @Autowired
+    private GenderRepository genderRepo;
+
     public String randomCriteriaCollege() {
         StringBuffer sb = new StringBuffer();
         sb.append("(college ");
@@ -72,6 +81,10 @@ public class MockService {
         return String.valueOf( (int)( Math.random() * 20 + 2000 ) );
     }
 
+    public static String staticYear() {
+        return String.valueOf( (int)( Math.random() * 20 + 2000 ) );
+    }
+
     public List<Role> roles() {
         return Arrays.asList("Admin", "Normal", "Nominate" )
                 .stream()
@@ -83,8 +96,60 @@ public class MockService {
                 .collect( Collectors.toList() );
     }
 
+    public List<College> colleges() {
+        return Arrays.asList("CSH", "CASSH", "CBA", "SOE")
+                .stream()
+                .map( collegeName -> {
+                    College college = new College();
+                    college.setCollege(collegeName);
+                    college.setYear(year());
+                    return collegeRepo.save(college);
+                })
+                .collect( Collectors.toList() );
+    }
+
+    public List<Dept> depts() {
+        return Arrays.asList("A", "B", "C", "D")
+                .stream()
+                .map(  deptName -> {
+                    Dept dept = new Dept();
+                    dept.setDeptName(deptName);
+                    dept.setYear(year());
+                    return deptRepo.save(dept);
+                })
+                .collect( Collectors.toList() );
+    }
+
+    public List<Gender> genders() {
+        return Arrays.asList("M", "F")
+                .stream()
+                .map(  genderName -> {
+                    Gender gender = new Gender();
+                    gender.setGender(genderName);
+                    gender.setYear(year());
+                    return genderRepo.save(gender);
+                })
+                .collect( Collectors.toList() );
+    }
+
     public static List<String> ranks = Arrays.asList( "Associate Professor", "Assistant Professor", "Full Professor" );
-    public static List<String> colleges = Arrays.asList("CSH", "CASH", "CBA");
+    public static List<College> colleges = Arrays.asList(
+            new College.Builder().college("CSH").year("2018").build(),
+            new College.Builder().college("CASSH").year("2018").build(),
+            new College.Builder().college("CBA").year("2018").build(),
+            new College.Builder().college("CSH").year("2019").build(),
+            new College.Builder().college("CASSH").year("2019").build(),
+            new College.Builder().college("CBA").year("2019").build(),
+            new College.Builder().college("SOE").year("2019").build());
+    public static List<Gender> genders = Arrays.asList(
+            new Gender.Builder().gender("M").year(staticYear()).build(),
+            new Gender.Builder().gender("F").year(staticYear()).build());
+    public static List<Dept> depts = Arrays.asList(
+            new Dept.Builder().deptName("A").year(staticYear()).build(),
+            new Dept.Builder().deptName("B").year(staticYear()).build(),
+            new Dept.Builder().deptName("C").year(staticYear()).build(),
+            new Dept.Builder().deptName("D").year(staticYear()).build()
+    );
 
     public static <T> T one( List<T> ts ) {
         int index = (int)(Math.random() * ts.size() );
@@ -105,11 +170,14 @@ public class MockService {
                 .email( email() )
                 .committees( new HashSet<>())
                 .volunteeredCommittees(new HashSet<>())
-                .gender( Math.random() < .5 ? "M" : "F" )
+                .gender( one( genders ))
+                .dept( one( depts ) )
                 .adminResponsibility(Math.random() < .6)
                 .year( year() )
                 .tenured( Math.random() < .6 )
                 .soe( Math.random() < .35 )
+                .gradStatus( Math.random() < .35 )
+                .chair(Math.random() < .35)
                 .roles( choose( roles, (int)(Math.random() * 2 + 1 ) ) )
                 .build();
     }
@@ -197,6 +265,8 @@ public class MockService {
     public void makeData() {
         List<Role> roles = roles();
         List<Committee> committees = committees();
+        List<Gender> genders = genders();
+        List<Dept> depts = depts();
         List<User> users = users(roles);
 
         committees

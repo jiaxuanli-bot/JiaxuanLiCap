@@ -5,4 +5,5 @@ export class CommitteeSummary {
   name: string;
   year: string;
   members: CommitteeUser[];
+  volunteers: CommitteeUser[];
 }
