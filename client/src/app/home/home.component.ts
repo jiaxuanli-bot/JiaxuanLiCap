@@ -3,6 +3,7 @@ import {ApiService} from '../service/api.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
 import {Committee} from '../models/committee';
+import {CommitteeSummary} from '../models/committee-summary';
 import {AuthenticationService} from '../service/authentication.service';
 import {User} from '../models/user';
 import {Survey} from '../models/survey';
@@ -22,7 +23,7 @@ export class HomeComponent implements OnInit {
   critreriaExpand = true;
   yearsForm: FormGroup;
   selectedCommittee: Committee;
-  committees: Committee[] = [];
+  committees: CommitteeSummary[] = [];
   surveys: Survey[] = [];
   surveysCommittee = new Set();
   comments = {};
