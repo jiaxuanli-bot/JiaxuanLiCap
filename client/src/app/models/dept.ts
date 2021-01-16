@@ -1,5 +1,5 @@
 export class Dept {
   id: number;
-  deptName: string;
+  name: string;
   year: string;
 }

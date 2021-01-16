@@ -1,15 +1,14 @@
-import {Component, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ApiService } from '../service/api.service';
 import { User } from '../models/user';
 import { debounceTime } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { YearService } from '../service/year.service';
-import { Papa, ParseResult } from 'ngx-papaparse';
+import { Papa } from 'ngx-papaparse';
 import { Committee } from '../models/committee';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthenticationService } from '../service/authentication.service';
-import { Role } from '../models/role';
 
 @Component({
   selector: 'app-faculty',
@@ -23,7 +22,9 @@ export class FacultyComponent implements OnInit {
     tenured: ['', 'Yes', 'No'],
     soe: ['', 'Yes', 'No'],
     admin: ['', 'Yes', 'No'],
-    gender: ['', 'F', 'M']
+    chair: ['', 'Yes', 'No'],
+    gender: [''],
+    dept: ['']
   };
 
   page: any = {
@@ -48,7 +49,9 @@ export class FacultyComponent implements OnInit {
     tenured: '',
     soe: '',
     admin: '',
-    gender: ''
+    gender: '',
+    dept: '',
+    chair: '',
   };
   faculties: User[];
   facultiesForm: FormGroup;
@@ -73,7 +76,9 @@ export class FacultyComponent implements OnInit {
       tenured: '',
       soe: '',
       admin: '',
-      gender: ''
+      gender: '',
+      dept: '',
+      chair: '',
     };
 
     // @ts-ignore
@@ -87,6 +92,7 @@ export class FacultyComponent implements OnInit {
         }
         return acc;
       }, {});
+    console.log(this.queries);
 
     this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue, this.queries, this.page.number).subscribe(
       value => {
@@ -122,6 +128,8 @@ export class FacultyComponent implements OnInit {
       admin: [''],
       soe: [''],
       gender: [''],
+      dept: [''],
+      chair: [''],
       editFirst: [''],
       editLast: [''],
       editRank: [''],
@@ -131,13 +139,37 @@ export class FacultyComponent implements OnInit {
       editSoe: [''],
       editGender: ['']
     });
+    this.getFaculty();
     this.year = this.yearService.getValue();
-
-
     this.apiService.getFacultyByYear(this.yearService.getYearValue).subscribe();
-
-    this.year.subscribe(value => {
-      this.getFaculty();
+    this.year.subscribe(year => {
+      this.apiService.getGendersByYear(year).subscribe(
+        genders => {
+          genders.forEach(
+            gender => {
+              this.options.gender.push(gender.name);
+            }
+          );
+        }
+      );
+      this.apiService.getCollegeByYear(year).subscribe(
+        colleges => {
+          colleges.forEach(
+            college => {
+              this.options.college.push(college.name);
+            }
+          );
+        }
+      );
+      this.apiService.getDeptByYear(year).subscribe(
+        depts => {
+          depts.forEach(
+            dept => {
+              this.options.dept.push(dept.name);
+            }
+          );
+        }
+      );
     });
   }
 
@@ -154,7 +186,7 @@ export class FacultyComponent implements OnInit {
     this.facultiesForm.controls.editTenured.setValue(this.faculties[i].tenured);
     this.facultiesForm.controls.editSoe.setValue(this.faculties[i].soe);
     this.facultiesForm.controls.editAdmin.setValue(this.faculties[i].adminResponsibility);
-    if (this.faculties[i].gender.gender === 'F') {
+    if (this.faculties[i].gender.name === 'F') {
       this.facultiesForm.controls.editGender.setValue('Female');
     } else {
       this.facultiesForm.controls.editGender.setValue('Male');

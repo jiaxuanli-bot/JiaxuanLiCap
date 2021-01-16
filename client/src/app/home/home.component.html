@@ -30,14 +30,11 @@
       <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12 mt-4 mb-5" id="committeeList">
         <thead>
         <tr>
-          <th class="w-25">
+          <th>
             Name
           </th>
-          <th class="w-25">
-            Volunteered
-          </th>
           <th>
-            Comment
+            Volunteered
           </th>
         </tr>
         </thead>
@@ -50,27 +47,6 @@
           </td>
           <td>
             <input type="checkbox" class="check" [checked]="surveysCommittee.has(committee.id)" (click)="createSurvey(committee.id, this.authentication.currentUserValue.id)">
-          </td>
-          <td *ngIf="editIndex !== i">
-            <ng-container *ngIf="surveysCommittee.has(committee.id)">
-              <div class="input-group">
-                <h5>
-                  {{comments[committee.id]}}
-                </h5>
-                <ul class="ml-auto" id="editCommittee">
-                  <svg (click)="editComment(i)" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3 view-link file-edit-icon">
-                    <path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                </ul>
-              </div>
-            </ng-container>
-          </td>
-
-          <td *ngIf="editIndex === i">
-            <div class="row">
-              <input type="text" class="col-8" [(ngModel)]="commentText">
-              <button class="btn btn-primary btn-sm ml-3" (click)="saveText( this.authentication.currentUserValue.id, committee.id)">Save</button>
-              <button class="btn btn-danger btn-sm ml-2" (click)="cancelEdit()">Cancel</button>
-            </div>
           </td>
         </tr>
         </tbody>

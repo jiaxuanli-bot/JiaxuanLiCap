@@ -3,7 +3,6 @@ import {AuthenticationService} from '../service/authentication.service';
 import {YearService} from '../service/year.service';
 import {ApiService} from '../service/api.service';
 import {Router} from '@angular/router';
-import {CommitteeSummary} from '../models/committee-summary';
 import {Gender} from '../models/gender';
 import {College} from '../models/college';
 import {Dept} from '../models/dept';
@@ -14,6 +13,16 @@ import {Dept} from '../models/dept';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
+  editIndex = {
+    editCollegeIndex: -1,
+    editGenderIndex: -1,
+    editDeptIndex : -1,
+  };
+  add = {
+    addCollege: false,
+    addGender: false,
+    addDept: false,
+  };
   genders: Gender[] = [];
   colleges: College[] = [];
   depts: Dept[] = [];
@@ -58,4 +67,37 @@ export class SettingsComponent implements OnInit {
     );
   }
 
+  deleteDept(deptId: number) {
+  }
+  deleteGender(genderId: number) {
+  }
+  deleteCollege(collegeId: number) {
+  }
+  cancelEditDept() {
+    this.editIndex.editDeptIndex = -1;
+  }
+  saveDept() {
+    this.editIndex.editDeptIndex = -1;
+  }
+  editDept(index: number) {
+    this.editIndex.editDeptIndex = index;
+  }
+  editGender(index: number) {
+    this.editIndex.editGenderIndex = index;
+  }
+  editCollege(index: number) {
+    this.editIndex.editCollegeIndex = index;
+  }
+  cancelEditCollege() {
+    this.editIndex.editCollegeIndex = -1;
+  }
+  saveCollege() {
+    this.editIndex.editCollegeIndex = -1;
+  }
+  cancelEditGender() {
+    this.editIndex.editGenderIndex = -1;
+  }
+  saveGender() {
+    this.editIndex.editGenderIndex = -1;
+  }
 }

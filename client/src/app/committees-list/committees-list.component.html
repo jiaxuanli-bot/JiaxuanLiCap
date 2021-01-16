@@ -21,7 +21,7 @@
     <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12" id="committeeList">
       <thead>
       <tr>
-        <th *ngFor="let property of ['Committee Name','Criteria','Members','Delete']">
+        <th *ngFor="let property of ['Committee Name','Criteria','Members','Volunteers','size','Delete']">
           {{property}}
         </th>
       </tr>
@@ -39,8 +39,15 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check file-check-icon" data-target="#modifyModal" data-toggle="modal"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </td>
         <td [routerLink]="['/uwl/committees', committee.id]">
-          <span *ngIf="committee.members">{{committee.members.length}}/9</span>
-          <span *ngIf="!committee.members">0/9</span>
+          <span *ngIf="committee.members">{{committee.members.length}}</span>
+          <span *ngIf="!committee.members">0</span>
+        </td>
+        <td [routerLink]="['/uwl/committees', committee.id]">
+          <span *ngIf="committee.volunteers">{{committee.volunteers.length}}</span>
+          <span *ngIf="!committee.volunteers">0</span>
+        </td>
+        <td>
+          9
         </td>
         <td>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 view-link file-trash-icon" href="#" data-toggle="modal" data-target="#exampleModal" (click)="delete(committee, i)"><polyline points="3 6 5 6 21 6">

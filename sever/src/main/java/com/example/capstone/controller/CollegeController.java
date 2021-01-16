@@ -35,8 +35,8 @@ public class CollegeController {
     public College createGender( @RequestBody( required=true ) College gender) {
         return this.collegeRepo.save( gender );
     }
-    
-    
+
+
     @RequestMapping( value="/{id}", method= RequestMethod.DELETE)
     public ResponseEntity<String> deleteGender(@PathVariable String id ) {
     	this.collegeRepo.deleteById( Long.valueOf(id) );
@@ -46,7 +46,6 @@ public class CollegeController {
     @RequestMapping( value="", method= RequestMethod.PUT)
     public College updateGender( @RequestBody( required=true ) College c ) {
     	College college = this.collegeRepo.findById( c.getId() ).orElse( null );
-    	
     	if( college != null ) { 
     		return this.collegeRepo.save( c );
     	} else {

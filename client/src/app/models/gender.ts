@@ -1,5 +1,5 @@
 export class Gender {
   id: number;
-  gender: string;
+  name: string;
   year: string;
 }

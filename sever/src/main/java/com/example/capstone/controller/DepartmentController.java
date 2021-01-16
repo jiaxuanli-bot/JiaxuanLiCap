@@ -1,6 +1,5 @@
 package com.example.capstone.controller;
 
-import java.net.http.HttpResponse;
 import java.util.List;
 
 import javax.validation.constraints.Pattern;

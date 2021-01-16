@@ -28,6 +28,9 @@ import { AssignMemberComponent } from './committees-details/assign-member/assign
 import { AddCommitteeComponent } from './committees-list/add-committee/add-committee.component';
 import { SelectedCommitteeComponent } from './home/selected-committee/selected-committee.component';
 import { SettingsComponent } from './setting/settings.component';
+import { AddDeptComponent } from './setting/add-dept/add-dept.component';
+import { AddCollegeComponent } from './setting/add-college/add-college.component';
+import { AddGenderComponent } from './setting/add-gender/add-gender.component';
 @NgModule({
 
   imports: [
@@ -64,6 +67,9 @@ import { SettingsComponent } from './setting/settings.component';
     AddCommitteeComponent,
     SelectedCommitteeComponent,
     SettingsComponent,
+    AddDeptComponent,
+    AddCollegeComponent,
+    AddGenderComponent,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true}

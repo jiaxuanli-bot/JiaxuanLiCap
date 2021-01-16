@@ -176,12 +176,12 @@ export class ApiService {
     return this.http.get<ApplicationComment>(`${AppConstants.API_URL}/users/${userId}/enlistings/committees/${committeeId}/comment`);
   }
   getGendersByYear(year: string): Observable<Gender[]> {
-    return this.http.get<Gender[]>(`${AppConstants.API_URL}/setting/${year}/gender`);
+    return this.http.get<Gender[]>(`${AppConstants.API_URL}/genders?year=${year}`);
   }
   getDeptByYear(year: string): Observable<Dept[]> {
-    return this.http.get<Dept[]>(`${AppConstants.API_URL}/setting/${year}/dept`);
+    return this.http.get<Dept[]>(`${AppConstants.API_URL}/departments?year=${year}`);
   }
   getCollegeByYear(year: string): Observable<College[]> {
-    return this.http.get<College[]>(`${AppConstants.API_URL}/setting/${year}/college`);
+    return this.http.get<College[]>(`${AppConstants.API_URL}/colleges?year=${year}`);
   }
 }

@@ -1,125 +1,186 @@
 <div id="main">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Settings</a>
+      <a class="navbar-brand" href="#">Settings</a>
 
-    <div class="collapse navbar-collapse" id="navbar">
-      <ul class="navbar-nav mr-auto">
-      </ul>
-      <ul class="navbar-nav ml-auto mr-3">
-        <div ngbDropdown class="d-inline-block">
-          <button class="btn btn-outline-primary" id="dropdownMenuButton" ngbDropdownToggle>{{authentication.currentUserValue.first}} {{authentication.currentUserValue.last}}</button>
-          <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
-            <button ngbDropdownItem (click)="authentication.logout()">Logout</button>
+      <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav mr-auto">
+        </ul>
+        <ul class="navbar-nav ml-auto mr-3">
+          <div ngbDropdown class="d-inline-block">
+            <button class="btn btn-outline-primary" id="dropdownMenuButton" ngbDropdownToggle>{{authentication.currentUserValue.first}} {{authentication.currentUserValue.last}}</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
+              <button ngbDropdownItem (click)="authentication.logout()">Logout</button>
+            </div>
           </div>
-        </div>
-      </ul>
-    </div>
-  </nav>
-  <div class="table-responsive ml-5 mt-5 mb-5">
+        </ul>
+      </div>
+    </nav>
+  <div class="col-12 mb-4">
     <div class="row">
-      <div class="col-5">
-        <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">
-          <thead>
-          <tr>
-            <th>
-              <div class="input-group">
-                  Department Name
-                <ul class="ml-auto">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square view-link plus-square-icon pluss"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                </ul>
-              </div>
-            </th>
-          </tr>
-          </thead>
-
-          <tbody *ngIf="depts" id="committeeListClickable">
-          <tr *ngFor="let dept of depts;index as i">
-            <td>
-              <div class="input-group">
-                <h5>
-                  {{dept.deptName}}
-                </h5>
-                <ul class="ml-auto">
-                  <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3 view-link file-edit-icon"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                </ul>
-              </div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="col-5">
-        <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">
-          <thead>
-          <tr>
-            <th>
-              <div class="input-group">
-                Genders
-                <ul class="ml-auto">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square view-link plus-square-icon pluss"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                </ul>
-              </div>
-            </th>
-          </tr>
-          </thead>
-
-          <tbody *ngIf="genders">
-          <tr *ngFor="let gender of genders;index as i">
-            <td>
-              <div class="input-group">
-                <h5>
-                  {{gender.gender}}
-                </h5>
-                <ul class="ml-auto">
-                  <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" href="#" class="feather feather-edit-3 view-link file-edit-icon"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                </ul>
-              </div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
+      <table class="table table-bordered table-striped ml-5 col-5">
+        <thead>
+        <tr>
+          <th>
+            <div class="input-group">
+              Department Name
+              <ul class="ml-auto">
+                <svg data-toggle="modal" data-backdrop="false"  data-target="#addDeptModal" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square view-link plus-square-icon pluss"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+              </ul>
+            </div>
+          </th>
+        </tr>
+        </thead>
+        <tbody *ngIf="depts">
+        <tr *ngFor="let dept of depts;index as i">
+          <td *ngIf="editIndex.editDeptIndex !== i">
+            <div class="input-group">
+              <h5>
+                {{dept.name}}
+              </h5>
+              <ul class="ml-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 view-link file-trash-icon" (click)="deleteDept(dept.id)"><polyline points="3 6 5 6 21 6">
+                </polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3 view-link file-edit-icon" (click)="editDept(i)"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              </ul>
+            </div>
+          </td>
+          <td *ngIf="editIndex.editDeptIndex === i">
+            <div class="row">
+              <input type="text" class="col-8">
+              <button class="btn btn-primary btn-sm ml-3" (click)="saveDept()">Save</button>
+              <button class="btn btn-danger btn-sm ml-2" (click)="cancelEditDept()">Cancel</button>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered table-striped ml-5 col-5">
+        <thead>
+        <tr>
+          <th>
+            <div class="input-group">
+              Genders
+              <ul class="ml-auto">
+                <svg data-toggle="modal" data-backdrop="false"  data-target="#addGenderModal" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-plus-square view-link plus-square-icon pluss">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="12" y1="8" x2="12" y2="16"></line>
+                  <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+              </ul>
+            </div>
+          </th>
+        </tr>
+        </thead>
+        <tbody *ngIf="genders">
+        <tr *ngFor="let gender of genders;index as i">
+          <td *ngIf="editIndex.editGenderIndex !== i">
+            <div class="input-group">
+              <h5>
+                {{gender.name}}
+              </h5>
+              <ul class="ml-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-trash-2 view-link file-trash-icon" (click)="deleteGender(gender.id)">
+                  <polyline points="3 6 5 6 21 6">
+                  </polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-edit-3 view-link file-edit-icon"  (click)="editGender(i)">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+              </ul>
+            </div>
+          </td>
+          <td *ngIf="editIndex.editGenderIndex === i">
+            <div class="row">
+              <input type="text" class="col-8">
+              <button class="btn btn-primary btn-sm ml-3" (click)="saveGender()">Save</button>
+              <button class="btn btn-danger btn-sm ml-2" (click)="cancelEditGender()">Cancel</button>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered table-striped ml-5 col-5">
+        <thead>
+        <tr>
+          <th>
+            <div class="input-group">
+              Colleges
+              <ul class="ml-auto">
+                <svg data-toggle="modal" data-backdrop="false"  data-target="#addCollegeModal" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-plus-square view-link plus-square-icon pluss">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="12" y1="8" x2="12" y2="16"></line>
+                  <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+              </ul>
+            </div>
+          </th>
+        </tr>
+        </thead>
+        <tbody *ngIf="colleges" id="committeeListClickable">
+        <tr *ngFor="let college of colleges;index as i">
+          <td *ngIf="editIndex.editCollegeIndex !== i">
+            <div class="input-group">
+              <h5>
+                {{college.name}}
+              </h5>
+              <ul class="ml-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-trash-2 view-link file-trash-icon" (click)="deleteCollege(college.id)">
+                  <polyline points="3 6 5 6 21 6">
+                  </polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-edit-3 view-link file-edit-icon"  (click)="editCollege(i)">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+              </ul>
+            </div>
+          </td>
+          <td *ngIf="editIndex.editCollegeIndex === i">
+            <div class="row">
+              <input type="text" class="col-8">
+              <button class="btn btn-primary btn-sm ml-3" (click)="saveCollege()">Save</button>
+              <button class="btn btn-danger btn-sm ml-2" (click)="cancelEditCollege()">Cancel</button>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
-
-    <div class="row">
-      <div class="col-5">
-        <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">
-          <thead>
-          <tr>
-            <th>
-              <div class="input-group">
-                College
-                <ul class="ml-auto">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square view-link plus-square-icon pluss"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                </ul>
-              </div>
-            </th>
-          </tr>
-          </thead>
-
-          <tbody *ngIf="colleges">
-          <tr *ngFor="let college of colleges;index as i">
-            <td>
-              <div class="input-group">
-                <h5>
-                  {{college.college}}
-                </h5>
-                <ul class="ml-auto">
-                  <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3 view-link file-edit-icon"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                </ul>
-              </div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <footer class="footer">
-      <div class="container" id="footerText">
-        <span class="text-dark">UWLAX</span>
-      </div>
-    </footer>
   </div>
+
+  <div class="modal fade" id="addGenderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <app-add-gender></app-add-gender>
+  </div>
+
+  <div class="modal fade" id="addCollegeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <app-add-college></app-add-college>
+  </div>
+
+  <div class="modal fade" id="addDeptModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <app-add-dept></app-add-dept>
+  </div>
+  <footer class="footer">
+    <div class="container" id="footerText">
+      <span class="text-dark">UWLAX</span>
+    </div>
+  </footer>
 </div>

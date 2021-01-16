@@ -52,6 +52,7 @@ export class CommitteesListComponent implements OnInit {
                   );
                 }
               );
+              console.log(this.committees);
               console.log(this.committeesCriteriaStatus);
             }
           );
