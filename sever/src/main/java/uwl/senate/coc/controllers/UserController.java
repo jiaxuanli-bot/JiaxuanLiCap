@@ -1,7 +1,10 @@
 package uwl.senate.coc.controllers;
 
+
 import java.util.List;
+
 import javax.validation.constraints.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import uwl.senate.coc.entities.College;
 import uwl.senate.coc.entities.Gender;
 import uwl.senate.coc.entities.SurveyResponse;
@@ -24,6 +28,7 @@ import uwl.senate.coc.projections.CommitteeSummary;
 import uwl.senate.coc.projections.SurveySummary;
 import uwl.senate.coc.services.SurveyService;
 import uwl.senate.coc.services.UserService;
+
 
 @RestController
 @RequestMapping( "/users" )
@@ -121,7 +126,7 @@ public class UserController {
 //    	return userService.getSurvey( uid );
 //    }
 
-    @RequestMapping( value="/{id}/enlistings/committees", method=RequestMethod.GET )
+    @RequestMapping( value="/users/{id}/enlistings/committees", method=RequestMethod.GET )
     public List<CommitteeSummary> getUserSurveysCommittees(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id) {
         //Get all the survey that user have been volunteered
         User v =new User();
@@ -129,7 +134,7 @@ public class UserController {
         return userService.getUserSurveysCommittees(v);
     }
 
-    @RequestMapping( value="/{id}/enlistings/committees/{committeeId}/comment", method=RequestMethod.POST )
+    @RequestMapping( value="/users/{id}/enlistings/committees/{committeeId}/comment", method=RequestMethod.POST )
     public void createComment(@RequestBody(required=true) String commentContext,
                               @Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,
                               @Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeId) {
@@ -151,7 +156,7 @@ public class UserController {
 //    }
 
     // This meethod is poorly constructed
-    @RequestMapping( value="/email/{email}/years", method=RequestMethod.GET )
+    @RequestMapping( value="/users/email/{email}/years", method=RequestMethod.GET )
     public List<String> getUserYears(@PathVariable String email) {
         //get all years of users which have same email
         return userService.getUserYears(email);

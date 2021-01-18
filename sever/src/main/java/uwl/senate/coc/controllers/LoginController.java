@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import uwl.senate.coc.entities.*;
 import uwl.senate.coc.repositories.UserRepository;
-import uwl.senate.coc.services.MockService;
 
 import java.util.List;
 
@@ -17,9 +16,6 @@ public class LoginController {
 
     @Autowired
     private UserRepository userRepo;
-
-    @Autowired
-    MockService mockService;
 
     @RequestMapping( value="/login", method= RequestMethod.POST )
     public uwl.senate.coc.entities.User login(@RequestBody(required=true) User reauestUser) {

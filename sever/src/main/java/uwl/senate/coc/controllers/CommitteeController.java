@@ -58,7 +58,7 @@ public class CommitteeController {
     public Map<String,List<CommitteeWithUserSummaries>> getYearsCommitteesWithGroup(@Pattern( regexp = "\\b\\d{4}\\b", message = "the start year format is wrong") @RequestParam(name="startYear", required=true) String startYear, @Pattern(regexp = "\\b\\d{4}\\b", message = "the end year format is wrong") @RequestParam(name="endYear",required = true)String endYear) {
         return committeeService.getCommittees(startYear, endYear);
     }
-    // 需要的
+    
 //    I don't think this method makes sense....we shouldn't need it    
 //    @RequestMapping( value="/{name}/years/{year}", method=RequestMethod.GET )
 //    public String getCommitteeIdByYearAndName(@PathVariable String name, @PathVariable String year) {
@@ -79,7 +79,7 @@ public class CommitteeController {
     public List<UserSummary> getCommitteeVolunteers( @PathVariable Long id ){
         return committeeService.getCommitteeVolunteersDetail( id );
     }
-// 确实可替代
+
 //    This doesn't make sense .... don't think we need it
 //    @RequestMapping( value="/{id}/volunteers/users", method=RequestMethod.GET )
 //    public List<UserSummary> getCommitteeVolunteersDetail( @PathVariable Long id ) {
