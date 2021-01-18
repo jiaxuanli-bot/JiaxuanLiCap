@@ -24,16 +24,13 @@ export class CommitteesDetailsComponent implements OnInit {
   usersCommittees: Committee[][];
   volunteers: User[] = [];
   volunteersCommittees: Committee[][];
-  popIntroductionExpand = false;
-  popDutyExpand = false;
-  popCritreriaExpand  = false;
   constructor(private http: HttpClient, public authentication: AuthenticationService, private yearService: YearService,
               private apiService: ApiService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(
       param => {
-            this.apiService.getCommitteeById(param.id).subscribe(
+        this.apiService.getCommitteeById(param.id).subscribe(
               value => {
                 this.committee = value;
                 this.apiService.getUnSatisfiedCriteria(param.id).subscribe(
@@ -45,7 +42,6 @@ export class CommitteesDetailsComponent implements OnInit {
                     );
                   }
                 );
-                console.log(value);
                 this.yearService.committeeGetValue().subscribe(
                   value5 => {
                     this.apiService.getCommitteeIdByYearAndName(value5, this.committee.name).subscribe(
@@ -142,10 +138,5 @@ export class CommitteesDetailsComponent implements OnInit {
 
   selectUser(id): void {
     this.seletedUserid = id;
-  }
-  closePop(): void {
-    this.popIntroductionExpand = false;
-    this.popDutyExpand = false;
-    this.popCritreriaExpand = false;
   }
 }

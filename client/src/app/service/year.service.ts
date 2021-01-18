@@ -61,7 +61,7 @@ export class YearService {
           );
         } else if (this.path !== 'uwl') {
           this.committeeId = null;
-          this.apiService.getCommitteesYears().subscribe(
+          this.apiService.getYears().subscribe(
             value => {
               this.years.next(value);
               if (this.currentYear.value === undefined || this.currentYear.value === '' || !value.includes(this.currentYear.value)) {
