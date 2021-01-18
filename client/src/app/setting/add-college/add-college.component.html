@@ -9,12 +9,12 @@
     <div class="modal-body">
       <div class="container-fluid">
         <label for="name">Name:</label>
-        <input id="name" type="text">
+        <input id="name" type="text" [(ngModel)]="collegeName">
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-      <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" aria-label="Close">Save</button>
+      <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" (click)="addNewCollege()" aria-label="Close">Save</button>
     </div>
   </div>
 </div>

@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {YearService} from '../../service/year.service';
+import {ApiService} from '../../service/api.service';
+import {College} from '../../models/college';
 
 @Component({
   selector: 'app-add-college',
@@ -6,10 +9,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./add-college.component.css']
 })
 export class AddCollegeComponent implements OnInit {
-
-  constructor() { }
+  @Output() addCollege = new EventEmitter();
+  collegeName: string;
+  constructor(private yearService: YearService, private apiService: ApiService) { }
 
   ngOnInit(): void {
   }
 
+  addNewCollege() {
+    const college = new College();
+    college.year = this.yearService.getYearValue;
+    college.name = this.collegeName;
+    this.apiService.createCollege(college).subscribe(
+      resCollege => {
+        this.addCollege.emit();
+      }
+    );
+  }
 }

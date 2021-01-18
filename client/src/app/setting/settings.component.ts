@@ -5,7 +5,7 @@ import {ApiService} from '../service/api.service';
 import {Router} from '@angular/router';
 import {Gender} from '../models/gender';
 import {College} from '../models/college';
-import {Dept} from '../models/dept';
+import {Department} from '../models/department';
 
 @Component({
   selector: 'app-settings',
@@ -25,7 +25,10 @@ export class SettingsComponent implements OnInit {
   };
   genders: Gender[] = [];
   colleges: College[] = [];
-  depts: Dept[] = [];
+  depts: Department[] = [];
+  editGenderText: string;
+  editCollegeText: string;
+  editDeptText: string;
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
               private router: Router) {
   }
@@ -48,36 +51,47 @@ export class SettingsComponent implements OnInit {
     );
     this.yearService.getValue().subscribe(
       year => {
-        this.apiService.getGendersByYear(year).subscribe(
-          genders => {
-            this.genders = genders;
-          }
-        );
-        this.apiService.getCollegeByYear(year).subscribe(
-          colleges => {
-            this.colleges = colleges;
-          }
-        );
-        this.apiService.getDeptByYear(year).subscribe(
-          depts => {
-            this.depts = depts;
-          }
-        );
+        this.getCollege();
+        this.getGen();
+        this.getGen();
       }
     );
   }
 
-  deleteDept(deptId: number) {
+  deleteDept(deptId: string, index: number) {
+    this.apiService.deleteDept(deptId).subscribe(
+      dept => {
+        this.depts.splice(index, 1);
+      }
+    );
   }
-  deleteGender(genderId: number) {
+  deleteGender(genderId: string, index: number) {
+    this.apiService.deleteGender(genderId).subscribe(
+      gender => {
+        this.genders.splice(index, 1);
+      }
+    );
   }
-  deleteCollege(collegeId: number) {
+  deleteCollege(collegeId: string, index: number) {
+    this.apiService.deleteCollege(collegeId).subscribe(
+      college => {
+        this.colleges.splice(index, 1);
+      }
+    );
   }
   cancelEditDept() {
+    this.editDeptText = '';
     this.editIndex.editDeptIndex = -1;
   }
-  saveDept() {
-    this.editIndex.editDeptIndex = -1;
+  saveDept(dept: Department) {
+    dept.name = this.editDeptText;
+    this.apiService.modifyDept(dept).subscribe(
+      resDept => {
+        dept = resDept;
+        this.editDeptText = '';
+        this.editIndex.editDeptIndex = -1;
+      }
+    );
   }
   editDept(index: number) {
     this.editIndex.editDeptIndex = index;
@@ -89,15 +103,55 @@ export class SettingsComponent implements OnInit {
     this.editIndex.editCollegeIndex = index;
   }
   cancelEditCollege() {
+    this.editCollegeText = '';
     this.editIndex.editCollegeIndex = -1;
   }
-  saveCollege() {
-    this.editIndex.editCollegeIndex = -1;
+  saveCollege(college: College) {
+    college.name = this.editCollegeText;
+    this.apiService.modifyCollege(college).subscribe(
+      resCollege => {
+        college = resCollege;
+        this.editIndex.editCollegeIndex = -1;
+        this.editCollegeText = '';
+      }
+    );
   }
   cancelEditGender() {
+    this.editGenderText = '';
     this.editIndex.editGenderIndex = -1;
   }
-  saveGender() {
-    this.editIndex.editGenderIndex = -1;
+  saveGender(gender: Gender) {
+    gender.name = this.editGenderText;
+    this.apiService.modifyGender(gender).subscribe(
+      resGender => {
+        gender = resGender;
+        this.editGenderText = '';
+        this.editIndex.editGenderIndex = -1;
+      }
+    );
+  }
+
+  getCollege() {
+    this.apiService.getCollegeByYear(this.yearService.getYearValue).subscribe(
+      colleges => {
+        this.colleges = colleges;
+      }
+    );
+  }
+
+  getGen() {
+    this.apiService.getGendersByYear(this.yearService.getYearValue).subscribe(
+      genders => {
+        this.genders = genders;
+      }
+    );
+  }
+
+  getDept() {
+    this.apiService.getDeptByYear(this.yearService.getYearValue).subscribe(
+      depts => {
+        this.depts = depts;
+      }
+    );
   }
 }

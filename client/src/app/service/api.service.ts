@@ -11,7 +11,7 @@ import {Page} from '../models/page';
 import {Criteria} from '../models/criteria';
 import {ApplicationComment} from '../models/application-comment';
 import {Gender} from '../models/gender';
-import {Dept} from '../models/dept';
+import {Department} from '../models/department';
 import {College} from '../models/college';
 import {CommitteeSummary} from '../models/committee-summary';
 
@@ -178,10 +178,40 @@ export class ApiService {
   getGendersByYear(year: string): Observable<Gender[]> {
     return this.http.get<Gender[]>(`${AppConstants.API_URL}/genders?year=${year}`);
   }
-  getDeptByYear(year: string): Observable<Dept[]> {
-    return this.http.get<Dept[]>(`${AppConstants.API_URL}/departments?year=${year}`);
+  modifyGender(gender: Gender): Observable<Gender> {
+    return this.http.put<Gender>(`${AppConstants.API_URL}/genders`, Gender);
+  }
+  deleteGender(id: string): Observable<any> {
+    return this.http.delete<any>(`${AppConstants.API_URL}/genders/${id}`);
+  }
+  createGender(gender: Gender): Observable<Gender> {
+    const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    return this.http.post<Gender>(`${AppConstants.API_URL}/genders`, gender, config);
+  }
+  getDeptByYear(year: string): Observable<Department[]> {
+    return this.http.get<Department[]>(`${AppConstants.API_URL}/departments?year=${year}`);
+  }
+  modifyDept(dept: Department): Observable<Department> {
+    return this.http.put<Department>(`${AppConstants.API_URL}/departments`, dept);
+  }
+  deleteDept(id: string): Observable<any> {
+    return this.http.delete<any>(`${AppConstants.API_URL}/departments/${id}`);
+  }
+  createDept(dept: Department): Observable<Department> {
+    const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    return this.http.post<Department>(`${AppConstants.API_URL}/departments`, dept, config);
   }
   getCollegeByYear(year: string): Observable<College[]> {
     return this.http.get<College[]>(`${AppConstants.API_URL}/colleges?year=${year}`);
+  }
+  modifyCollege(college: College): Observable<College> {
+    return this.http.put<College>(`${AppConstants.API_URL}/colleges`, college);
+  }
+  deleteCollege(id: string): Observable<any> {
+    return this.http.delete<any>(`${AppConstants.API_URL}/colleges/${id}`);
+  }
+  createCollege(college: College): Observable<College> {
+    const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    return this.http.post<College>(`${AppConstants.API_URL}/colleges`, college, config);
   }
 }

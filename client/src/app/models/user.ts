@@ -2,7 +2,7 @@ import {UserCommittees} from './user-committees';
 import {Role} from './role';
 import {Gender} from './gender';
 import {College} from './college';
-import {Dept} from './dept';
+import {Department} from './department';
 
 export class User {
   id: string;
@@ -18,7 +18,7 @@ export class User {
   year: string;
   committees: UserCommittees[];
   roles: Role[];
-  dept: Dept;
+  dept: Department;
   chair: boolean;
   years: string[];
 }

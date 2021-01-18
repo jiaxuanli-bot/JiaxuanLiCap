@@ -139,10 +139,10 @@ export class FacultyComponent implements OnInit {
       editSoe: [''],
       editGender: ['']
     });
-    this.getFaculty();
     this.year = this.yearService.getValue();
-    this.apiService.getFacultyByYear(this.yearService.getYearValue).subscribe();
     this.year.subscribe(year => {
+      this.getFaculty();
+      this.apiService.getFacultyByYear(year).subscribe();
       this.apiService.getGendersByYear(year).subscribe(
         genders => {
           genders.forEach(

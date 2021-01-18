@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h4 class="modal-title" id="Modify">Create New Dept:</h4>
+      <h4 class="modal-title" id="Modify">Create New Department:</h4>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span class="closeBtn" aria-hidden="true">&times;</span>
       </button>
@@ -9,12 +9,12 @@
     <div class="modal-body">
       <div class="container-fluid">
         <label for="name">Name:</label>
-        <input id="name" type="text">
+        <input id="name" type="text" [(ngModel)]="deptName">
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-      <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" aria-label="Close">Save</button>
+      <button type="button" class="btn btn-primary closeBtn" aria-hidden="true" data-dismiss="modal" aria-label="Close" (click)="addNewDept()">Save</button>
     </div>
   </div>
 </div>
