@@ -150,8 +150,6 @@ public class CommitteeService {
     	return committeeRepo.findByYear( year, CommitteeId.class );
     }
     
-    
-
     public List<UserSummary> getCommitteeVolunteersDetail(Long id){
         Committee c = new Committee();
         c.setId(Long.valueOf(id));
@@ -189,8 +187,8 @@ public class CommitteeService {
         return res[0];
     }
 
-    public String getCommitteeIdByYearAndName(String name, String year) {
-        return committeeRepo.findByNameEqualsAndYearEquals(name, year).getId().toString();
+    public CommitteeId getCommitteeIdByYearAndName(String name, String year) {
+        return committeeRepo.findByNameEqualsAndYearEquals(name, year, CommitteeId.class );
     }
 
     public void deleteCommitteeById(Long id) {
@@ -231,6 +229,10 @@ public class CommitteeService {
     	committee.setDuties( duties );
         committeeRepo.save(committee);
         
-        return committeeRepo.findByNameEqualsAndYearEquals( committee.getName(), committee.getYear() );
+        return committeeRepo.findByNameEqualsAndYearEquals( committee.getName(), committee.getYear(), CommitteeSummary.class );
     }
+
+	public List<CommitteeId> getCommitteeIdsByName(String name, String year) {
+		return this.committeeRepo.findByNameEquals( name, CommitteeId.class );
+	}
 }

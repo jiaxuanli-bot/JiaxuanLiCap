@@ -10,7 +10,6 @@ import uwl.senate.coc.services.MockService;
 
 
 @RestController
-@RequestMapping( "/api/v1" )
 public class MockDataBaseController {
     @Autowired
     MockService mockService;

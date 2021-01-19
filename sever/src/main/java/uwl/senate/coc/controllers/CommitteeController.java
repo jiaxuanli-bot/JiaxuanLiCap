@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uwl.senate.coc.entities.Committee;
 import uwl.senate.coc.entities.Criteria;
 import uwl.senate.coc.entities.User;
+import uwl.senate.coc.projections.CommitteeId;
 import uwl.senate.coc.projections.CommitteeSummary;
 import uwl.senate.coc.projections.CommitteeWithUserSummaries;
 import uwl.senate.coc.projections.UserSummary;
@@ -59,12 +60,16 @@ public class CommitteeController {
         return committeeService.getCommittees(startYear, endYear);
     }
     
-//    I don't think this method makes sense....we shouldn't need it    
-//    @RequestMapping( value="/{name}/years/{year}", method=RequestMethod.GET )
-//    public String getCommitteeIdByYearAndName(@PathVariable String name, @PathVariable String year) {
-//        return committeeService.getCommitteeIdByYearAndName(name, year);
-//    }
-
+    @RequestMapping( value="/{name}/years", method=RequestMethod.GET )
+    public List<CommitteeId> getCommitteeIdsByName(@PathVariable String name, @PathVariable String year) {
+        return committeeService.getCommitteeIdsByName(name, year);
+    }
+    
+    @RequestMapping( value="/{name}/years/{year}", method=RequestMethod.GET )
+    public CommitteeId getCommitteeIdByYearAndName(@PathVariable String name, @PathVariable String year) {
+        return committeeService.getCommitteeIdByYearAndName(name, year);
+    }
+    
     @RequestMapping( value="/{id}/years", method=RequestMethod.GET )
     public List<String> getCommitteeYears( @PathVariable Long id ) {
         return committeeService.getCommitteeYears( id );
@@ -79,12 +84,6 @@ public class CommitteeController {
     public List<UserSummary> getCommitteeVolunteers( @PathVariable Long id ){
         return committeeService.getCommitteeVolunteersDetail( id );
     }
-
-//    This doesn't make sense .... don't think we need it
-//    @RequestMapping( value="/{id}/volunteers/users", method=RequestMethod.GET )
-//    public List<UserSummary> getCommitteeVolunteersDetail( @PathVariable Long id ) {
-//        return committeeService.getCommitteeVolunteersDetail( id );
-//    }
 
     @RequestMapping( value="/{cid}/members/{uid}", method=RequestMethod.PUT )
     public User assignCommitteeMember( 

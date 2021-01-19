@@ -44,7 +44,6 @@ public class Committee {
     @JoinTable(name = "committee_members",joinColumns = { @JoinColumn(name = "committee_id")},inverseJoinColumns = {@JoinColumn(name = "members_id")})
     private Set<User> members;
 
-
     @OneToMany(mappedBy = "committee", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<Criteria> criteria;

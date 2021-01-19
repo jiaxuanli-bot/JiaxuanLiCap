@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="surveyresponse")
@@ -20,9 +21,6 @@ public class SurveyResponse {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="response_id")
 	private Long id;
-
-	@Column(name="committee_id")
-	private Long committeeId;
 	
 	@Column(name="selected")
 	private Boolean selected;
@@ -36,6 +34,7 @@ public class SurveyResponse {
 	)
 	private Survey survey;
 	
+	@JsonIgnore
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinTable( 
 			name="committee_surveyresponse", 

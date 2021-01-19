@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name="survey")
 public class Survey {
@@ -28,7 +30,7 @@ public class Survey {
 	@Column( name="comment" )
 	private String comment;
 
-	@OneToMany( fetch=FetchType.LAZY, mappedBy="survey" )
+	@OneToMany( fetch=FetchType.LAZY )
 	private List<SurveyResponse> responses;
 	
 	public Survey() {		

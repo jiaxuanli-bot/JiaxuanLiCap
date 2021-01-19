@@ -1,6 +1,7 @@
 package uwl.senate.coc.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class SurveyService {
     private SurveyRepository surveyRepo;
     
     @Autowired 
-    private SurveyResponseRepository surveyResponseRepository;
+    private SurveyResponseRepository surveyResponseRepo;
     
     @Autowired
     private CommitteeService committeeService;
@@ -44,10 +45,7 @@ public class SurveyService {
 						.build() )
 				.collect( Collectors.toList() );
 		
-		surveyResponseRepository.saveAll( responses );
-//		survey.setResponses( responses );
-//		surveyRepo.save( survey );
-		
+		surveyResponseRepo.saveAll( responses );		
 		return survey;
     }
     
@@ -56,8 +54,33 @@ public class SurveyService {
     }
     
     public List<SurveyResponse> getResponsesBySurveyId( Long sid ) {
-    	return surveyResponseRepository.findBySurveyId(sid);
+    	return surveyResponseRepo.findBySurveyId(sid);
     }
     
+    public Survey update( Survey survey ) {
+    	Survey oldSurvey = this.surveyRepo.getOne( survey.getId() );
+    	oldSurvey.setComment( survey.getComment() );
+
+    	survey.getResponses().forEach( rNew -> {
+    		Optional<SurveyResponse> response = oldSurvey
+    				.getResponses()
+    				.stream()
+    				.filter( rOld -> rOld.getId() == rNew.getId() )
+    				.findFirst();
+
+    		
+    		if( response.isPresent() ) {
+    			response.get().setSelected( rNew.getSelected() );
+    		}
+    	});
+    	
+    	this.surveyResponseRepo.saveAll( oldSurvey.getResponses() );
+    	return this.surveyRepo.save( survey );
+    }
     
+    public SurveyResponse updateResponse( SurveyResponse surveyResponse ) { 
+    	SurveyResponse oldResponse = this.surveyResponseRepo.getOne( surveyResponse.getId() );
+    	oldResponse.setSelected( surveyResponse.getSelected() );
+    	return this.surveyResponseRepo.save( oldResponse );
+    }
 }

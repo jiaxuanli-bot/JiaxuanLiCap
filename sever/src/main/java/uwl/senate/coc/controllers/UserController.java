@@ -1,6 +1,5 @@
 package uwl.senate.coc.controllers;
 
-
 import java.util.List;
 
 import javax.validation.constraints.Pattern;
@@ -22,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import uwl.senate.coc.entities.College;
 import uwl.senate.coc.entities.Gender;
+import uwl.senate.coc.entities.Survey;
 import uwl.senate.coc.entities.SurveyResponse;
 import uwl.senate.coc.entities.User;
 import uwl.senate.coc.projections.CommitteeSummary;
 import uwl.senate.coc.projections.SurveySummary;
 import uwl.senate.coc.services.SurveyService;
 import uwl.senate.coc.services.UserService;
-
 
 @RestController
 @RequestMapping( "/users" )
@@ -83,16 +82,6 @@ public class UserController {
     	return userService.getUser( uid );
     }
     
-    @RequestMapping( value="/{uid}/survey", method=RequestMethod.GET)
-    public SurveySummary getSurvey( @PathVariable Long uid ) {
-    	return surveyService.getByUserId( uid );
-    }
-    
-    @RequestMapping( value="/{uid}/survey/responses", method=RequestMethod.GET)
-    public List<SurveyResponse> getSurveyResponses( @PathVariable Long uid ) {
-    	return surveyService.getResponsesBySurveyId(uid);    	
-    }
-
     @RequestMapping( value="/{uid}", method=RequestMethod.PUT )
     public User modifyUser( @PathVariable Long uid, @RequestBody(required=true) User user) {    	
     	if( uid != user.getId() ) throw new IllegalArgumentException("Path id and user.id are not the same");
@@ -121,10 +110,6 @@ public class UserController {
         return  userService.getUserCommittees( userService.getUser( uid ) );
     }
 
-//    @RequestMapping( value="/{uid}/survey", method=RequestMethod.GET )
-//    public Survey getUserSurvey( @PathVariable Long uid ) {
-//    	return userService.getSurvey( uid );
-//    }
 
     @RequestMapping( value="/users/{id}/enlistings/committees", method=RequestMethod.GET )
     public List<CommitteeSummary> getUserSurveysCommittees(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id) {
@@ -141,24 +126,35 @@ public class UserController {
         //Create a comment for a survey
     }
 
-//    @RequestMapping( value="/users/{id}/enlistings/{committeeid}", method=RequestMethod.POST )
-//    public void createSurvey(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeid, @RequestParam(name="year", required=false) String year) {
-//       //Create a new survey that user volunteer one committee
-//        User v  = userService.getUserById(Long.valueOf(id));
-//        v = userService.getUserByEmailAndYear(v.getEmail(), year);
-//        userService.createSurvey(Long.valueOf(committeeid),v);
-//    }
-//
-//    @RequestMapping( value="/users/{id}/enlistings/{committeeid}", method=RequestMethod.DELETE )
-//    public void deleteSurvey(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,@Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeid) {
-//        //Delete survey for that user
-//        userService.deleteSurvey(Long.valueOf(id),Long.valueOf(committeeid));
-//    }
-
-    // This meethod is poorly constructed
+    // This method is poorly constructed
     @RequestMapping( value="/users/email/{email}/years", method=RequestMethod.GET )
     public List<String> getUserYears(@PathVariable String email) {
         //get all years of users which have same email
         return userService.getUserYears(email);
     }
+    
+    
+    //////////////////////////////////////////////////////////////////////
+    /// SURVEYS 
+    //////////////////////////////////////////////////////////////////////
+    @RequestMapping( value="/{uid}/survey", method=RequestMethod.GET)
+    public SurveySummary getSurvey( @PathVariable Long uid ) {
+    	return surveyService.getByUserId( uid );
+    }
+
+    
+//    @RequestMapping( value="/{uid}/survey/{sid}", method=RequestMethod.PUT)
+//    public Survey updateSurvey( @PathVariable Long uid, @PathVariable Long sid, @RequestBody Survey survey ) {    	
+//    	return surveyService.update(survey);
+//    }
+
+    @RequestMapping( value="/{uid}/survey/responses/{rid}", method=RequestMethod.PUT)
+    public SurveyResponse updateSurveyResponse( 
+    		@PathVariable Long uid, 
+    		@PathVariable Long rid, 
+    		@RequestBody SurveyResponse surveyResponse ) {
+    	/// NEED SOME VALIDATION HERE..........    	    	
+    	return surveyService.updateResponse( surveyResponse );
+    }
+    
 }

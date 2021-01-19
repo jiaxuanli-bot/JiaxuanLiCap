@@ -7,7 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import uwl.senate.coc.entities.SurveyResponse;
 
 public interface SurveyResponseRepository extends JpaRepository<SurveyResponse, Long> {
-
 	List<SurveyResponse> findBySurveyId(Long sid);
-
 }
