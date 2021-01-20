@@ -2,6 +2,7 @@ package uwl.senate.coc.controllers;
 
 import java.util.List;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import uwl.senate.coc.entities.College;
 import uwl.senate.coc.entities.Gender;
-import uwl.senate.coc.entities.Survey;
 import uwl.senate.coc.entities.SurveyResponse;
 import uwl.senate.coc.entities.User;
 import uwl.senate.coc.projections.CommitteeSummary;
@@ -45,17 +45,17 @@ public class UserController {
             @RequestParam(defaultValue="0") Integer pageNo,
             @RequestParam(defaultValue="10") Integer pageSize,
             @RequestParam(defaultValue="last") String sortBy,
-            @RequestParam(name="pageLength", required=false) String pageLength,
+//            @RequestParam(name="pageLength", required=false) String pageLength,  This doesn't seem to be used
             @Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(name="year", required=true) String year,
-            @Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @RequestParam(name="id", required=false) String id,
+            @RequestParam @Min(0) Long id,
             @RequestParam(required=false) String first, 
             @RequestParam(required=false) String last,
             @Pattern( regexp = "Full|Associate|Assistant", message = "the rank format is wrong") @RequestParam(name="rank", required=false) String rank,
-            @Pattern( regexp = "CASH|CSH|CBA", message = "the college format is wrong") @RequestParam(name="college", required=false) String college,
+            @RequestParam(name="college", required=false) String college,
             @RequestParam(required=false) Boolean tenured,
             @RequestParam(required=false) Boolean soe,
             @RequestParam(required=false) Boolean admin,
-            @Pattern( regexp = "F|M", message = "the gender format is wrong") @RequestParam(name="gender", required=false) String gender) {
+            @RequestParam(name="gender", required=false) String gender) {
         rank = rank != null ? rank + " Professor" : null;
         User user = new User.Builder()
         		.year(year)
@@ -72,6 +72,7 @@ public class UserController {
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withMatcher("first", m -> m.contains())
                 .withMatcher("last", m -> m.contains());
+        
         Example<User> example = Example.of(user, matcher);
         Pageable paging = PageRequest.of( pageNo, pageSize, Sort.by(sortBy));
         return userService.getUsers(example, paging );
@@ -141,12 +142,6 @@ public class UserController {
     public SurveySummary getSurvey( @PathVariable Long uid ) {
     	return surveyService.getByUserId( uid );
     }
-
-    
-//    @RequestMapping( value="/{uid}/survey/{sid}", method=RequestMethod.PUT)
-//    public Survey updateSurvey( @PathVariable Long uid, @PathVariable Long sid, @RequestBody Survey survey ) {    	
-//    	return surveyService.update(survey);
-//    }
 
     @RequestMapping( value="/{uid}/survey/responses/{rid}", method=RequestMethod.PUT)
     public SurveyResponse updateSurveyResponse( 
