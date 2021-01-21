@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -34,6 +35,7 @@ import uwl.senate.coc.repositories.RoleRepository;
 import uwl.senate.coc.repositories.SurveyRepository;
 import uwl.senate.coc.repositories.SurveyResponseRepository;
 import uwl.senate.coc.repositories.UserRepository;
+import uwl.senate.coc.utils.EncryptionUtils;
 
 @Service
 public class MockService {
@@ -178,6 +180,8 @@ public class MockService {
     }
 
     public User user(List<Role> roles, List<Gender> genders, List<Department> departments) {
+
+    			
     	final Department department = one( departments );
     	final String year = department.getYear();
     	final Gender gender = one( genders.stream().filter( g -> g.getYear().equals( year ) ).collect( Collectors.toList() ) );
@@ -286,12 +290,16 @@ public class MockService {
 
         userRepo.saveAll( users ); // all users have been saved with ids
         
+        
+        // CREATE SURVEY DATA
         List<Survey> allSurveys = users
         		.stream()
         		.map( user -> new Survey.Builder()
         				.comment( randomString() )
         				.userId( user.getId() )
         				.year( user.getYear() )
+        				.isEnabled(true)
+        				.urlkey( EncryptionUtils.encrypt( user.getId() + ":" + user.getYear() + ":" + UUID.randomUUID() ) )
         				.build()
         				
     				)
@@ -328,8 +336,8 @@ public class MockService {
         });
         
         surveyResponseRepo.saveAll( allResponses );
-        surveyRepo.saveAll( allSurveys );
-        
+        surveyRepo.saveAll( allSurveys );        
+
         return users;
     }
 

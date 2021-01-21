@@ -47,7 +47,7 @@ public class College {
     public String getYear() {
         return year;
     }
-
+    
     public static class Builder {
         private Long id;
         private String name;

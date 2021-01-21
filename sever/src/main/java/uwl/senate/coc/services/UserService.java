@@ -1,8 +1,16 @@
 package uwl.senate.coc.services;
 
+import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -40,8 +48,33 @@ public class UserService {
     	return userRepo.findById( id ).get();
     }
 
-    public User modifyUser(User user){
-        return userRepo.save(user);
+    public static void copyNonNullProperties(Object src, Object target) {
+        BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
+    }
+
+    public static String[] getNullPropertyNames (Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        PropertyDescriptor[] pds = src.getPropertyDescriptors();
+        
+        Set<String> result = Arrays.stream( pds )
+        		.map( pd -> pd.getName() )
+        		.filter( name -> src.getPropertyValue( name ) == null )
+        		.collect( Collectors.toSet() );
+        
+        return result.toArray( new String[] {} );        
+    }
+    
+    public User modifyUser(User user) {
+    	User existingUser = userRepo.getOne( user.getId() );
+    	
+    	copyNonNullProperties( user, existingUser );
+    	
+    	if( user.getDept() != null ) {
+    		existingUser.setDept( user.getDept() );
+    		existingUser.setCollege( user.getDept().getCollege() );
+    	}
+    	    	
+    	return userRepo.save( existingUser );
     }
 
     public void deleteUser(Long id){
@@ -61,8 +94,8 @@ public class UserService {
         return committeeRepo.findByVolunteers(v);
     }
     
-    public SurveySummary getSurvey( Long userId ) {
-    	return this.surveyService.getByUserId(userId);
+    public <T> T getSurvey( Long userId, Class<T> clazz ) {
+    	return this.surveyService.getByUserId(userId, clazz);
     }
 
     public Survey createSurvey( User user ) {

@@ -29,6 +29,10 @@ public class Duty {
 		return this.committee;
 	}
 	
+	public Committee getCommittee() {
+		return committee;
+	}
+
 	public void setCommittee( Committee c ) {
 		this.committee = c;
 	}

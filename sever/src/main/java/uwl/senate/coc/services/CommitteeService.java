@@ -135,25 +135,17 @@ public class CommitteeService {
     }
 
     public List<UserSummary> getCommitteeMembers(Long id) {    	
-    	Committee c = committeeRepo.findById(id).orElse( null );
-    	
-    	System.out.println("committeeSevice.getCommitteeMembers::" + c );
-    	if( c == null ) throw new IllegalArgumentException("invalid committee id");
-    	    	
-        List<UserSummary> result = userRepo.findByCommitteesEquals(c);
-        System.out.println( "RESULT=>" + result );
-        
-        return result;
+    	CommitteeWithUserSummaries c = committeeRepo.findByIdEquals(id, CommitteeWithUserSummaries.class );
+        return c.getMembers();
     }
     
     public List<CommitteeId> getCommitteeIds( String year ) {
     	return committeeRepo.findByYear( year, CommitteeId.class );
     }
     
-    public List<UserSummary> getCommitteeVolunteersDetail(Long id){
-        Committee c = new Committee();
-        c.setId(Long.valueOf(id));
-        return userRepo.findByVolunteeredCommitteesEquals(c);
+    public List<UserSummary> getCommitteeVolunteersDetail(Long id) {        
+        CommitteeWithUserSummaries c = committeeRepo.findByIdEquals(id, CommitteeWithUserSummaries.class );
+        return c.getVolunteers();
     }
 
     public User assignCommitteeMember(Long id,Long userId){

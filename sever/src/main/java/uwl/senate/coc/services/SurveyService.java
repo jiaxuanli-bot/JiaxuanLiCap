@@ -49,8 +49,8 @@ public class SurveyService {
 		return survey;
     }
     
-    public SurveySummary getByUserId( Long uid ) {
-    	return surveyRepo.findByUserId(uid, SurveySummary.class);    	
+    public <T> T getByUserId( Long uid, Class<T> clazz) {
+    	return surveyRepo.findByUserId(uid, clazz );
     }
     
     public List<SurveyResponse> getResponsesBySurveyId( Long sid ) {
@@ -83,4 +83,10 @@ public class SurveyService {
     	oldResponse.setSelected( surveyResponse.getSelected() );
     	return this.surveyResponseRepo.save( oldResponse );
     }
+
+	public Survey updateComment(Survey survey) {
+		Survey oldSurvey = this.surveyRepo.getOne( survey.getId() );
+		oldSurvey.setComment( survey.getComment() );
+		return this.surveyRepo.save( oldSurvey );
+	}
 }

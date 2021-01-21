@@ -29,6 +29,12 @@ public class Survey {
 	
 	@Column( name="comment" )
 	private String comment;
+	
+	@Column( name="urlkey", length=2048 )
+	private String urlkey;
+	
+	@Column( name="enabled" )
+	private Boolean isEnabled;
 
 	@OneToMany( fetch=FetchType.LAZY )
 	private List<SurveyResponse> responses;
@@ -42,6 +48,8 @@ public class Survey {
 		this.year = b.year;
 		this.comment = b.comment;
 		this.responses = b.responses;
+		this.urlkey = b.urlkey;
+		this.isEnabled = b.isEnabled;
 	}
 
 	public Long getId() {
@@ -84,11 +92,29 @@ public class Survey {
 		this.responses = responses;
 	}
 
+	public String getUrlkey() {
+		return this.urlkey;
+	}
+
+	public void setUrlkey(String urlkey) {
+		this.urlkey = urlkey;
+	}
+
+	public Boolean getIsEnabled() {
+		return isEnabled;
+	}
+
+	public void setIsEnabled(Boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
+	
 	public static class Builder {
 		private Long id;
 		private Long userId;
 		private String year;
 		private String comment;
+		private String urlkey;
+		private Boolean isEnabled;
 		private List<SurveyResponse> responses;
 		
 		public Builder id( Long id ) {
@@ -101,6 +127,11 @@ public class Survey {
 			return this;
 		}
 		
+		public Builder urlkey( String urlkey ) {
+			this.urlkey = urlkey;
+			return this;
+		}
+		
 		public Builder year(String year ) {
 			this.year = year;
 			return this;
@@ -108,6 +139,11 @@ public class Survey {
 		
 		public Builder comment( String comment ) {
 			this.comment = comment;
+			return this;
+		}
+		
+		public Builder isEnabled( Boolean isEnabled) {
+			this.isEnabled = isEnabled;
 			return this;
 		}
 		

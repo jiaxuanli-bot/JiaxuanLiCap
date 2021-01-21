@@ -19,13 +19,6 @@ import javax.persistence.JoinColumn;
 @Entity
 public class Committee {
 
-	@Override
-	public String toString() {
-		return "Committee [id=" + id + ", introduction=" + introduction + ", name=" + name + ", year=" + year
-				+ ", members=" + members + ", criteria=" + criteria + ", duties=" + duties + ", volunteers="
-				+ volunteers + "]";
-	}
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="committee_id")

@@ -14,6 +14,7 @@ public interface CommitteeRepository extends JpaRepository<Committee, Long> {
     <T> T findByNameEqualsAndYearEquals(String name, String year, Class<T> clazz);
     <T> List<T> findByNameEquals( String name, Class<T> clazz );
     <T> List<T> findByYear(String year, Class<T> type);
+    <T> T findByIdEquals( Long id, Class<T> type);
     
     List<CommitteeWithUserSummaries> findByYearBetween(String startYear, String endYear);
     List<CommitteeSummary> findByYearBetweenAndIdNotNull(String startYear, String endYear);
@@ -24,6 +25,4 @@ public interface CommitteeRepository extends JpaRepository<Committee, Long> {
     List<CommitteeSummary> findByVolunteers(User v);
     
     CommitteeWithUserSummaries findByIdEqualsAndIdNotNull(Long id);
-    CommitteeMembers findByIdEquals(Long id);
-    CommitteeVolunteers findByIdIs(Long id);
 }

@@ -13,9 +13,9 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     List<UserYearsOnly> findDistinctByEmailOrderByYearAsc(String email);
-    List<UserSummary> findByCommitteesEquals(Committee c);
+//    List<UserSummary> findByCommitteesEquals(Committee c);
     List<User> findByEmailEquals(String email);
-    List<UserSummary> findByVolunteeredCommitteesEquals(Committee c);
+//    List<UserSummary> findByVolunteeredCommitteesEquals(Committee c);
     User findByEmailEqualsAndYearEquals(String email, String year);
     List<User> findByYear(String year);
     

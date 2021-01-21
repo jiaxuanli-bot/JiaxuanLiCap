@@ -23,7 +23,7 @@ public class User {
 	private Boolean gradStatus;
 	private Boolean soe;
 	private Boolean chair;
-
+	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_college",
 			joinColumns =
@@ -60,7 +60,6 @@ public class User {
 
     @ManyToMany(fetch=FetchType.LAZY)
 	private List<Role> roles;
-
 
 	public User() {
 	}

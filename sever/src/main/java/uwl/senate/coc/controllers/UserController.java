@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import uwl.senate.coc.entities.College;
 import uwl.senate.coc.entities.Gender;
+import uwl.senate.coc.entities.Survey;
 import uwl.senate.coc.entities.SurveyResponse;
 import uwl.senate.coc.entities.User;
 import uwl.senate.coc.projections.CommitteeSummary;
@@ -45,7 +46,6 @@ public class UserController {
             @RequestParam(defaultValue="0") Integer pageNo,
             @RequestParam(defaultValue="10") Integer pageSize,
             @RequestParam(defaultValue="last") String sortBy,
-//            @RequestParam(name="pageLength", required=false) String pageLength,  This doesn't seem to be used
             @Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(name="year", required=true) String year,
             @RequestParam @Min(0) Long id,
             @RequestParam(required=false) String first, 
@@ -83,14 +83,11 @@ public class UserController {
     	return userService.getUser( uid );
     }
     
+    // I HAVEN'T TESTED THIS ENDPOINT
     @RequestMapping( value="/{uid}", method=RequestMethod.PUT )
-    public User modifyUser( @PathVariable Long uid, @RequestBody(required=true) User user) {    	
-    	if( uid != user.getId() ) throw new IllegalArgumentException("Path id and user.id are not the same");
-    	
-        User u = userService.getUser( uid );
-        user.setId( u.getId() );
-        user.setEmail( u.getEmail() );
-        user.setYear( u.getYear() );
+    public User modifyUser( @PathVariable Long uid, @RequestBody(required=true) User user) {  
+    	if( uid == null || !uid.equals( user.getId() ) ) throw new IllegalArgumentException("Path id and user.id are not the same");
+        
         return userService.modifyUser(user);
     }
 
@@ -112,7 +109,7 @@ public class UserController {
     }
 
 
-    @RequestMapping( value="/users/{id}/enlistings/committees", method=RequestMethod.GET )
+    @RequestMapping( value="/{id}/enlistings/committees", method=RequestMethod.GET )
     public List<CommitteeSummary> getUserSurveysCommittees(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id) {
         //Get all the survey that user have been volunteered
         User v =new User();
@@ -120,12 +117,6 @@ public class UserController {
         return userService.getUserSurveysCommittees(v);
     }
 
-    @RequestMapping( value="/users/{id}/enlistings/committees/{committeeId}/comment", method=RequestMethod.POST )
-    public void createComment(@RequestBody(required=true) String commentContext,
-                              @Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id,
-                              @Pattern( regexp = "^[0-9]*$", message = "the CommitteeID format is wrong") @PathVariable String committeeId) {
-        //Create a comment for a survey
-    }
 
     // This method is poorly constructed
     @RequestMapping( value="/users/email/{email}/years", method=RequestMethod.GET )
@@ -140,7 +131,7 @@ public class UserController {
     //////////////////////////////////////////////////////////////////////
     @RequestMapping( value="/{uid}/survey", method=RequestMethod.GET)
     public SurveySummary getSurvey( @PathVariable Long uid ) {
-    	return surveyService.getByUserId( uid );
+    	return surveyService.getByUserId( uid, SurveySummary.class );
     }
 
     @RequestMapping( value="/{uid}/survey/responses/{rid}", method=RequestMethod.PUT)
@@ -150,6 +141,12 @@ public class UserController {
     		@RequestBody SurveyResponse surveyResponse ) {
     	/// NEED SOME VALIDATION HERE..........    	    	
     	return surveyService.updateResponse( surveyResponse );
+    }
+    
+    @RequestMapping( value="/{uid}/survey/comment", method=RequestMethod.PUT )
+    public Survey updateComment(@RequestBody(required=true) Survey surveyWithCommentAndIdOnly,
+                              @PathVariable Long uid) {
+    	return surveyService.updateComment( surveyWithCommentAndIdOnly );
     }
     
 }
