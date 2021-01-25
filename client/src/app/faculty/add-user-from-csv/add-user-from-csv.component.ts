@@ -69,7 +69,6 @@ export class AddUserFromCSVComponent implements OnInit {
                 this.deptNameAndObjMap.set(dept.name, dept);
               }
             );
-            console.log(this.deptNameAndObjMap);
           }
         );
       }
@@ -176,7 +175,9 @@ export class AddUserFromCSVComponent implements OnInit {
       //
       //
       // need to check
-      // faculty.college = faculty.dept.college;
+      if (faculty.dept !== undefined) {
+        faculty.college = faculty.dept.college;
+      }
       this.uploadedFaculties.push(faculty);
     }
     console.log(this.uploadedFaculties);

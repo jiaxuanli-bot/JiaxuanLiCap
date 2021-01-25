@@ -138,7 +138,6 @@ export class FacultyComponent implements OnInit {
       this.apiService.getFacultyByYear(year).subscribe();
       this.apiService.getGendersByYear(year).subscribe(
         genders => {
-          console.log(genders);
           this.genders = genders;
           this.options.gender = [''];
           genders.forEach(

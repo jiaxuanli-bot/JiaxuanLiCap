@@ -1,12 +1,15 @@
+import {Gender} from './gender';
+import {College} from './college';
+
 export class CommitteeUser {
   id: string;
   first: string;
   last: string;
   rank: string;
-  college: string;
+  college: College;
   tenured: boolean;
   soe: boolean;
   adminResponsibility: boolean;
-  gender: string;
+  gender: Gender;
   year: string;
 }

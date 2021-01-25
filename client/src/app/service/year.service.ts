@@ -33,7 +33,12 @@ export class YearService {
       )
       .subscribe( state => {
         // @ts-ignore
-        this.path = state && state.url && state.url[0] && state.url[0].path;
+        console.log(state.url[0].path);
+        // @ts-ignore
+        if (state.url[0].path !== 'uwl') {
+          // @ts-ignore
+          this.path = state && state.url && state.url[0] && state.url[0].path;
+        }
         // @ts-ignore
         if (this.path === 'committees' && state.url[1] !== undefined && state.url[1] !== null) {
           // @ts-ignore

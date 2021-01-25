@@ -49,7 +49,8 @@ public class CommitteeController {
         this.committeeService.deleteCommitteeById(id );
     	return new ResponseEntity<>("OK", HttpStatus.NO_CONTENT);
     }
-    
+
+
     @RequestMapping( method=RequestMethod.POST)
     public CommitteeSummary createCommitte(@RequestBody(required=true) Committee committee) {
         return this.committeeService.createCommittee(committee);
@@ -59,17 +60,17 @@ public class CommitteeController {
     public Map<String,List<CommitteeWithUserSummaries>> getYearsCommitteesWithGroup(@Pattern( regexp = "\\b\\d{4}\\b", message = "the start year format is wrong") @RequestParam(name="startYear", required=true) String startYear, @Pattern(regexp = "\\b\\d{4}\\b", message = "the end year format is wrong") @RequestParam(name="endYear",required = true)String endYear) {
         return committeeService.getCommittees(startYear, endYear);
     }
-    
-    @RequestMapping( value="/{name}/years", method=RequestMethod.GET )
+
+    @RequestMapping( value="/{name}/ids", method=RequestMethod.GET )
     public List<CommitteeId> getCommitteeIdsByName(@PathVariable String name, @PathVariable String year) {
         return committeeService.getCommitteeIdsByName(name, year);
     }
-    
+
     @RequestMapping( value="/{name}/years/{year}", method=RequestMethod.GET )
     public CommitteeId getCommitteeIdByYearAndName(@PathVariable String name, @PathVariable String year) {
         return committeeService.getCommitteeIdByYearAndName(name, year);
     }
-    
+
     @RequestMapping( value="/{id}/years", method=RequestMethod.GET )
     public List<String> getCommitteeYears( @PathVariable Long id ) {
         return committeeService.getCommitteeYears( id );

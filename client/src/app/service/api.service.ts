@@ -62,7 +62,6 @@ export class ApiService {
   }
 
   modifyUser(user: User): Observable<User> {
-    console.log(user);
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     return this.http.put<User>(`${AppConstants.API_URL}/users/${user.id}`, user, config);
   }
@@ -149,8 +148,8 @@ export class ApiService {
     return this.http.post <string> (`${AppConstants.API_URL}/settings/years/${year}`, {});
   }
 
-  getCommitteeIdByYearAndName(year, name): Observable<string> {
-    return this.http.get<string>(`${AppConstants.API_URL}/committees/${name}/years/${year}`, {} );
+  getCommitteeIdByYearAndName(year, name): Observable<CommitteeSummary> {
+    return this.http.get<CommitteeSummary>(`${AppConstants.API_URL}/committees/${name}/years/${year}`, {} );
   }
   getUserYears(email): Observable<string[]> {
     return this.http.get<string[]>(`${AppConstants.API_URL}/users/email/${email}/years`, {} );

@@ -30,9 +30,11 @@ export class CommitteesDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(
       param => {
+        alert(param.id)
         this.apiService.getCommitteeById(param.id).subscribe(
-              value => {
-                this.committee = value;
+              committee => {
+                console.log(committee);
+                this.committee = committee;
                 this.apiService.getUnSatisfiedCriteria(param.id).subscribe(
                   criteria => {
                     criteria.forEach(
@@ -43,52 +45,35 @@ export class CommitteesDetailsComponent implements OnInit {
                   }
                 );
                 this.yearService.committeeGetValue().subscribe(
-                  value5 => {
-                    this.apiService.getCommitteeIdByYearAndName(value5, this.committee.name).subscribe(
-                      value7 => {
-                        if (this.committee !== undefined) {
-                          this.router.navigate(['/uwl/committees/' + value7]);
+                  year => {
+                    if (year !== '' ) {
+                      this.apiService.getCommitteeIdByYearAndName(year, committee.name).subscribe(
+                        value7 => {
+                          this.router.navigate(['/uwl/committees/' + value7.id]);
                         }
-                      }
-                    );
+                      );
+                    }
                   }
                 );
-                const reqs = value.members.map( m => this.apiService.getUserAssignedCommittees(m.id) );
+                const reqs = committee.members.map( m => this.apiService.getUserAssignedCommittees(m.id) );
                 forkJoin(reqs).subscribe(
                   results => {
                     this.usersCommittees = results as Committee[][];
                   }
                 );
-                this.apiService.getCommitteeVolunteers(param.id).subscribe(
-                  v => {
-                    let contains = false;
-                    v.forEach(value1 => {
-                      this.committee.members.forEach(
-                        value2 => {
-                          if (value1.id === value2.id) {
-                            contains = true;
-                          }
-                        }
-                      );
-                      if (!contains) {
-                        this.volunteers.push(value1);
-                      }
-                    });
-                    const reqs2 = [];
-                    this.volunteersCommittees = newArray(v.length);
-                    v.forEach(
-                      value1 => {
-                        reqs2.push(this.apiService.getUserAssignedCommittees(value1.id));
-                      }
-                    );
-                    forkJoin(reqs2).subscribe(
-                      results => {
-                        this.volunteersCommittees = results as Committee[][];
-                      }
-                    );
-                    console.log(this.volunteersCommittees);
+                const reqs2 = [];
+                this.volunteersCommittees = newArray(this.committee.volunteers.length);
+                this.committee.volunteers.forEach(
+                  value1 => {
+                    reqs2.push(this.apiService.getUserAssignedCommittees(value1.id));
                   }
                 );
+                forkJoin(reqs2).subscribe(
+                  results => {
+                    this.volunteersCommittees = results as Committee[][];
+                  }
+                );
+                console.log(this.volunteersCommittees);
               }
             );
       }

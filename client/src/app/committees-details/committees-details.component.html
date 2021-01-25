@@ -140,7 +140,7 @@
               {{user.rank}}
             </td>
             <td>
-              {{user.college}}
+              {{user.college.name}}
             </td>
             <td>
               <label class="myCheckBox">
@@ -162,12 +162,14 @@
             </td>
 
             <td  class="text-center">
-              {{user.gender}}
+              {{user.gender.name}}
             </td>
             <td>
-              <button *ngFor="let committee of usersCommittees[i];index as j" class="btn btn-link"  routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">
-                {{committee.name}},
-              </button>
+              <ng-container *ngIf="usersCommittees">
+                <button *ngFor="let committee of usersCommittees[i];index as j" class="btn btn-link"  routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">
+                  {{committee.name}},
+                </button>
+              </ng-container>
             </td>
             <td>
               <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#refuseModal" (click)="selectUser(user.id)">
@@ -212,7 +214,7 @@
               {{user.rank}}
             </td>
             <td>
-              {{user.college}}
+              {{user.college.name}}
             </td>
             <td>
               <label class="myCheckBox">
@@ -234,12 +236,14 @@
             </td>
 
             <td  class="text-center">
-              {{user.gender}}
+              {{user.gender.name}}
             </td>
             <td>
-              <button *ngFor="let committee of usersCommittees[i];index as j" data-toggle="modal" class="btn btn-link" routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">
-                {{committee.name}},
-              </button>
+              <ng-container *ngIf="usersCommittees">
+                <button *ngFor="let committee of usersCommittees[i];index as j" data-toggle="modal" class="btn btn-link" routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">
+                  {{committee.name}},
+                </button>
+              </ng-container>
             </td>
             <td>
               <button type="button" disabled class="btn btn-secondary btn-sm disabled" data-toggle="modal" data-target="#exampleModal" (click)="selectUser(user.id)">
@@ -247,8 +251,8 @@
               </button>
             </td>
           </tr>
-          <ng-container *ngIf="volunteers&&volunteers.length > 0">
-            <tr *ngFor="let user of volunteers;let i = index">
+          <ng-container>
+            <tr *ngFor="let user of committee.volunteers;let i = index">
               <td>
                 {{user.last}}
               </td>

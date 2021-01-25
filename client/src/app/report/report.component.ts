@@ -27,12 +27,12 @@ export class ReportComponent implements OnInit {
   max = {};
   committees: HashedCommittees;
   type = 'PieChart';
-  CTitle = 'College Affiliation';
-  GTitle = 'Gender';
+  // CTitle = 'College Affiliation';
+  // GTitle = 'Gender';
   RTitle = 'Rank';
   TTitle = 'Tenured';
-  GData: any;
-  CData: any;
+  // GData: any;
+  // CData: any;
   RData: any;
   TData: any;
   years: string[];
@@ -67,11 +67,11 @@ export class ReportComponent implements OnInit {
   private initPiecgart(committees) {
     for (const property in committees) {
       for (let j = 0; j < committees[property].length; j++) {
-        this.M += committees[property][j].members.filter(item => item.gender === 'M').length;
-        this.F += committees[property][j].members.filter(item => item.gender === 'F').length;
-        this.CASH += committees[property][j].members.filter(item => item.college === 'CASH').length;
-        this.CBA += committees[property][j].members.filter(item => item.college === 'CBA').length;
-        this.CSH += committees[property][j].members.filter(item => item.college === 'CSH').length;
+        // this.M += committees[property][j].members.filter(item => item.gender === 'M').length;
+        // this.F += committees[property][j].members.filter(item => item.gender === 'F').length;
+        // this.CASH += committees[property][j].members.filter(item => item.college === 'CASH').length;
+        // this.CBA += committees[property][j].members.filter(item => item.college === 'CBA').length;
+        // this.CSH += committees[property][j].members.filter(item => item.college === 'CSH').length;
         this.FP += committees[property][j].members.filter(item => item.rank === 'Full Professor').length;
         this.AP += committees[property][j].members.filter(item => item.rank === 'Associate Professor').length;
         this.ATP += committees[property][j].members.filter(item => item.rank === 'Assistant Professor').length;
@@ -79,15 +79,15 @@ export class ReportComponent implements OnInit {
         this.TF += committees[property][j].members.filter(item => item.tenured === false).length;
       }
     }
-    this.GData = [
-      ['Male', this.M],
-      ['Female', this.F],
-    ];
-    this.CData = [
-      ['CASH', this.CASH],
-      ['CBA', this.CBA],
-      ['CSH', this.CSH]
-    ];
+    // this.GData = [
+    //   ['Male', this.M],
+    //   ['Female', this.F],
+    // ];
+    // this.CData = [
+    //   ['CASH', this.CASH],
+    //   ['CBA', this.CBA],
+    //   ['CSH', this.CSH]
+    // ];
     this.RData = [
       ['Full Professor', this.FP],
       ['Associate Professor', this.AP],
@@ -101,7 +101,6 @@ export class ReportComponent implements OnInit {
 
   committeeMemberMaxLength(committees) {
     for (const property in committees) {
-      console.log(property)
       let maxNum = 0;
       for (let j = 0; j < committees[property].length; j++) {
         if  (committees[property][j].members.length > maxNum) {
