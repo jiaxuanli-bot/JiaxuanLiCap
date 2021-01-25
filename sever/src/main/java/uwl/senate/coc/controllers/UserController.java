@@ -20,11 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import uwl.senate.coc.entities.College;
-import uwl.senate.coc.entities.Gender;
-import uwl.senate.coc.entities.Survey;
-import uwl.senate.coc.entities.SurveyResponse;
-import uwl.senate.coc.entities.User;
+import uwl.senate.coc.entities.*;
 import uwl.senate.coc.projections.CommitteeSummary;
 import uwl.senate.coc.projections.SurveySummary;
 import uwl.senate.coc.services.SurveyService;
@@ -47,7 +43,6 @@ public class UserController {
             @RequestParam(defaultValue="10") Integer pageSize,
             @RequestParam(defaultValue="last") String sortBy,
             @Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(name="year", required=true) String year,
-            @RequestParam @Min(0) Long id,
             @RequestParam(required=false) String first, 
             @RequestParam(required=false) String last,
             @Pattern( regexp = "Full|Associate|Assistant", message = "the rank format is wrong") @RequestParam(name="rank", required=false) String rank,
@@ -55,6 +50,8 @@ public class UserController {
             @RequestParam(required=false) Boolean tenured,
             @RequestParam(required=false) Boolean soe,
             @RequestParam(required=false) Boolean admin,
+            @RequestParam(required=false) Boolean chair,
+            @RequestParam(name="dept", required=false) String department,
             @RequestParam(name="gender", required=false) String gender) {
         rank = rank != null ? rank + " Professor" : null;
         User user = new User.Builder()
@@ -67,6 +64,8 @@ public class UserController {
                 .rank( rank )
                 .tenured( tenured )
                 .soe( soe )
+                .chair( chair )
+                .dept( new Department.Builder().name(department).build())
                 .build();
 
         ExampleMatcher matcher = ExampleMatcher.matching()
@@ -108,7 +107,6 @@ public class UserController {
         return  userService.getUserCommittees( userService.getUser( uid ) );
     }
 
-
     @RequestMapping( value="/{id}/enlistings/committees", method=RequestMethod.GET )
     public List<CommitteeSummary> getUserSurveysCommittees(@Pattern( regexp = "^[0-9]*$", message = "the UserID format is wrong") @PathVariable String id) {
         //Get all the survey that user have been volunteered
@@ -119,7 +117,7 @@ public class UserController {
 
 
     // This method is poorly constructed
-    @RequestMapping( value="/users/email/{email}/years", method=RequestMethod.GET )
+    @RequestMapping( value="/email/{email}/years", method=RequestMethod.GET )
     public List<String> getUserYears(@PathVariable String email) {
         //get all years of users which have same email
         return userService.getUserYears(email);

@@ -5,6 +5,9 @@ import {User} from '../../models/user';
 import {ApiService} from '../../service/api.service';
 import {Role} from '../../models/role';
 import {YearService} from '../../service/year.service';
+import {Gender} from '../../models/gender';
+import {College} from '../../models/college';
+import {Department} from '../../models/department';
 
 @Component({
   selector: 'app-add-user-from-csv',
@@ -19,21 +22,58 @@ export class AddUserFromCSVComponent implements OnInit {
   propertyMapFileName = new Map<any, any>();
   fileNameMapProperty = new Map<any, any>();
   uploadedFaculties: User[];
-  csvProperties = ['first', 'last', 'rank', 'college', 'tenured', 'soe', 'adminResponsibility', 'gender', 'email'];
+  csvProperties = ['first', 'last', 'rank', 'college', 'tenured', 'soe', 'adminResponsibility', 'gender', 'email', 'dept'];
   relation: FormGroup;
+
+  genderNameAndObjMap = new Map<string, Gender>();
+  collegeNameAndObjMap = new Map<string, College>();
+  deptNameAndObjMap = new Map<string, Department>();
   constructor(private papa: Papa, private formBuilder: FormBuilder, private apiService: ApiService, private yearService: YearService) { }
   ngOnInit(): void {
-    this.relation = this.formBuilder.group({
-      first: [''],
-      last: [''],
-      rank: [''],
-      college: [''],
-      tenured: [''],
-      adminResponsibility: [''],
-      soe: [''],
-      gender: [''],
-      email: ['']
-    });
+    this.yearService.getValue().subscribe(
+      year => {
+        this.relation = this.formBuilder.group({
+          first: [''],
+          last: [''],
+          rank: [''],
+          college: [''],
+          tenured: [''],
+          adminResponsibility: [''],
+          soe: [''],
+          gender: [''],
+          email: [''],
+          dept: ['']
+        });
+        this.apiService.getGendersByYear(this.yearService.getYearValue).subscribe(
+          genders => {
+            genders.forEach(
+              gender => {
+                this.genderNameAndObjMap.set(gender.name, gender);
+              }
+            );
+          }
+        );
+        this.apiService.getCollegeByYear(this.yearService.getYearValue).subscribe(
+          colleges => {
+            colleges.forEach(
+              college => {
+                this.collegeNameAndObjMap.set(college.name, college);
+              }
+            );
+          }
+        );
+        this.apiService.getDeptByYear(this.yearService.getYearValue).subscribe(
+          depts => {
+            depts.forEach(
+              dept => {
+                this.deptNameAndObjMap.set(dept.name, dept);
+              }
+            );
+            console.log(this.deptNameAndObjMap);
+          }
+        );
+      }
+    );
   }
 
   fileChanged(e) {
@@ -48,6 +88,7 @@ export class AddUserFromCSVComponent implements OnInit {
     this.papa.parse(this.file, {
       preview: 1,
       complete: result => {
+        console.log(result.data[0]);
         // iterate over every column in the first row
         result.data[0].forEach(
           header => {
@@ -113,6 +154,9 @@ export class AddUserFromCSVComponent implements OnInit {
             alert(this.fileHeaders[index] + ' is not mapping');
             return false;
           }
+        } else if (this.isObjectProperty(this.fileNameMapProperty.get(this.fileHeaders[index]))) {
+          faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] =
+            this.getObjByClassNameAndProperty(this.fileNameMapProperty.get(this.fileHeaders[index]), value[key]);
         } else {
           faculty[`` + this.fileNameMapProperty.get(this.fileHeaders[index])] = value[key];
         }
@@ -124,9 +168,32 @@ export class AddUserFromCSVComponent implements OnInit {
         faculty.roles = roles;
         index++;
       }
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      // need to check
+      // faculty.college = faculty.dept.college;
       this.uploadedFaculties.push(faculty);
     }
+    console.log(this.uploadedFaculties);
     return true;
+  }
+  getObjByClassNameAndProperty(name: string, propertyValue: string) {
+    if (name === 'gender') {
+      return this.genderNameAndObjMap.get(propertyValue);
+    } else if (name === 'college') {
+      return this.collegeNameAndObjMap.get(propertyValue);
+    } else if (name === 'dept') {
+      return this.deptNameAndObjMap.get(propertyValue);
+    }
+  }
+
+  isObjectProperty(param: any) {
+    return param === 'college' || param === 'gender' || param === 'dept';
   }
   isBooleanTypeProperty(property: any): boolean {
     return property === 'tenured' || property === 'soe' || property === 'adminResponsibility';

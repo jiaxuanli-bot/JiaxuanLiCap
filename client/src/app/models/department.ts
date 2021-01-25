@@ -1,5 +1,8 @@
+import {College} from './college';
+
 export class Department {
-  id: string;
+  id: number;
   name: string;
   year: string;
+  college: College;
 }

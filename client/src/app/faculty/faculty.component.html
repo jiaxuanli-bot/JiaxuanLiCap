@@ -32,7 +32,6 @@
           <th>
             <input type="text" class="form-control searchInput" formControlName="last" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
           </th>
-
           <th *ngFor="let controlName of ['rank', 'college', 'tenured', 'soe', 'admin', 'gender', 'dept','chair']">
             <select [formControlName]="controlName" class= "form-control" (ngModelChange)="changed($event)">
               <option *ngFor="let opt of options[controlName]">{{opt}}</option>
@@ -117,8 +116,8 @@
             </select>
           </td>
           <td>
-            <select class="form-control" formControlName="editCollege">
-              <option *ngFor="let college of colleges">{{college}}</option>
+            <select class="form-control" formControlName="editCollege" (change)="changeCollege($event.target.value)">
+              <option id = "editCollege" *ngFor="let college of colleges" [ngValue]="college">{{college.name}}</option>
             </select>
           </td>
           <td>
@@ -131,9 +130,17 @@
             <input type="checkbox" formControlName="editAdmin" class="check" [checked]="faculties[i].adminResponsibility">
           </td>
           <td>
-            <select class="form-control" formControlName="editGender">
-              <option *ngFor="let gender of genders">{{gender}}</option>
+            <select class="form-control" formControlName="editGender" (change)="changeGen($event.target.value)">
+              <option id = "editGender" *ngFor="let gender of genders" [ngValue]="gender">{{gender.name}}</option>
             </select>
+          </td>
+          <td>
+            <select class="form-control" formControlName="editDept" (change)="changeDept($event.target.value)">
+              <option id ="editDept" *ngFor="let dept of depts" [ngValue]="dept">{{dept.name}}</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" formControlName="editChair" class="check" [checked]="faculties[i].chair">
           </td>
           <td>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check file-check-icon" data-target="#modifyModal" data-toggle="modal"><polyline points="20 6 9 17 4 12"></polyline></svg>

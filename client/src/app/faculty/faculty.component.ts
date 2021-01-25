@@ -7,8 +7,11 @@ import { YearService } from '../service/year.service';
 import { Papa } from 'ngx-papaparse';
 import { Committee } from '../models/committee';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import { AuthenticationService } from '../service/authentication.service';
+import {College} from '../models/college';
+import {Gender} from '../models/gender';
+import {Department} from '../models/department';
 
 @Component({
   selector: 'app-faculty',
@@ -58,10 +61,10 @@ export class FacultyComponent implements OnInit {
   searchTextChanged = new Subject<string>();
   year: Observable<string>;
   ranks = ['Assistant', 'Associate', 'Full'];
-  genders = ['F', 'M'];
-  colleges = ['CASH', 'CBA', 'CSH'];
-  relation: FormGroup;
-
+  genders: Gender[];
+  colleges: College[];
+  depts: Department[];
+  editedUser: User;
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
               private router: Router, private formBuilder: FormBuilder, private papa: Papa) {
     this.searchTextChanged.pipe(debounceTime(1000)).subscribe( () => this.getFaculty() );
@@ -92,7 +95,6 @@ export class FacultyComponent implements OnInit {
         }
         return acc;
       }, {});
-    console.log(this.queries);
 
     this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue, this.queries, this.page.number).subscribe(
       value => {
@@ -108,17 +110,6 @@ export class FacultyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.relation = this.formBuilder.group({
-      first: [''],
-      last: [''],
-      rank: [''],
-      college: [''],
-      tenured: [''],
-      adminResponsibility: [''],
-      soe: [''],
-      gender: [''],
-      email: ['']
-    });
     this.facultiesForm = this.formBuilder.group({
       first: [''],
       last: [''],
@@ -133,11 +124,13 @@ export class FacultyComponent implements OnInit {
       editFirst: [''],
       editLast: [''],
       editRank: [''],
-      editCollege: [''],
+      editCollege: new FormControl(null),
       editTenured: [''],
       editAdmin: [''],
       editSoe: [''],
-      editGender: ['']
+      editGender: new FormControl(null),
+      editDept: new FormControl(null),
+      editChair: ['']
     });
     this.year = this.yearService.getValue();
     this.year.subscribe(year => {
@@ -145,6 +138,9 @@ export class FacultyComponent implements OnInit {
       this.apiService.getFacultyByYear(year).subscribe();
       this.apiService.getGendersByYear(year).subscribe(
         genders => {
+          console.log(genders);
+          this.genders = genders;
+          this.options.gender = [''];
           genders.forEach(
             gender => {
               this.options.gender.push(gender.name);
@@ -154,6 +150,8 @@ export class FacultyComponent implements OnInit {
       );
       this.apiService.getCollegeByYear(year).subscribe(
         colleges => {
+          this.colleges = colleges;
+          this.options.college = [''];
           colleges.forEach(
             college => {
               this.options.college.push(college.name);
@@ -163,6 +161,8 @@ export class FacultyComponent implements OnInit {
       );
       this.apiService.getDeptByYear(year).subscribe(
         depts => {
+          this.options.dept = [''];
+          this.depts = depts;
           depts.forEach(
             dept => {
               this.options.dept.push(dept.name);
@@ -182,15 +182,26 @@ export class FacultyComponent implements OnInit {
     this.facultiesForm.controls.editFirst.setValue(this.faculties[i].first);
     this.facultiesForm.controls.editLast.setValue(this.faculties[i].last);
     this.facultiesForm.controls.editRank.setValue(this.faculties[i].rank);
-    this.facultiesForm.controls.editCollege.setValue(this.faculties[i].college);
+    this.facultiesForm.controls.editCollege.setValue(
+      this.colleges[ this.colleges.findIndex(
+        college => college.id === this.faculties[i].college.id
+      )]
+    );
+    this.facultiesForm.controls.editGender.setValue(
+      this.genders[this.genders.findIndex(
+        gender => gender.id === this.faculties[i].gender.id
+      )]
+    );
+    this.facultiesForm.controls.editDept.setValue(
+      this.depts[this.depts.findIndex(
+        dept => dept.id === this.faculties[i].dept.id
+      )]
+    );
     this.facultiesForm.controls.editTenured.setValue(this.faculties[i].tenured);
     this.facultiesForm.controls.editSoe.setValue(this.faculties[i].soe);
     this.facultiesForm.controls.editAdmin.setValue(this.faculties[i].adminResponsibility);
-    if (this.faculties[i].gender.name === 'F') {
-      this.facultiesForm.controls.editGender.setValue('Female');
-    } else {
-      this.facultiesForm.controls.editGender.setValue('Male');
-    }
+    this.facultiesForm.controls.editChair.setValue(this.faculties[i].chair);
+    this.editedUser = this.faculties[this.editIndex];
   }
 
   clear(): void {
@@ -199,11 +210,14 @@ export class FacultyComponent implements OnInit {
   }
 
   modifyUser(): void {
-    this.apiService.modifyUser(this.facultiesForm.controls.editFirst.value, this.facultiesForm.controls.editLast.value,
-      this.facultiesForm.controls.editRank.value, this.facultiesForm.controls.editCollege.value,
-      this.facultiesForm.controls.editTenured.value, this.facultiesForm.controls.editSoe.value,
-      this.facultiesForm.controls.editAdmin.value, this.facultiesForm.controls.editGender.value.substring(0, 1),
-      this.faculties[this.editIndex].id).subscribe(
+    this.editedUser.first = this.facultiesForm.controls.editFirst.value;
+    this.editedUser.last = this.facultiesForm.controls.editLast.value;
+    this.editedUser.rank = this.facultiesForm.controls.editRank.value;
+    this.editedUser.tenured = this.facultiesForm.controls.editTenured.value;
+    this.editedUser.soe = this.facultiesForm.controls.editSoe.value;
+    this.editedUser.adminResponsibility = this.facultiesForm.controls.editAdmin.value;
+    this.editedUser.chair = this.facultiesForm.controls.editChair.value;
+    this.apiService.modifyUser(this.editedUser).subscribe(
         res => {
           this.faculties[this.editIndex] = res;
           this.editIndex = -1;
@@ -261,6 +275,25 @@ export class FacultyComponent implements OnInit {
       committees => {
         this.userVolunteeredCommittees = committees;
       }
+    );
+  }
+
+  changeCollege(college: string) {
+    this.editedUser.college = this.colleges[college.split(':')[0]];
+    this.editedUser.dept.college = this.colleges[college.split(':')[0]];
+  }
+
+  changeGen(gen: string) {
+    this.editedUser.gender = this.genders[gen.split(':')[0]];
+  }
+
+  changeDept(dept: string) {
+    this.editedUser.dept = this.depts[dept.split(':')[0]];
+    this.editedUser.college = this.depts[dept.split(':')[0]].college;
+    this.facultiesForm.controls.editCollege.setValue(
+      this.colleges[ this.colleges.findIndex(
+        college => college.id === this.depts[dept.split(':')[0]].college.id
+      )]
     );
   }
 }

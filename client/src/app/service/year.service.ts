@@ -84,7 +84,6 @@ export class YearService {
     return this.yearForCommitteePage.asObservable();
   }
   getValue(): Observable<string> {
-    //  alert(this.committeeId);
     return this.currentYear.asObservable();
   }
   public get getYearValue(): string {

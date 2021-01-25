@@ -13,6 +13,7 @@ import {Gender} from '../models/gender';
 import {Department} from '../models/department';
 import {College} from '../models/college';
 import {CommitteeSummary} from '../models/committee-summary';
+import {SurveyResponse} from '../models/survey-response';
 
 @Injectable({
   providedIn: 'root'
@@ -41,10 +42,13 @@ export class ApiService {
     return this.http.get<string[]>(`${AppConstants.API_URL}/committees/${id}/years`, {} );
   }
 
-  getSurveys(userId: string, year: string): Observable<Survey[]> {
-    return this.http.get<Survey[]>(`${AppConstants.API_URL}/users/${userId}/enlistings?year=${year}`, { });
+  getSurvey(userId: string, year: string): Observable<Survey> {
+    return this.http.get<Survey>(`${AppConstants.API_URL}/users/${userId}/survey`, { });
   }
-
+  modifySurvey(userId: string, rId: number, surveyResponse: SurveyResponse) {
+    const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    return this.http.put<SurveyResponse>(`${AppConstants.API_URL}/users/${userId}/survey/responses/${rId}`, surveyResponse, config);
+  }
   getFacultyByYear(year: string): Observable<Page> {
     return this.http.get<Page>(`${AppConstants.API_URL}/users?year=${year}`);
   }
@@ -57,19 +61,10 @@ export class ApiService {
     return this.http.get<Page>(`${AppConstants.API_URL}/users`, { params : params } );
   }
 
-  modifyUser(first: string, last: string, rank: string, college: string, tenured: boolean, soe: boolean,
-             admin: boolean, gender: string, userId: string): Observable<User> {
-    const data = {
-      first : first,
-      last : last,
-      rank : rank,
-      college : college,
-      tenured : tenured,
-      soe : soe,
-      adminResponsibility : admin,
-      gender : gender
-    };
-    return this.http.put<User>(`${AppConstants.API_URL}/users/${userId}`, data);
+  modifyUser(user: User): Observable<User> {
+    console.log(user);
+    const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    return this.http.put<User>(`${AppConstants.API_URL}/users/${user.id}`, user, config);
   }
 
   deleteUser(userId: string): Observable<any> {
@@ -105,18 +100,22 @@ export class ApiService {
   }
   createUser(email, first, last, rank, college, tenured, admin, soe, gender, year): Observable<User> {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    const genderObj = new Gender();
+    const collegeObj = new College();
+    collegeObj.name = college;
+    genderObj.name = gender;
     const data = {
-      "email": email,
-      "first" : first,
-      "last" : last,
-      "rank" : rank,
-      "college" : college,
-      "tenured" : tenured,
-      "adminResponsibility" : admin,
-      "soe" : soe,
-      "gender" : gender,
-      "roles": [{ "role" : "Normal"}],
-      "year": year
+      email,
+      first,
+      last,
+      rank,
+      college: collegeObj,
+      tenured,
+      adminResponsibility: admin,
+      soe,
+      gender: genderObj,
+      roles: [{ role : 'Normal'}],
+      year
     }
     return this.http.post <User> (`${AppConstants.API_URL}/users`, data, config);
   }
@@ -143,10 +142,9 @@ export class ApiService {
     };
     return this.http.post <User> (`${AppConstants.API_URL}/committees`, data, config);
   }
-  createSurvey(userId: string, committeeId: string, year: string): Observable<Survey> {
+  updateSurvey(userId: string, committeeId: string, year: string): Observable<Survey> {
     return this.http.post<Survey>(`${AppConstants.API_URL}/users/${userId}/enlistings/${committeeId}?year=${year}`, {} );
   }
-
   createYear(year: string): Observable<string> {
     return this.http.post <string> (`${AppConstants.API_URL}/settings/years/${year}`, {});
   }
@@ -172,7 +170,8 @@ export class ApiService {
     return this.http.get<Gender[]>(`${AppConstants.API_URL}/settings/genders?year=${year}`);
   }
   modifyGender(gender: Gender): Observable<Gender> {
-    return this.http.put<Gender>(`${AppConstants.API_URL}/settings/genders/${gender.id}`, Gender);
+    const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    return this.http.put<Gender>(`${AppConstants.API_URL}/settings/genders/${gender.id}`, gender, config);
   }
   deleteGender(id: string): Observable<any> {
     return this.http.delete<any>(`${AppConstants.API_URL}/settings/genders/${id}`);
@@ -186,7 +185,12 @@ export class ApiService {
     return this.http.get<Department[]>(`${AppConstants.API_URL}/settings/departments?year=${year}`);
   }
   modifyDept(dept: Department): Observable<Department> {
-    return this.http.put<Department>(`${AppConstants.API_URL}/settings/departments/${dept.id}`, dept);
+    const data = {
+      id: dept.id,
+      name: dept.name,
+      year: dept.year
+    };
+    return this.http.put<Department>(`${AppConstants.API_URL}/settings/departments/${dept.id}`, data);
   }
   deleteDept(id: string): Observable<any> {
     return this.http.delete<any>(`${AppConstants.API_URL}/settings/departments/${id}`);
@@ -201,7 +205,8 @@ export class ApiService {
     return this.http.get<College[]>(`${AppConstants.API_URL}/settings/colleges?year=${year}`);
   }
   modifyCollege(college: College): Observable<College> {
-    return this.http.put<College>(`${AppConstants.API_URL}/settings/colleges/${college.id}`, college);
+    const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    return this.http.put<College>(`${AppConstants.API_URL}/settings/colleges/${college.id}`, college, config);
   }
   deleteCollege(id: string): Observable<any> {
     return this.http.delete<any>(`${AppConstants.API_URL}/settings/colleges/${id}`);

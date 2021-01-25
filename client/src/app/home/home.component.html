@@ -1,6 +1,6 @@
  <!-- /sidebar -->
   <!-- main right col -->
-  <div id="main" *ngIf="surveys.length > 0">
+  <div id="main" *ngIf="survey">
     <!-- top nav -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
       <a class="navbar-brand" href="#">Survey</a>
@@ -46,7 +46,7 @@
             </a>
           </td>
           <td>
-            <input type="checkbox" class="check" [checked]="surveysCommittee.has(committee.id)" (click)="createSurvey(committee.id, this.authentication.currentUserValue.id)">
+            <input type="checkbox" class="check" [checked]="this.survey.responses[i].selected" (click)="createSurvey(this.survey.responses[i])">
           </td>
         </tr>
         </tbody>

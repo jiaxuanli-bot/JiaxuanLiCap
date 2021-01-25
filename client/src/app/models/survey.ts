@@ -1,4 +1,9 @@
+import {SurveyResponse} from './survey-response';
+
 export class Survey {
+  id: number;
   userId: number;
-  committeeId: string;
+  year: string;
+  comment: string;
+  responses: SurveyResponse[];
 }

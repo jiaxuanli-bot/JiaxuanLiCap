@@ -30,10 +30,12 @@ export class CommitteesListComponent implements OnInit {
               this.committees = value1;
               const reqs2 = [];
               const reqs3 = [];
+              const reqs4 = [];
               this.committees.forEach(
                 value2 => {
                   reqs2.push( this.apiService.getCommitteeMember(value2.id));
                   reqs3.push( this.apiService.getUnSatisfiedCriteria(value2.id));
+                  reqs4.push( this.apiService.getCommitteeVolunteers(value2.id));
                 }
               );
               forkJoin(reqs2).subscribe(
@@ -50,6 +52,13 @@ export class CommitteesListComponent implements OnInit {
                       this.committeesCriteriaStatus.push(criteria as Criteria[]);
                     }
                   );
+                }
+              );
+              forkJoin(reqs4).subscribe(
+                results => {
+                  for (let i = 0; i < results.length; i++) {
+                    this.committees[i].volunteers = results[i] as CommitteeUser[];
+                  }
                 }
               );
             }

@@ -8,8 +8,7 @@ import {AuthenticationService} from '../service/authentication.service';
 import {User} from '../models/user';
 import {Survey} from '../models/survey';
 import {YearService} from '../service/year.service';
-import {forkJoin} from 'rxjs';
-import {ApplicationComment} from '../models/application-comment';
+import {SurveyResponse} from '../models/survey-response';
 
 
 @Component({
@@ -24,8 +23,7 @@ export class HomeComponent implements OnInit {
   yearsForm: FormGroup;
   selectedCommittee: Committee;
   committees: CommitteeSummary[] = [];
-  surveys: Survey[] = [];
-  surveysCommittee = new Set();
+  survey: Survey;
   user: User;
 
   constructor(public authentication: AuthenticationService, private yearService: YearService,
@@ -41,15 +39,10 @@ export class HomeComponent implements OnInit {
         this.apiService.getCommitteesByYear(this.authenticationService.currentUserValue.years[0]).subscribe(
           res => {
             this.committees = res;
-            this.apiService.getSurveys(this.authenticationService.currentUserValue.id,
+            this.apiService.getSurvey(this.authenticationService.currentUserValue.id,
               this.authenticationService.currentUserValue.years[0]).subscribe(
-              surveys => {
-                this.surveys = surveys;
-                surveys.forEach(
-                  survey => {
-                    this.surveysCommittee.add(survey.committeeId);
-                  }
-                );
+              survey => {
+                this.survey = survey;
               }
             );
           }
@@ -63,14 +56,15 @@ export class HomeComponent implements OnInit {
     this.critreriaExpand = true ;
     this.selectedCommittee = committee;
   }
-  createSurvey(committeeId: string, userId: string) {
-    this.apiService.createSurvey(userId, committeeId, this.yearService.getYearValue).subscribe(
-      survey => {
-        if (this.surveysCommittee.has(committeeId)) {
-          this.surveysCommittee.delete(committeeId);
-        } else {
-          this.surveysCommittee.add(committeeId);
-        }
+  createSurvey(surveyResponse: SurveyResponse) {
+    const copyObj = new SurveyResponse();
+    copyObj.id = surveyResponse.id;
+    copyObj.selected = !surveyResponse.selected;
+    copyObj.committee = surveyResponse.committee;
+    surveyResponse.selected = !surveyResponse.selected;
+    this.apiService.modifySurvey(this.authenticationService.currentUserValue.id, surveyResponse.id, copyObj).subscribe(
+      res => {
+        surveyResponse = res;
       }
     );
   }

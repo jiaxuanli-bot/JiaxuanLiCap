@@ -11,7 +11,7 @@
       <h3 class="ml-4 mt-4">Faculties Property Mapping</h3>
       <div id="relations" *ngFor="let property of csvProperties" [formGroup]="relation" class="form-inline input-group">
         <label class="control-label ml-4 mt-1">{{property}}:</label>
-        <div *ngIf="fileNameMapProperty.size > 0" class="w-25 ml-4 ml-auto input-group mt-2">
+        <div *ngIf="fileHeaders.length > 0" class="w-25 ml-4 ml-auto input-group mt-2">
           <select formControlName="{{property}}" class="form-control" (change)="propertyMapping(property)">
             <ng-container *ngFor="let head of fileHeaders">
               <option [value]="head">{{head}}</option>
