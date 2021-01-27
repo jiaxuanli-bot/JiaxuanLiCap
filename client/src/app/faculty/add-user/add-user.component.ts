@@ -1,10 +1,11 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ApiService} from '../../service/api.service';
 import {YearService} from '../../service/year.service';
 import {Gender} from '../../models/gender';
 import {College} from '../../models/college';
 import {Department} from '../../models/department';
+import {User} from '../../models/user';
 
 @Component({
   selector: 'app-add-user',
@@ -23,37 +24,45 @@ export class AddUserComponent implements OnInit {
       first: [''],
       last: [''],
       rank: ['Full Professor'],
-      college: ['CASH'],
+      college: new FormControl(null),
       tenured: [false],
       admin: [false],
       soe: [false],
-      gender: ['M'],
+      gender: new FormControl(null),
       chair: [false],
-      dept: [],
+      dept: new FormControl(null),
     });
   }
   ngOnInit(): void {
     this.apiService.getGendersByYear(this.yearService.getYearValue).subscribe(
       genders => {
         this.genders = genders;
+        this.addUserForm.controls.gender.setValue(this.genders[0]);
       }
     );
     this.apiService.getCollegeByYear(this.yearService.getYearValue).subscribe(
       colleges => {
         this.colleges = colleges;
+        this.addUserForm.controls.college.setValue(this.colleges[0]);
       }
     );
     this.apiService.getDeptByYear(this.yearService.getYearValue).subscribe(
       depts => {
         this.depts = depts;
+        this.addUserForm.controls.dept.setValue(this.depts[0]);
       }
     );
   }
   addFaculty(): void {
-    this.apiService.createUser(this.addUserForm.controls.email.value, this.addUserForm.controls.first.value,
-      this.addUserForm.controls.last.value, this.addUserForm.controls.rank.value, this.addUserForm.controls.college.value,
-      Number(this.addUserForm.controls.tenured.value), Number(this.addUserForm.controls.admin.value),
-      Number(this.addUserForm.controls.soe.value), this.addUserForm.controls.gender.value, this.yearService.getYearValue).
+    const user = new User();
+    Object.keys(this.addUserForm.controls).forEach(
+      key => {
+        user[key] = this.addUserForm.controls[key].value;
+      }
+    );
+    user.year =  this.yearService.getYearValue;
+    console.log(user);
+    this.apiService.createUser(user).
     subscribe(
       value => {
         this.addUser.emit();

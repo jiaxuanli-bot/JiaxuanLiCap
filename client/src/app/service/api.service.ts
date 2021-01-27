@@ -31,7 +31,8 @@ export class ApiService {
   }
 
   getHashedCommitteesByYears(startYear: string, endYear: string): Observable<HashedCommittees> {
-    return this.http.get<HashedCommittees>( `${AppConstants.API_URL}/hashedCommittees?startYear=${startYear}&endYear=${endYear}` );
+    return this.http.get<HashedCommittees>( `${AppConstants.API_URL}/committees/hashedCommittees?` +
+      `startYear=${startYear}&endYear=${endYear}` );
   }
 
   getYears(): Observable<string[]> {
@@ -58,7 +59,7 @@ export class ApiService {
       (acc, val) => acc = acc.append(val, queries[val] ), new HttpParams() );
     params = params.append( 'year', year );
     params = params.append( 'pageNo', pageNo.toString() );
-    return this.http.get<Page>(`${AppConstants.API_URL}/users`, { params : params } );
+    return this.http.get<Page>(`${AppConstants.API_URL}/users`, { params } );
   }
 
   modifyUser(user: User): Observable<User> {
@@ -97,26 +98,9 @@ export class ApiService {
   getCommitteeVolunteers(committeeId): Observable<User[]> {
     return this.http.get<User[]>(`${AppConstants.API_URL}/committees/${committeeId}/volunteers`);
   }
-  createUser(email, first, last, rank, college, tenured, admin, soe, gender, year): Observable<User> {
+  createUser(user: User): Observable<User> {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
-    const genderObj = new Gender();
-    const collegeObj = new College();
-    collegeObj.name = college;
-    genderObj.name = gender;
-    const data = {
-      email,
-      first,
-      last,
-      rank,
-      college: collegeObj,
-      tenured,
-      adminResponsibility: admin,
-      soe,
-      gender: genderObj,
-      roles: [{ role : 'Normal'}],
-      year
-    }
-    return this.http.post <User> (`${AppConstants.API_URL}/users`, data, config);
+    return this.http.post <User> (`${AppConstants.API_URL}/users`, user, config);
   }
   uploadFacultiesFromCSV(faculties: User[]) {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };

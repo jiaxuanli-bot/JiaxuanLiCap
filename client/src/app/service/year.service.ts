@@ -33,7 +33,6 @@ export class YearService {
       )
       .subscribe( state => {
         // @ts-ignore
-        console.log(state.url[0].path);
         // @ts-ignore
         if (state.url[0].path !== 'uwl') {
           // @ts-ignore
@@ -82,6 +81,7 @@ export class YearService {
     if (this.path === 'committees' && this.committeeId !== undefined && this.committeeId !== null) {
       this.yearForCommitteePage.next(newValue);
     } else {
+      window.location.hash = newValue;
       this.currentYear.next(newValue);
     }
   }
@@ -93,6 +93,9 @@ export class YearService {
   }
   public get getYearValue(): string {
     return this.currentYear.value;
+  }
+  public setYears(years: string[]) {
+    this.years.next(years);
   }
   public get getYears() {
     return this.years.asObservable();

@@ -1,7 +1,3 @@
-
-<!-- sidebar -->
-<!-- /sidebar -->
-<!-- main right col -->
 <div *ngIf="committee" id="main">
   <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top" id="topNav">
     <a class="navbar-brand" href="#">Committee</a>
@@ -184,7 +180,7 @@
       <div *ngIf="volunteers" class="table-responsive">
         <div id="h4">
           <div class="input-group mb-2">
-            Volunteers({{committee.members.length+volunteers.length}})
+            Volunteers({{committee.members.length + committee.volunteers.length}})
           </div>
         </div>
         <ul class="nav nav-tabs mb-4" role="tablist">
@@ -323,4 +319,3 @@
     </div>
   </footer>
 </div>
-<!-- /main -->

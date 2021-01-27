@@ -216,6 +216,9 @@ export class FacultyComponent implements OnInit {
     this.editedUser.soe = this.facultiesForm.controls.editSoe.value;
     this.editedUser.adminResponsibility = this.facultiesForm.controls.editAdmin.value;
     this.editedUser.chair = this.facultiesForm.controls.editChair.value;
+    this.editedUser.gender = this.facultiesForm.controls.editGender.value;
+    this.editedUser.college = this.facultiesForm.controls.editCollege.value;
+    this.editedUser.dept = this.facultiesForm.controls.editDept.value;
     this.apiService.modifyUser(this.editedUser).subscribe(
         res => {
           this.faculties[this.editIndex] = res;
@@ -277,22 +280,22 @@ export class FacultyComponent implements OnInit {
     );
   }
 
-  changeCollege(college: string) {
-    this.editedUser.college = this.colleges[college.split(':')[0]];
-    this.editedUser.dept.college = this.colleges[college.split(':')[0]];
-  }
-
-  changeGen(gen: string) {
-    this.editedUser.gender = this.genders[gen.split(':')[0]];
-  }
-
-  changeDept(dept: string) {
-    this.editedUser.dept = this.depts[dept.split(':')[0]];
-    this.editedUser.college = this.depts[dept.split(':')[0]].college;
-    this.facultiesForm.controls.editCollege.setValue(
-      this.colleges[ this.colleges.findIndex(
-        college => college.id === this.depts[dept.split(':')[0]].college.id
-      )]
-    );
-  }
+  // changeCollege(college: string) {
+  //   this.editedUser.college = this.colleges[college.split(':')[0]];
+  //   this.editedUser.dept.college = this.colleges[college.split(':')[0]];
+  // }
+  //
+  // changeGen(gen: string) {
+  //   this.editedUser.gender = this.genders[gen.split(':')[0]];
+  // }
+  //
+  // changeDept(dept: string) {
+  //   this.editedUser.dept = this.depts[dept.split(':')[0]];
+  //   this.editedUser.college = this.depts[dept.split(':')[0]].college;
+  //   this.facultiesForm.controls.editCollege.setValue(
+  //     this.colleges[ this.colleges.findIndex(
+  //       college => college.id === this.depts[dept.split(':')[0]].college.id
+  //     )]
+  //   );
+  // }
 }

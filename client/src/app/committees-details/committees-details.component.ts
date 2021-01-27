@@ -30,53 +30,20 @@ export class CommitteesDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(
       param => {
-        alert(param.id)
-        this.apiService.getCommitteeById(param.id).subscribe(
-              committee => {
-                console.log(committee);
-                this.committee = committee;
-                this.apiService.getUnSatisfiedCriteria(param.id).subscribe(
-                  criteria => {
-                    criteria.forEach(
-                      criteria2 => {
-                        this.unsatisfiedCriteria.push(criteria2.criteria);
-                      }
-                    );
-                  }
-                );
-                this.yearService.committeeGetValue().subscribe(
-                  year => {
-                    if (year !== '' ) {
-                      this.apiService.getCommitteeIdByYearAndName(year, committee.name).subscribe(
-                        value7 => {
-                          this.router.navigate(['/uwl/committees/' + value7.id]);
-                        }
-                      );
-                    }
-                  }
-                );
-                const reqs = committee.members.map( m => this.apiService.getUserAssignedCommittees(m.id) );
-                forkJoin(reqs).subscribe(
-                  results => {
-                    this.usersCommittees = results as Committee[][];
-                  }
-                );
-                const reqs2 = [];
-                this.volunteersCommittees = newArray(this.committee.volunteers.length);
-                this.committee.volunteers.forEach(
-                  value1 => {
-                    reqs2.push(this.apiService.getUserAssignedCommittees(value1.id));
-                  }
-                );
-                forkJoin(reqs2).subscribe(
-                  results => {
-                    this.volunteersCommittees = results as Committee[][];
-                  }
-                );
-                console.log(this.volunteersCommittees);
-              }
-            );
-      }
+        this.uploadCommitteeById(param.id);
+        this.yearService.committeeGetValue().subscribe(
+          year => {
+            if (year !== '' ) {
+              this.apiService.getCommitteeIdByYearAndName(year, this.committee.name).subscribe(
+                value7 => {
+                  this.router.navigate( ['/uwl/committees/' , value7.id ], {fragment: year});
+                }
+              );
+            }
+          }
+        );
+      },
+      (err) => console.error(err),
     );
   }
 
@@ -94,33 +61,52 @@ export class CommitteesDetailsComponent implements OnInit {
 
   removeMember(): void {
     this.apiService.removeUserFromCommittee(this.committee.id, this.seletedUserid).subscribe(
-      value => {
-        console.log(value);
-        this.apiService.getUserAssignedCommittees(value.id).subscribe(
-          value1 => {
-            this.volunteersCommittees.push(value1);
-          }
-        );
-        this.volunteers.push(value);
-        this.committee.members = this.committee.members.filter( m => m.id !== value.id );
+      committee => {
+        this.uploadCommitteeById(this.committee.id);
       }
     );
   }
-
+  uploadCommitteeById(committeeId: string) {
+    this.apiService.getCommitteeById(committeeId).subscribe (
+      committee => {
+        this.committee = committee;
+        this.apiService.getUnSatisfiedCriteria(this.committee.id).subscribe(
+          criteria => {
+            criteria.forEach(
+              criteria2 => {
+                this.unsatisfiedCriteria.push(criteria2.criteria);
+              }
+            );
+          }
+        );
+        const reqs = committee.members.map( m => this.apiService.getUserAssignedCommittees(m.id) );
+        forkJoin(reqs).subscribe(
+          results => {
+            this.usersCommittees = results as Committee[][];
+          }
+        );
+        const reqs2 = [];
+        this.volunteersCommittees = newArray(this.committee.volunteers.length);
+        this.committee.volunteers.forEach(
+          value1 => {
+            reqs2.push(this.apiService.getUserAssignedCommittees(value1.id));
+          }
+        );
+        forkJoin(reqs2).subscribe(
+          results => {
+            this.volunteersCommittees = results as Committee[][];
+          }
+        );
+      }
+    );
+  }
   assignVolunteer(): void {
     this.apiService.assignUserToOneCommittee(this.committee.id, this.seletedUserid).subscribe(
       value => {
-        this.apiService.getUserAssignedCommittees(value.id).subscribe(
-          value1 => {
-            this.usersCommittees.push(value1);
-          }
-        );
-        this.volunteers = this.volunteers.filter( v => v.id !== value.id );
-        this.committee.members.push(value);
+        this.uploadCommitteeById(this.committee.id);
       }
-      );
+    );
   }
-
   selectUser(id): void {
     this.seletedUserid = id;
   }

@@ -90,6 +90,9 @@ public class CommitteeController {
     public User assignCommitteeMember( 
     		@PathVariable Long cid,
     		@PathVariable Long uid ) {
+        System.out.println();
+        System.out.println(cid);
+        System.out.println(uid);
         return committeeService.assignCommitteeMember( cid, uid );
     }
 

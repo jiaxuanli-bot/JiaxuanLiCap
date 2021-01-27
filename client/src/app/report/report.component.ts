@@ -3,7 +3,6 @@ import {AuthenticationService} from '../service/authentication.service';
 import {ApiService} from '../service/api.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {newArray} from '@angular/compiler/src/util';
-import {Committee} from '../models/committee';
 import {HashedCommittees} from '../models/hashed-committees';
 import {YearService} from '../service/year.service';
 
@@ -17,7 +16,6 @@ export class ReportComponent implements OnInit {
   CSH = 0;
   CBA = 0;
   M = 0;
-  F = 0;
   FP = 0;
   AP = 0;
   ATP = 0;
@@ -27,12 +25,8 @@ export class ReportComponent implements OnInit {
   max = {};
   committees: HashedCommittees;
   type = 'PieChart';
-  // CTitle = 'College Affiliation';
-  // GTitle = 'Gender';
   RTitle = 'Rank';
   TTitle = 'Tenured';
-  // GData: any;
-  // CData: any;
   RData: any;
   TData: any;
   years: string[];
@@ -64,14 +58,9 @@ export class ReportComponent implements OnInit {
     );
   }
 
-  private initPiecgart(committees) {
+  private initPiecgart(committees: HashedCommittees) {
     for (const property in committees) {
       for (let j = 0; j < committees[property].length; j++) {
-        // this.M += committees[property][j].members.filter(item => item.gender === 'M').length;
-        // this.F += committees[property][j].members.filter(item => item.gender === 'F').length;
-        // this.CASH += committees[property][j].members.filter(item => item.college === 'CASH').length;
-        // this.CBA += committees[property][j].members.filter(item => item.college === 'CBA').length;
-        // this.CSH += committees[property][j].members.filter(item => item.college === 'CSH').length;
         this.FP += committees[property][j].members.filter(item => item.rank === 'Full Professor').length;
         this.AP += committees[property][j].members.filter(item => item.rank === 'Associate Professor').length;
         this.ATP += committees[property][j].members.filter(item => item.rank === 'Assistant Professor').length;
@@ -79,15 +68,6 @@ export class ReportComponent implements OnInit {
         this.TF += committees[property][j].members.filter(item => item.tenured === false).length;
       }
     }
-    // this.GData = [
-    //   ['Male', this.M],
-    //   ['Female', this.F],
-    // ];
-    // this.CData = [
-    //   ['CASH', this.CASH],
-    //   ['CBA', this.CBA],
-    //   ['CSH', this.CSH]
-    // ];
     this.RData = [
       ['Full Professor', this.FP],
       ['Associate Professor', this.AP],

@@ -116,7 +116,7 @@
             </select>
           </td>
           <td>
-            <select class="form-control" formControlName="editCollege" (change)="changeCollege($event.target.value)">
+            <select class="form-control" formControlName="editCollege">
               <option id = "editCollege" *ngFor="let college of colleges" [ngValue]="college">{{college.name}}</option>
             </select>
           </td>
@@ -130,12 +130,12 @@
             <input type="checkbox" formControlName="editAdmin" class="check" [checked]="faculties[i].adminResponsibility">
           </td>
           <td>
-            <select class="form-control" formControlName="editGender" (change)="changeGen($event.target.value)">
+            <select class="form-control" formControlName="editGender">
               <option id = "editGender" *ngFor="let gender of genders" [ngValue]="gender">{{gender.name}}</option>
             </select>
           </td>
           <td>
-            <select class="form-control" formControlName="editDept" (change)="changeDept($event.target.value)">
+            <select class="form-control" formControlName="editDept">
               <option id ="editDept" *ngFor="let dept of depts" [ngValue]="dept">{{dept.name}}</option>
             </select>
           </td>

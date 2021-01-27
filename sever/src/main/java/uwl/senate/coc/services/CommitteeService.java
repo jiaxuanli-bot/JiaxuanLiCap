@@ -150,15 +150,14 @@ public class CommitteeService {
 
     public User assignCommitteeMember(Long id,Long userId){
         final User[] res = new User[1];
-        userRepo.findById(Long.valueOf(userId)).map(
-                user -> {
-                    res[0] = user;
-                    Committee c = new Committee();
-                    c.setId(Long.valueOf(id));
-                    user.getCommittees().add(c);
-                    return userRepo.save(user);
-                }
-        );
+        User user = userRepo.findById(Long.valueOf(userId)).get();
+        Committee committee = committeeRepo.findById(Long.valueOf(id)).get();
+        user.getCommittees().add(committee);
+        user.getVolunteeredCommittees().remove(committee);
+        committee.getMembers().add(user);
+        committee.getVolunteers().remove(user);
+        userRepo.save(user);
+        committeeRepo.save(committee);
         return res[0];
     }
 

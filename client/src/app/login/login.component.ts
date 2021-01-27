@@ -4,8 +4,8 @@ import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '
 import { first } from 'rxjs/operators';
 
 import { AuthenticationService } from '../service/authentication.service';
-import {ApiService} from '../service/api.service';
 import {YearService} from '../service/year.service';
+import {ApiService} from '../service/api.service';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private yearService: YearService,
+    private apiService: ApiService
   ) {
     // redirect to home if already logged in
     this.authenticationService.getUser().subscribe( user => {
@@ -34,11 +35,20 @@ export class LoginComponent implements OnInit {
 
   navigateToDefaultPage( ) {
     if (this.authenticationService.hasRole( 'Admin' ) ) {
-      this.router.navigate(['/uwl/faculty']);
+      this.apiService.getYears().subscribe(
+        years => {
+          this.yearService.setYears(years);
+          this.router.navigate(['/uwl/faculty'], {fragment: years[0]});
+        }
+      );
     } else if (this.authenticationService.hasRole('Nominate') ) {
-      this.router.navigate(['/uwl/committees']);
+      this.apiService.getYears().subscribe(
+        years => {
+          this.router.navigate(['/uwl/committees'], {fragment: years[0]});
+        }
+      );
     } else {
-      this.router.navigate(['/uwl/survey']);
+      this.router.navigate(['/uwl/survey'],  {fragment: this.authenticationService.currentUserValue.years[0]});
     }
   }
 
@@ -48,7 +58,6 @@ export class LoginComponent implements OnInit {
       password: ['']
     });
   }
-  // convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
 
   onSubmit() {

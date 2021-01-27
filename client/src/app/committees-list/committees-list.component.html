@@ -27,15 +27,15 @@
       </tr>
       </thead>
 
-      <tbody *ngIf="committeesCriteriaStatus.length > 0" id="committeeListClickable">
+      <tbody *ngIf="committees" id="committeeListClickable">
       <tr *ngFor="let committee of committees;index as i">
         <td [routerLink]="['/uwl/committees', committee.id]">
           {{committee.name}}
         </td>
-        <td [routerLink]="['/uwl/committees', committee.id]" *ngIf="committeesCriteriaStatus[i].length > 0">
+        <td [routerLink]="['/uwl/committees', committee.id]" *ngIf="committeesCriteriaStatus[i]">
           <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x file-x-icon"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </td>
-        <td *ngIf="committeesCriteriaStatus[i].length == 0">
+        <td *ngIf="!committeesCriteriaStatus[i]">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check file-check-icon" data-target="#modifyModal" data-toggle="modal"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </td>
         <td [routerLink]="['/uwl/committees', committee.id]">
@@ -43,7 +43,7 @@
           <span *ngIf="!committee.members">0</span>
         </td>
         <td [routerLink]="['/uwl/committees', committee.id]">
-          <span *ngIf="committee.volunteers">{{committee.volunteers.length}}</span>
+          <span *ngIf="committee.volunteers">{{committee.volunteers.length + committee.members.length}}</span>
           <span *ngIf="!committee.volunteers">0</span>
         </td>
         <td>

@@ -43,7 +43,7 @@
               <label class="col-xs-3 control-label">College Affiliation:</label>
               <div class="col-xs-8">
                 <select formControlName="college" class="form-control select-duiqi">
-                  <option *ngFor="let college of colleges">{{college.name}}</option>
+                  <option *ngFor="let college of colleges" [ngValue]="college">{{college.name}}</option>
                 </select>
               </div>
             </div>
@@ -51,13 +51,13 @@
             <div class="form-group mt-4">
               <label class="col-xs-3 control-label">Gender:</label>
               <select formControlName="gender" class="form-control select-duiqi">
-                <option *ngFor="let gender of genders">{{gender.name}}</option>
+                <option *ngFor="let gender of genders" [ngValue]="gender">{{gender.name}}</option>
               </select>
             </div>
             <div class="form-group mt-4">
               <label class="col-xs-3 control-label">Department:</label>
               <select formControlName="dept" class="form-control select-duiqi">
-                <option *ngFor="let dept of depts">{{dept.name}}</option>
+                <option *ngFor="let dept of depts" [ngValue]="dept">{{dept.name}}</option>
               </select>
             </div>
 

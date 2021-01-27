@@ -66,7 +66,6 @@ export class SlideBarComponent implements OnInit {
   }
   changeYear() {
     this.yearService.setValue(this.selectedYear);
-    window.location.hash = this.selectedYear;
   }
 
   routerToFaculty() {
