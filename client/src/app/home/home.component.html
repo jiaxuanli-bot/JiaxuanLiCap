@@ -27,27 +27,20 @@
     </nav>
 
     <div class="table-responsive  mb-4">
-      <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12 mt-4 mb-5" id="committeeList">
+      <table class="table table-bordered table-striped table-condensed table-compact col-xs-12 col-md-12 col-lg-12 mt-4 mb-5" id="committeeList">
         <thead>
-        <tr>
-          <th>
-            Name
-          </th>
-          <th>
-            Volunteered
-          </th>
-        </tr>
+          <tr><th>Name</th><th class="text-center">Willing to Serve</th></tr>
         </thead>
         <tbody>
-        <tr *ngFor="let committee of committees;index as i;">
-          <td>
-            <a data-toggle="modal" class="clickAble" data-target="#committeeModal" (click)="popUp(committee)">
-              {{committee.name}}
-            </a>
-          </td>
-          <td>
-            <input type="checkbox" class="check" [checked]="this.survey.responses[i].selected" (click)="createSurvey(this.survey.responses[i])">
-          </td>
+          <tr *ngFor="let response of survey.responses">
+            <td>
+              <span data-toggle="modal" data-target="#committeeModal" class="clickAble" (click)="popUp(response.committee)">
+                {{response.committee.name}}
+              </span>
+            </td>
+            <td>
+              <input type="checkbox" class="check" [checked]="response.selected" (click)="createSurvey(response)">
+            </td>
         </tr>
         </tbody>
       </table>
@@ -55,14 +48,15 @@
 
 
     <div *ngIf="selectedCommittee" class="modal fade" id="committeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div>Xxxxxxxxxxxxxxx</div>
       <app-selected-committee [(selectedCommittee)]="selectedCommittee"></app-selected-committee>
     </div>
 
-    <!-- Modal for committee-->
+
     <footer class="footer">
       <div class="container" id="footerText">
         <span class="text-dark">UWLAX</span>
       </div>
     </footer>
   </div>
-<!-- /main -->
+

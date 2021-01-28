@@ -43,7 +43,7 @@ export class ApiService {
     return this.http.get<string[]>(`${AppConstants.API_URL}/committees/${id}/years`, {} );
   }
 
-  getSurvey(userId: string, year: string): Observable<Survey> {
+  getSurvey(userId: string): Observable<Survey> {
     return this.http.get<Survey>(`${AppConstants.API_URL}/users/${userId}/survey`, { });
   }
   modifySurvey(userId: string, rId: number, surveyResponse: SurveyResponse) {

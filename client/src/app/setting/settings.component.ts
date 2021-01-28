@@ -7,6 +7,8 @@ import {Gender} from '../models/gender';
 import {College} from '../models/college';
 import {Department} from '../models/department';
 
+import { faTrash, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -23,12 +25,21 @@ export class SettingsComponent implements OnInit {
     addGender: false,
     addDept: false,
   };
+
+
   genders: Gender[] = [];
   colleges: College[] = [];
   depts: Department[] = [];
   editGenderText: string;
   editCollegeText: string;
   editDeptText: string;
+
+  icons = {
+    faTrash : faTrash,
+    faEdit : faEdit,
+    faPlusSquare : faPlusSquare
+  }
+
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
               private router: Router) {
   }

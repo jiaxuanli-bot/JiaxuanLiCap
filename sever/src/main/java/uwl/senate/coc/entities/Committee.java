@@ -1,6 +1,7 @@
 package uwl.senate.coc.entities;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.persistence.JoinColumn;
 
 
@@ -48,8 +53,55 @@ public class Committee {
     @ManyToMany
     @JoinTable(name = "committee_volunteers",joinColumns = { @JoinColumn(name = "committee_id")},inverseJoinColumns = {@JoinColumn(name = "volunteers_id")})
     private Set<User> volunteers;
+    
+    @Transient
+    @JsonInclude
+    private Integer size;
+    
+    @Transient
+    @JsonInclude
+    private Integer numMembers;
+    
+    @Transient
+    @JsonInclude
+    private Integer numVolunteers;
+    
 
     public Committee(){
+    }
+    
+    public Integer getSize() {
+    	Optional<Criteria> criteria = this.criteria.stream().filter( c -> c.getCriteria().startsWith("(size") ).findFirst();
+    	
+    	if( criteria.isPresent() ) {
+    		String txt = criteria.get().getCriteria();
+    		return Integer.valueOf( txt.substring(6, txt.length()-1));
+    	} else {
+    		return 0;
+    	}
+    }
+    
+    public void setSize(Integer size) {
+    	// this should never be called.  It is only here
+    	// to support potential problems with Springs IOC
+    }
+    
+    public Integer getNumMembers() {
+    	return this.members.size();
+    }
+    
+    public void setNumMembers(Integer size) {
+    	// this should never be called.  It is only here
+    	// to support potential problems with Springs IOC
+    }
+    
+    public Integer getNumVolunteers() {
+    	return this.volunteers.size();
+    }
+    
+    public void setNumVolunteers(Integer size) {
+    	// this should never be called.  It is only here
+    	// to support potential problems with Springs IOC
     }
 
     private Committee(Builder builder) {

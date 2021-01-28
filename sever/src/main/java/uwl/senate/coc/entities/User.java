@@ -24,6 +24,17 @@ public class User {
 	private Boolean soe;
 	private Boolean chair;
 	
+	
+	
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", first=" + first + ", last=" + last + ", adminResponsibility=" + adminResponsibility
+				+ ", rank=" + rank + ", email=" + email + ", year=" + year + ", tenured=" + tenured + ", gradStatus="
+				+ gradStatus + ", soe=" + soe + ", chair=" + chair + ", college=" + college + ", gender=" + gender
+				+ ", dept=" + dept + ", committees=" + committees + ", volunteeredCommittees=" + volunteeredCommittees
+				+ ", roles=" + roles + "]";
+	}
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_college",
 			joinColumns =

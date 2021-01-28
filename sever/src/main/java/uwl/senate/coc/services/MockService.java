@@ -179,10 +179,16 @@ public class MockService {
         return randomString() + "@uwlax.edu";
     }
 
+    public static boolean firstUser = true;
     public User user(List<Role> roles, List<Gender> genders, List<Department> departments) {
-
     			
     	final Department department = one( departments );
+    	List<Role> userRoles = choose( roles, (int)(Math.random() * 3 + 1 ) );
+    	if( firstUser ) {
+    		// ensure that user.id == 1 has all roles
+    		userRoles = roles;
+    		firstUser = false;
+    	}
     	final String year = department.getYear();
     	final Gender gender = one( genders.stream().filter( g -> g.getYear().equals( year ) ).collect( Collectors.toList() ) );
         final User user = new User.Builder()
@@ -201,7 +207,7 @@ public class MockService {
                 .soe( Math.random() < .35 )
                 .gradStatus( Math.random() < .35 )
                 .chair(Math.random() < .15)
-                .roles( choose( roles, (int)(Math.random() * 2 + 1 ) ) )
+                .roles( userRoles )
                 .build();
         
         return user;
@@ -285,7 +291,7 @@ public class MockService {
     public List<User> users(List<Role> roles, List<Gender> genders, List<Department> departments) {
         List<User> users = IntStream
                 .range(0,  500 )
-                .mapToObj( i -> user(roles, genders, departments ) )
+                .mapToObj( i -> user(roles, genders, departments) )
                 .collect( Collectors.toList() );
 
         userRepo.saveAll( users ); // all users have been saved with ids

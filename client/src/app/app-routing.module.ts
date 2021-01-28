@@ -18,8 +18,8 @@ const routes: Routes = [
       { path: 'faculty', component: FacultyComponent, canActivate: [AuthGuard]},
       { path: 'survey', component: HomeComponent, canActivate: [AuthGuard]},
       { path: 'committees', component: CommitteesListComponent, canActivate: [AuthGuard]},
-      { path: 'report', component : ReportComponent, canActivate: [AuthGuard]},
-      { path: 'setting', component : SettingsComponent, canActivate: [AuthGuard]}
+      { path: 'reports', component : ReportComponent, canActivate: [AuthGuard]},
+      { path: 'settings', component : SettingsComponent, canActivate: [AuthGuard]}
     ]},
 ];
 

@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -31,6 +33,7 @@ import { SettingsComponent } from './setting/settings.component';
 import { AddDeptComponent } from './setting/add-dept/add-dept.component';
 import { AddCollegeComponent } from './setting/add-college/add-college.component';
 import { AddGenderComponent } from './setting/add-gender/add-gender.component';
+
 @NgModule({
 
   imports: [
@@ -44,7 +47,8 @@ import { AddGenderComponent } from './setting/add-gender/add-gender.component';
     BrowserModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    FontAwesomeModule
   ],
 
   declarations: [

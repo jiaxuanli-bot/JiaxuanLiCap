@@ -4,10 +4,10 @@ import {ApiService} from '../service/api.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Committee} from '../models/committee';
 import {forkJoin} from 'rxjs';
-import {newArray} from '@angular/compiler/src/util';
 import {User} from '../models/user';
 import {AuthenticationService} from '../service/authentication.service';
-import {HttpClient} from '@angular/common/http';
+
+import { faCircle, faCheckCircle, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-committees-details',
@@ -15,48 +15,45 @@ import {HttpClient} from '@angular/common/http';
   styleUrls: ['./committees-details.component.css']
 })
 export class CommitteesDetailsComponent implements OnInit {
-  seletedUserid: string;
-  introductionExpand = false;
-  committee: Committee;
-  dutyExpand = false;
-  unsatisfiedCriteria: string[] = [];
-  critreriaExpand = false;
+  seletedUserid: string;  
+  committee: Committee;  
   usersCommittees: Committee[][];
   volunteers: User[] = [];
   volunteersCommittees: Committee[][];
-  constructor(private http: HttpClient, public authentication: AuthenticationService, private yearService: YearService,
-              private apiService: ApiService, private route: ActivatedRoute, private router: Router) { }
+
+  views = {
+    introduction: false,
+    duties : false,
+    criteria : false,
+    members: true,
+    volunteers: true
+  }
+
+  icons = {
+    faCircle : faCircle,
+    faCheckCircle : faCheckCircle,
+    faAngleDown : faAngleDown,
+    faAngleUp : faAngleUp
+  }
+
+  constructor(
+    public authentication: AuthenticationService, 
+    private yearService: YearService,
+    private apiService: ApiService, 
+    private route: ActivatedRoute, 
+    private router: Router) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(
       param => {
-        this.uploadCommitteeById(param.id);
-        this.yearService.committeeGetValue().subscribe(
-          year => {
-            if (year !== '' ) {
-              this.apiService.getCommitteeIdByYearAndName(year, this.committee.name).subscribe(
-                value7 => {
-                  this.router.navigate( ['/uwl/committees/' , value7.id ], {fragment: year});
-                }
-              );
-            }
-          }
-        );
+        this.uploadCommitteeById( param.id );
       },
       (err) => console.error(err),
     );
   }
 
-  expandIntroduction(): void {
-    this.introductionExpand = !this.introductionExpand;
-  }
-
-  expandCriteria(): void {
-    this.critreriaExpand = !this.critreriaExpand;
-  }
-
-  expandDuties(): void {
-    this.dutyExpand = !this.dutyExpand;
+  toggleView( view : string ) : void {
+    this.views[view] = !this.views[view];
   }
 
   removeMember(): void {
@@ -66,33 +63,23 @@ export class CommitteesDetailsComponent implements OnInit {
       }
     );
   }
+
   uploadCommitteeById(committeeId: string) {
     this.apiService.getCommitteeById(committeeId).subscribe (
       committee => {
         this.committee = committee;
-        this.apiService.getUnSatisfiedCriteria(this.committee.id).subscribe(
-          criteria => {
-            criteria.forEach(
-              criteria2 => {
-                this.unsatisfiedCriteria.push(criteria2.criteria);
-              }
-            );
-          }
-        );
-        const reqs = committee.members.map( m => this.apiService.getUserAssignedCommittees(m.id) );
-        forkJoin(reqs).subscribe(
+        this.committee.members.forEach( m => m.rank = m.rank.split(' ')[0] );
+        this.committee.volunteers.forEach( m => m.rank = m.rank.split(' ')[0] );
+
+        const assignedUsersReqs = committee.members.map( m => this.apiService.getUserAssignedCommittees(m.id) );
+        forkJoin(assignedUsersReqs).subscribe(
           results => {
             this.usersCommittees = results as Committee[][];
           }
         );
-        const reqs2 = [];
-        this.volunteersCommittees = newArray(this.committee.volunteers.length);
-        this.committee.volunteers.forEach(
-          value1 => {
-            reqs2.push(this.apiService.getUserAssignedCommittees(value1.id));
-          }
-        );
-        forkJoin(reqs2).subscribe(
+
+        const unassignedUserReqs = this.committee.volunteers.map( m => this.apiService.getUserAssignedCommittees(m.id) );
+        forkJoin(unassignedUserReqs).subscribe(
           results => {
             this.volunteersCommittees = results as Committee[][];
           }

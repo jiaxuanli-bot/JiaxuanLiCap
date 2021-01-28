@@ -1,9 +1,8 @@
-#committeeListClickable tr:hover {
+.clickable tr:hover {
   cursor: pointer;
   -webkit-box-shadow: 0 0 10px rgba(115, 115, 115, .4);
   box-shadow: 0 0 10px rgba(115, 115, 115, .4);
 }
-
 
 .modal-dialog{
   max-width: 65%!important;

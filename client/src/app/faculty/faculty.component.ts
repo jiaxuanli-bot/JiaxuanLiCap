@@ -13,6 +13,8 @@ import {College} from '../models/college';
 import {Gender} from '../models/gender';
 import {Department} from '../models/department';
 
+import { faEdit, faCheckCircle, faTrash, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+
 @Component({
   selector: 'app-faculty',
   templateUrl: './faculty.component.html',
@@ -37,12 +39,21 @@ export class FacultyComponent implements OnInit {
     totalPages : 0
   };
 
+  icons = {
+    faCheckCircle : faCheckCircle,
+    faTrash: faTrash,
+    faEdit: faEdit,
+    faInfoCircle: faInfoCircle
+  }
+
   userVolunteeredCommittees: Committee[];
   userAssignedCommittees: Committee[];
 
   editIndex: number;
   deleteIndex: number;
-  file: any;
+  file: any;    t
+  searchFormChanged : boolean =  false;
+
 
   queries = {
     first: '',
@@ -68,6 +79,9 @@ export class FacultyComponent implements OnInit {
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
               private router: Router, private formBuilder: FormBuilder, private papa: Papa) {
     this.searchTextChanged.pipe(debounceTime(1000)).subscribe( () => this.getFaculty() );
+    this.apiService.getYears().subscribe( years => {
+      this.yearService.setYears( years );
+    });
   }
 
   getFaculty() {
@@ -96,8 +110,13 @@ export class FacultyComponent implements OnInit {
         return acc;
       }, {});
 
+      if( this.searchFormChanged ) {
+        this.page.number = 0;
+      }
+
     this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue, this.queries, this.page.number).subscribe(
       value => {
+        this.searchFormChanged = false;
         this.faculties = value.content;
         this.page = {
           first : value.first,
@@ -174,6 +193,7 @@ export class FacultyComponent implements OnInit {
 
   changed($event: any): void {
     this.searchTextChanged.next();
+    this.searchFormChanged = true;
   }
 
   edit(i: number): void {

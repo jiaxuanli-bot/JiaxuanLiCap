@@ -1,6 +1,9 @@
 package uwl.senate.coc.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import uwl.senate.coc.utils.CriteriaPredicateFactory;
 
 import javax.persistence.*;
 
@@ -11,6 +14,10 @@ public class Criteria {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	private String criteria;
+	
+	@Transient
+	@JsonInclude
+	private Boolean isSatisfied;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -48,6 +55,17 @@ public class Criteria {
 
 	public void setCriteria(String criteria) {
 		this.criteria = criteria;
+	}
+	
+	public Boolean getIsSatisfied( ) {
+		return CriteriaPredicateFactory.build( this ).test( this.committee );
+	}
+	
+	public void setIsSatisfied( Boolean f ) {
+		// this function only exists to
+		// support Springs IOC and to prevent 
+		// potential errors at the controller level.
+		// Not sure if this is needed or not.
 	}
 	
 	public static class Builder {

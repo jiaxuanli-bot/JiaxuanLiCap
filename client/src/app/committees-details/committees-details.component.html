@@ -1,7 +1,8 @@
-<div *ngIf="committee" id="main">
+<div>
   <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top" id="topNav">
     <a class="navbar-brand" href="#">Committee</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
+      aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbar">
@@ -20,235 +21,86 @@
     </div>
   </nav>
 
-  <div>
-    <div class="card mb-5">
-      <h3 class="featuredHead">{{committee.name}}</h3>
-      <ul class="nav nav-tabs mb-4" role="tablist">
-        <li role="presentation" class="active">
-        </li>
-      </ul>
-      <div class="mb-3">
-        <div id="h1">
-          <div class="input-group mb-2">
-            Introduction
-            <button (click)="expandIntroduction()" class="btn btn-sm pull-right">
-              <svg *ngIf="introductionExpand === true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up file-text-icon"><polyline points="18 15 12 9 6 15"></polyline></svg>
-              <svg *ngIf="introductionExpand === false"  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down file-text-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-          </div>
-        </div>
-        <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active">
-          </li>
-        </ul>
-        <p *ngIf="introductionExpand === true" class="lead mt-4" id="1">
-          {{committee.introduction}}
-        </p>
-      </div>
-      <div class="mb-3" >
-        <div id="h2">
-          <div class="input-group mb-2">
-            Duties
-            <button (click)="expandDuties()" class="btn btn-sm pull-right">
-              <svg *ngIf="dutyExpand === true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up file-text-icon"><polyline points="18 15 12 9 6 15"></polyline></svg>
-              <svg  *ngIf="dutyExpand === false" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down file-text-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-          </div>
-        </div>
-        <ul class="nav nav-tabs mb-4" role="tablist">
-          <li role="presentation" class="active">
-          </li>
-        </ul>
-        <div *ngIf="dutyExpand === true"  class="tab-content" id="2">
-          <div role="tabpanel" class="tab-pane active">
-            <div>
-              <div class="List">
-                <ol>
-                  <li class="mt-1" *ngFor="let duty of committee.duties">
-                    {{duty.duty}}
-                  </li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mb-3">
-        <div id="h3">
-          <div class="input-group mb-2">
-            Criteria
-            <button (click)="expandCriteria()" class="btn btn-sm pull-right">
-              <svg *ngIf="critreriaExpand === true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up file-text-icon"><polyline points="18 15 12 9 6 15"></polyline></svg>
-              <svg *ngIf="critreriaExpand === false"  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down file-text-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-          </div>
-        </div>
-        <ul class="nav nav-tabs mb-2" role="tablist">
-          <li role="presentation" class="active">
-          </li>
-        </ul>
-        <div *ngIf="critreriaExpand === true " class="tab-content" id="3">
-          <div role="tabpanel" class="tab-pane active">
-            <div>
-              <div class="List">
-                <ol>
-                  <li class="mt-1" *ngFor="let criteria of committee.criteria">
-                    <ng-container *ngIf="unsatisfiedCriteria.indexOf(criteria.criteria) >= 0">Unsatisfied</ng-container>
-                    <ng-container *ngIf="unsatisfiedCriteria.indexOf(criteria.criteria) < 0">Satisfied</ng-container>
-                    {{criteria.criteria}}
-                  </li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="container mt-4">
+    <h2 class="featuredHead mb-4">{{committee?.name}}</h2>
 
-      <div class="table-responsive">
-        <div id="h4">
-          <div class="input-group mb-2">
-            Member({{committee.members.length}})
-          </div>
-        </div>
-        <ul class="nav nav-tabs mb-4" role="tablist">
-          <li role="presentation" class="active">
-          </li>
-        </ul>
-      </div>
+    <div class="expandable">
       <div>
-        <table *ngIf="committee.members" class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12" id="memberTable">
-          <thead>
-          <tr>
-            <th *ngFor="let property of ['Last','First','Rank','College','Tenured','SOE','Admin','Gender','AssignedCommittees','Action']">
-              {{property}}
-            </th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let user of committee.members;let i = index">
-            <td>
-              {{user.last}}
-            </td>
-            <td>
-              {{user.first}}
-            </td>
-            <td>
-              {{user.rank}}
-            </td>
-            <td>
-              {{user.college.name}}
-            </td>
-            <td>
-              <label class="myCheckBox">
-                <input type="checkbox" checked="checked">
-                <span [ngClass]="user.tenured?'checkmark':'emptyCheckBox'"></span>
-              </label>
-            </td>
-            <td>
-              <label class="myCheckBox">
-                <input type="checkbox" checked="checked">
-                <span [ngClass]="user.soe?'checkmark':'emptyCheckBox'"></span>
-              </label>
-            </td>
-            <td>
-              <label class="myCheckBox">
-                <input type="checkbox" checked="checked">
-                <span [ngClass]="user.adminResponsibility?'checkmark':'emptyCheckBox'"></span>
-              </label>
-            </td>
-
-            <td  class="text-center">
-              {{user.gender.name}}
-            </td>
-            <td>
-              <ng-container *ngIf="usersCommittees">
-                <button *ngFor="let committee of usersCommittees[i];index as j" class="btn btn-link"  routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">
-                  {{committee.name}},
-                </button>
-              </ng-container>
-            </td>
-            <td>
-              <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#refuseModal" (click)="selectUser(user.id)">
-                Remove
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+        <h4>Introduction
+          <button (click)="toggleView('introduction')" class="btn btn-sm pull-right">
+            <fa-icon [icon]="views.introduction?icons.faAngleUp:icons.faAngleDown"></fa-icon>
+          </button>
+        </h4>
       </div>
 
-      <div *ngIf="volunteers" class="table-responsive">
-        <div id="h4">
-          <div class="input-group mb-2">
-            Volunteers({{committee.members.length + committee.volunteers.length}})
-          </div>
-        </div>
-        <ul class="nav nav-tabs mb-4" role="tablist">
-          <li role="presentation" class="active">
+      <div class="top-border">
+        <p class="body-paragraph" *ngIf="views.introduction">{{committee?.introduction}}</p>
+      </div>
+    </div>
+
+    <div class="expandable">
+      <div>
+        <h4>Duties
+          <button (click)="toggleView('duties')" class="btn btn-sm pull-right">
+            <fa-icon [icon]="views.duties?icons.faAngleUp:icons.faAngleDown"></fa-icon>
+          </button>
+        </h4>
+      </div>
+
+      <div class="top-border">
+        <ol class="list-group mt-2" *ngIf="views.duties">
+          <li class="list-group-item" *ngFor="let duty of committee?.duties">
+            {{duty?.duty}}
           </li>
-        </ul>
+        </ol>
       </div>
-      <div *ngIf="committee.members">
-          <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12" id="memberTable">
+    </div>
+
+
+    <div class="expandable">
+      <div>
+        <div>
+          <h4>Criteria
+            <button (click)="toggleView('criteria')" class="btn btn-sm pull-right">
+              <fa-icon [icon]="views.criteria?icons.faAngleUp:icons.faAngleDown"></fa-icon>
+            </button>
+          </h4>
+        </div>
+      </div>
+
+      <div class="top-border">
+        <ol class="list-group" *ngIf="views.criteria">
+          <li class="list-group-item" *ngFor="let criteria of committee.criteria">
+            <span
+              [ngClass]="{'criteria-is-not-satisfied':!criteria.isSatisfied, 'criteria-is-satisfied' : criteria.isSatisfied}">{{criteria?.criteria}}</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="expandable">
+      <div>
+        <h4>Members ({{committee?.members.length}})
+          <button (click)="toggleView('members')" class="btn btn-sm pull-right">
+            <fa-icon [icon]="views.members?icons.faAngleUp:icons.faAngleDown"></fa-icon>
+          </button>
+        </h4>
+      </div>
+
+      <div class="top-border">
+        <table
+          class="table table-bordered table-condensed table-compact table-striped col-xs-12 col-md-12 col-lg-12 mt-3"
+          *ngIf="views.members">
           <thead>
-          <tr>
-            <th *ngFor="let property of ['Last','First','Rank','College','Tenured','SOE','Admin','Gender','AssignedCommittees','Action']">
-              {{property}}
-            </th>
-          </tr>
+            <tr>
+              <th
+                *ngFor="let property of ['Last','First','Rank','College','Tenured','SoE','Admin','Gender','Committees','Action']">
+                {{property}}
+              </th>
+            </tr>
           </thead>
           <tbody>
-
-          <tr *ngFor="let user of committee.members;let i = index">
-            <td>
-              {{user.last}}
-            </td>
-            <td>
-              {{user.first}}
-            </td>
-            <td>
-              {{user.rank}}
-            </td>
-            <td>
-              {{user.college.name}}
-            </td>
-            <td>
-              <label class="myCheckBox">
-                <input type="checkbox" checked="checked">
-                <span [ngClass]="user.tenured?'checkmark':'emptyCheckBox'"></span>
-              </label>
-            </td>
-            <td>
-              <label class="myCheckBox">
-                <input type="checkbox" checked="checked">
-                <span [ngClass]="user.soe?'checkmark':'emptyCheckBox'"></span>
-              </label>
-            </td>
-            <td>
-              <label class="myCheckBox">
-                <input type="checkbox" checked="checked">
-                <span [ngClass]="user.adminResponsibility?'checkmark':'emptyCheckBox'"></span>
-              </label>
-            </td>
-
-            <td  class="text-center">
-              {{user.gender.name}}
-            </td>
-            <td>
-              <ng-container *ngIf="usersCommittees">
-                <button *ngFor="let committee of usersCommittees[i];index as j" data-toggle="modal" class="btn btn-link" routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">
-                  {{committee.name}},
-                </button>
-              </ng-container>
-            </td>
-            <td>
-              <button type="button" disabled class="btn btn-secondary btn-sm disabled" data-toggle="modal" data-target="#exampleModal" (click)="selectUser(user.id)">
-                Assign
-              </button>
-            </td>
-          </tr>
-          <ng-container>
-            <tr *ngFor="let user of committee.volunteers;let i = index">
+            <tr *ngFor="let user of committee?.members;let i = index">
               <td>
                 {{user.last}}
               </td>
@@ -259,63 +111,115 @@
                 {{user.rank}}
               </td>
               <td>
-                {{user.college}}
+                {{user.college.name}}
+              </td>
+              <td style="text-align:center">
+                <fa-icon *ngIf="user.tenured" [icon]="icons.faCheckCircle"></fa-icon>
+              </td>
+              <td style="text-align:center">
+                <fa-icon *ngIf="user.soe" [icon]="icons.faCheckCircle"></fa-icon>
+              </td>
+              <td style="text-align:center">
+                <fa-icon *ngIf="user.adminResponsibility" [icon]="icons.faCheckCircle"></fa-icon>
+              </td>
+              <td style="text-align:center">
+                {{user.gender.name}}
               </td>
               <td>
-                <label class="myCheckBox">
-                  <input type="checkbox" checked="checked">
-                  <span [ngClass]="user.tenured?'checkmark':'emptyCheckBox'"></span>
-                </label>
-              </td>
-              <td>
-                <label class="myCheckBox">
-                  <input type="checkbox" checked="checked">
-                  <span [ngClass]="user.soe?'checkmark':'emptyCheckBox'"></span>
-                </label>
-              </td>
-              <td>
-                <label class="myCheckBox">
-                  <input type="checkbox" checked="checked">
-                  <span [ngClass]="user.adminResponsibility?'checkmark':'emptyCheckBox'"></span>
-                </label>
-              </td>
-
-              <td  class="text-center">
-                {{user.gender}}
-              </td>
-              <td>
-                <ng-container *ngIf="volunteers&&volunteersCommittees">
-                  <button *ngFor="let committee of volunteersCommittees[i];index as j" class="btn btn-link" data-toggle="modal" routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">
-                   {{committee.name}},
-                  </button>
+                <ng-container *ngIf="usersCommittees" class="d-flex">
+                  <span *ngFor="let committee of usersCommittees[i];index as j" class="btn bg-primary mini-link"
+                    routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">{{committee?.name}}</span>
                 </ng-container>
               </td>
               <td>
-                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModal" (click)="selectUser(user.id)">
-                  Assign
-                </button>
+                <span class="btn btn-sm bg-danger" data-toggle="modal" data-target="#refuseModal"
+                  (click)="selectUser(user.id)">Remove</span>
               </td>
             </tr>
-          </ng-container>
           </tbody>
         </table>
       </div>
 
+
+      <div class="expandable">
+        <div>
+          <h4>Volunteers ({{committee?.volunteers.length}})
+            <button (click)="toggleView('volunteers')" class="btn btn-sm pull-right">
+              <fa-icon [icon]="views.volunteers?icons.faAngleUp:icons.faAngleDown"></fa-icon>
+            </button>
+          </h4>
+        </div>
+  
+        <div class="top-border">
+          <table
+            class="table table-bordered table-condensed table-compact table-striped col-xs-12 col-md-12 col-lg-12 mt-3"
+            *ngIf="views.volunteers">
+            <thead>
+              <tr>
+                <th
+                  *ngFor="let property of ['Last','First','Rank','College','Tenured','SoE','Admin','Gender','Committees','Action']">
+                  {{property}}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of committee?.volunteers;let i = index">
+                <td>
+                  {{user.last}}
+                </td>
+                <td>
+                  {{user.first}}
+                </td>
+                <td>
+                  {{user.rank}}
+                </td>
+                <td>
+                  {{user.college.name}}
+                </td>
+                <td style="text-align:center">
+                  <fa-icon *ngIf="user.tenured" [icon]="icons.faCheckCircle"></fa-icon>
+                </td>
+                <td style="text-align:center">
+                  <fa-icon *ngIf="user.soe" [icon]="icons.faCheckCircle"></fa-icon>
+                </td>
+                <td style="text-align:center">
+                  <fa-icon *ngIf="user.adminResponsibility" [icon]="icons.faCheckCircle"></fa-icon>
+                </td>
+                <td style="text-align:center">
+                  {{user.gender.name}}
+                </td>
+                <td>
+                  <ng-container *ngIf="usersCommittees" class="d-flex">
+                    <span *ngFor="let committee of usersCommittees[i];index as j" class="btn bg-primary mini-link"
+                      routerLink="/uwl/committees/{{committee.id}}" routerLinkActive="active">{{committee.name}}</span>
+                  </ng-container>
+                </td>
+                <td>
+                  <span class="btn btn-sm bg-success" data-toggle="modal" data-target="#refuseModal"
+                    (click)="selectUser(user.id)">Assign</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
       <!-- Modal for delete-->
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <app-assign-member (assignVolunteer)="assignVolunteer()"></app-assign-member>
       </div>
 
       <!-- Modal for refuse-->
-      <div class="modal fade" id="refuseModal" tabindex="-1" role="dialog" aria-labelledby="refuseModalLabel" aria-hidden="true">
+      <div class="modal fade" id="refuseModal" tabindex="-1" role="dialog" aria-labelledby="refuseModalLabel"
+        aria-hidden="true">
         <app-remove-member (removeMember)="removeMember()"></app-remove-member>
       </div>
     </div>
-  </div>
 
-  <footer class="footer">
-    <div class="container" id="footerText">
-      <span class="text-dark">UWLAX</span>
-    </div>
-  </footer>
-</div>
+
+    <footer class="footer">
+      <div class="container" id="footerText">
+        <span class="text-dark">UWLAX</span>
+      </div>
+    </footer>
+  </div>

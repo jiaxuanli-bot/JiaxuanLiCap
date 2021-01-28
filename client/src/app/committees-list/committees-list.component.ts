@@ -7,6 +7,8 @@ import {forkJoin} from 'rxjs';
 import {CommitteeUser} from '../models/committee-user';
 import {Criteria} from '../models/criteria';
 
+import { faTimesCircle, faCheckCircle, faTrash} from '@fortawesome/free-solid-svg-icons';
+
 @Component({
   selector: 'app-committees-list',
   templateUrl: './committees-list.component.html',
@@ -15,6 +17,13 @@ import {Criteria} from '../models/criteria';
 export class CommitteesListComponent implements OnInit {
   committees: CommitteeSummary[] = [];
   committeesCriteriaStatus: Criteria[][] = [];
+
+  icons = {
+    faTimesCircle : faTimesCircle,
+    faCheckCircle : faCheckCircle,
+    faTrash : faTrash
+  }
+
   constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService) {}
 
   ngOnInit(): void {
@@ -22,46 +31,15 @@ export class CommitteesListComponent implements OnInit {
   }
 
   getCommitteeList() {
+    this.apiService.getYears().subscribe( years => {
+      this.yearService.setYears( years );
+    });
+
     this.yearService.getValue().subscribe(
-      value => {
-        if (value !== undefined && value !== '' && value !== null) {
-          this.apiService.getCommitteesByYear(value).subscribe(
-            value1 => {
-              this.committees = value1;
-              const reqs2 = [];
-              const reqs3 = [];
-              const reqs4 = [];
-              this.committees.forEach(
-                value2 => {
-                  reqs2.push( this.apiService.getCommitteeMember(value2.id));
-                  reqs3.push( this.apiService.getUnSatisfiedCriteria(value2.id));
-                  reqs4.push( this.apiService.getCommitteeVolunteers(value2.id));
-                }
-              );
-              forkJoin(reqs2).subscribe(
-                results => {
-                  for (let i = 0; i < results.length; i++) {
-                    this.committees[i].members = results[i] as CommitteeUser[];
-                  }
-                }
-              );
-              forkJoin(reqs3).subscribe(
-                results => {
-                  results.forEach(
-                    criteria => {
-                      this.committeesCriteriaStatus.push(criteria as Criteria[]);
-                    }
-                  );
-                }
-              );
-              forkJoin(reqs4).subscribe(
-                results => {
-                  for (let i = 0; i < results.length; i++) {
-                    this.committees[i].volunteers = results[i] as CommitteeUser[];
-                  }
-                }
-              );
-            }
+      year => {
+        if (year !== undefined && year !== '' && year !== null) {
+          this.apiService.getCommitteesByYear(year).subscribe(
+            committees => this.committees = committees
           );
         }
       }

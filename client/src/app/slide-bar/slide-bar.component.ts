@@ -3,9 +3,10 @@ import {ApiService} from '../service/api.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../service/authentication.service';
-import {Committee} from '../models/committee';
 import {User} from '../models/user';
 import {YearService} from '../service/year.service';
+
+import { faUser, faUsers, faQuestionCircle, faCog, faChartPie, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-slide-bar',
@@ -13,50 +14,55 @@ import {YearService} from '../service/year.service';
   styleUrls: ['./slide-bar.component.css']
 })
 export class SlideBarComponent implements OnInit {
-  sideBar = {
-    homeNavbar: true,
-    facultyNavbar: false,
-    surveyNavbar: false,
-    committeesNavbar: false,
-    reportNavbar:  false,
-    settingNavbar: false
+  pages = {
+    home: true,
+    faculty: false,
+    survey: false,
+    committees: false,
+    report:  false,
+    settings: false
   }
 
-  constructor(public yearService: YearService, private apiService: ApiService, private formBuilder: FormBuilder,
-              private router: Router, private authenticationService: AuthenticationService) { }
+  icons = {
+    faUser : faUser,
+    faUsers : faUsers,
+    faQuestionCircle : faQuestionCircle,
+    faCog : faCog,
+    faChartPie : faChartPie,
+    faPlusSquare : faPlusSquare
+  }
+
   yearsForm: FormGroup;
-  committees: Committee[] = [];
   selectedYear: string;
   user: User;
-  roles = {
-    isAdmin: false,
-    isNominate: false,
-    isNormal: false
-  };
+
   newYear: number;
   years: any;
+
+  constructor(
+    public yearService: YearService, 
+    private apiService: ApiService, 
+    private formBuilder: FormBuilder,
+    private router: Router, 
+    private authenticationService: AuthenticationService) { 
+  }
+
   ngOnInit(): void {
     this.user = this.authenticationService.currentUserValue;
+
     this.yearService.getValue().subscribe(
       value => {
         this.selectedYear = value;
       }
     );
-    if ( this.authenticationService.hasRole('Normal')) {
-        this.roles.isNormal = true;
-    }
-    if ( this.authenticationService.hasRole( 'Admin')) {
-        this.roles.isAdmin = true;
-    }
-    if (this.authenticationService.hasRole('Nominate')) {
-        this.roles.isNominate = true;
-    }
+
     this.yearsForm = this.formBuilder.group({
       year: []
     });
+
     this.yearService.getYears.subscribe(
-      value => {
-        this.years = value;
+      years => {
+        this.years = years;
       }
     );
   }
@@ -64,54 +70,26 @@ export class SlideBarComponent implements OnInit {
   hasRole(role: string): boolean {
     return this.authenticationService.hasRole(role);
   }
+
   changeYear() {
     this.yearService.setValue(this.selectedYear);
   }
 
-  routerToFaculty() {
-    this.clearBar();
-    this.sideBar.facultyNavbar = true;
-    this.router.navigate(['/uwl/faculty'], { fragment: this.selectedYear });
+  goTo( page : string ) : void {
+    this.clear();
+    this.pages[page] = true;
+    this.router.navigate(['/uwl', page ], { fragment: this.selectedYear } );
   }
 
-  routerToSurvey() {
-    this.clearBar();
-    this.sideBar.surveyNavbar = true;
-    this.router.navigate(['/uwl/survey'], { fragment: this.selectedYear });
+  clear() {
+    Object.keys( this.pages ).forEach( pg => this.pages[pg] = false );
   }
 
-  routerCommittees() {
-    this.clearBar();
-    this.sideBar.committeesNavbar = true;
-    this.router.navigate(['/uwl/committees'], { fragment: this.selectedYear });
-  }
-
-  routerToReport() {
-    this.clearBar();
-    this.sideBar.reportNavbar = true;
-    this.router.navigate(['/uwl/report'], { fragment: this.selectedYear });
-  }
-
-  clearBar() {
-    this.sideBar.reportNavbar = false;
-    this.sideBar.surveyNavbar = false;
-    this.sideBar.homeNavbar = false;
-    this.sideBar.facultyNavbar = false;
-    this.sideBar.committeesNavbar = false;
-    this.sideBar.settingNavbar = false;
-  }
-
-  crateYear() {
+  createYear() {
     this.apiService.createYear(this.newYear.toString()).subscribe(
       value => {
         location.reload();
       }
     );
-  }
-
-  routerToSettings() {
-    this.clearBar();
-    this.sideBar.settingNavbar = true;
-    this.router.navigate(['/uwl/setting'], { fragment: this.selectedYear });
   }
 }

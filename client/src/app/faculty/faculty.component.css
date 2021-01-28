@@ -1,9 +1,3 @@
-.file-edit-icon ,.file-trash-icon ,.file-text-icon{
-  cursor: pointer;
-  stroke-width: 3px;
-  height: 18px;
-  width: 18px;
-}
 
 #committeeListModal .modal-dialog {
   max-width: 70%!important;
@@ -12,6 +6,9 @@
   margin-top: 6%;
 }
 
+fa-icon {
+  margin-right: .5em;
+}
 
 .disabledPagation{
   background-color: #f2f2f2!important;

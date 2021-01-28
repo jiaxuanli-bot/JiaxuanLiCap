@@ -1,5 +1,5 @@
 
-<div id="main" *ngIf="year">
+<div class="container" *ngIf="year">
   <!-- top nav -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">Faculty</a>
@@ -21,18 +21,18 @@
     </div>
   </nav>
 
-  <div class="table-responsive">
+  <div class="mt-5">
     <form [formGroup]="facultiesForm">
-    <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12" id="facultyTable">
+    <table class="table table-bordered table-condensed table-compact table-striped col-xs-12 col-md-12 col-lg-12" id="facultyTable">
       <thead>
       <tr id="searchTr">
           <th>
-            <input type="text" class="form-control searchInput" formControlName="first" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
-          </th>
-          <th>
             <input type="text" class="form-control searchInput" formControlName="last" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
           </th>
-          <th *ngFor="let controlName of ['rank', 'college', 'tenured', 'soe', 'admin', 'gender', 'dept','chair']">
+          <th>
+            <input type="text" class="form-control searchInput" formControlName="first" aria-describedby="basic-addon1" (ngModelChange)="changed($event)">
+          </th>
+          <th *ngFor="let controlName of ['rank', 'college', 'dept', 'tenured', 'soe', 'admin', 'chair', 'gender']">
             <select [formControlName]="controlName" class= "form-control" (ngModelChange)="changed($event)">
               <option *ngFor="let opt of options[controlName]">{{opt}}</option>
             </select>
@@ -45,7 +45,7 @@
           </th>
       </tr>
       <tr>
-        <th *ngFor="let property of ['First','Last','Rank','College','Tenured','SOE','Admin','Gender','Department','Chair','Action']">
+        <th *ngFor="let property of ['First','Last','Rank','College', 'Dept', 'Tenured','SOE','Admin','Chair', 'Gender','Action']">
           {{property}}
         </th>
       </tr>
@@ -55,10 +55,10 @@
       <tr *ngFor="let faculty of faculties; index as i;" id="firstLine">
         <ng-container *ngIf="i!==editIndex">
           <td>
-            {{faculty.first}}
+            {{faculty.last}}
           </td>
           <td>
-            {{faculty.last}}
+            {{faculty.first}}
           </td>
           <td>
             {{faculty.rank}}
@@ -67,42 +67,30 @@
             {{faculty.college.name}}
           </td>
           <td>
-            <label class="myCheckBox">
-              <input type="checkbox" checked="checked">
-              <span [ngClass]="faculty.tenured?'checkmark':'emptyCheckBox'"></span>
-            </label>
+            {{faculty.dept.name}}
           </td>
-          <td>
-            <label class="myCheckBox">
-              <input type="checkbox" checked="checked">
-              <span [ngClass]="faculty.soe?'checkmark':'emptyCheckBox'"></span>
-            </label>
+          <td class="text-center">
+              <fa-icon [icon]="icons.faCheckCircle" *ngIf="faculty.tenured"></fa-icon>
           </td>
-          <td>
-            <label class="myCheckBox">
-              <input type="checkbox" checked="checked">
-              <span [ngClass]="faculty.adminResponsibility?'checkmark':'emptyCheckBox'"></span>
-            </label>
+          <td class="text-center">
+            <fa-icon [icon]="icons.faCheckCircle" *ngIf="faculty.soe"></fa-icon>
+          </td>
+          <td class="text-center">
+            <fa-icon [icon]="icons.faCheckCircle" *ngIf="faculty.adminResponsibility"></fa-icon>
+          </td>
+          <td class="text-center">
+            <fa-icon [icon]="icons.faCheckCircle" *ngIf="faculty.chair"></fa-icon>                          
           </td>
           <td class="text-center">
             {{faculty.gender.name}}
           </td>
-          <td class="text-center">
-            {{faculty.dept.name}}
-          </td>
           <td>
-            <label class="myCheckBox">
-              <input type="checkbox" checked="checked">
-              <span [ngClass]="faculty.chair?'checkmark':'emptyCheckBox'"></span>
-            </label>
+            <fa-icon [icon]="icons.faTrash" data-target="#exampleModal" (click)="delete(i)"></fa-icon>
+            <fa-icon [icon]="icons.faEdit" (click)="edit(i)"></fa-icon>
+            <fa-icon [icon]="icons.faInfoCircle"  data-toggle="modal" data-target="#committeeListModal"  (click)="getUserCommittees(i)" ></fa-icon>
           </td>
+      </ng-container>
 
-          <td>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 view-link file-trash-icon" href="#" data-toggle="modal" data-target="#exampleModal" (click)="delete(i)"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3 view-link file-edit-icon" href="#" (click)="edit(i)"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text view-link file-text-icon" data-toggle="modal" data-target="#committeeListModal"  (click)="getUserCommittees(i)" href="#"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-          </td>
-        </ng-container>
         <ng-container *ngIf="i==editIndex">
           <td>
             <input type="text" formControlName="editFirst">
@@ -153,7 +141,7 @@
     </form>
   </div>
 
-  <div class="table-buttons mt-4" id="tableFooterGroup">
+  <div class="table-buttons mt-4">
     <ul class="pagination">
       <ng-container *ngIf="faculties&&faculties.length>0">
         <li [ngClass]="page.first?['page-item', 'disabledPagation']:['page-item']" (click)="firstPage()">
@@ -188,12 +176,10 @@
       </ul>
 
       <button type="button" class="btn btn-primary mb-5 mr-3" data-toggle="modal" data-target="#addUsersModal">
-        <i class="user-plus-icon ml-2 mr-1" data-feather="user-plus"></i>Upload Faculties From CSV File
-      </button>
+        Upload CSV</button>
 
       <button type="button" class="btn btn-primary mb-5" data-toggle="modal" data-target="#userModal">
-        <i class="user-plus-icon ml-2 mr-1" data-feather="user-plus"></i>Add Faculty
-      </button>
+        Add Faculty</button>
     </ul>
   </div>
 

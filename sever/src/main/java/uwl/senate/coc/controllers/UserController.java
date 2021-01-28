@@ -54,6 +54,7 @@ public class UserController {
             @RequestParam(name="dept", required=false) String department,
             @RequestParam(name="gender", required=false) String gender) {
         rank = rank != null ? rank + " Professor" : null;
+        
         User user = new User.Builder()
         		.year(year)
                 .first(first)
@@ -65,8 +66,10 @@ public class UserController {
                 .tenured( tenured )
                 .soe( soe )
                 .chair( chair )
-                .dept( new Department.Builder().name(department).build())
+                .dept( new Department.Builder().name(department).build() )
                 .build();
+        
+        System.out.println( user );
 
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withMatcher("first", m -> m.contains())
@@ -74,6 +77,7 @@ public class UserController {
         
         Example<User> example = Example.of(user, matcher);
         Pageable paging = PageRequest.of( pageNo, pageSize, Sort.by(sortBy));
+        
         return userService.getUsers(example, paging );
     }
     

@@ -17,11 +17,18 @@ import {YearService} from './service/year.service';
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'committees';
   user: User;
-  constructor(private yearService: YearService, private apiService: ApiService, private formBuilder: FormBuilder, private router: Router,
-              private authenticationService: AuthenticationService) {}
+  constructor(
+    private yearService: YearService, 
+    private apiService: ApiService, 
+    private formBuilder: FormBuilder, 
+    private router: Router,
+    private authenticationService: AuthenticationService) {      
+  }
+
   ngAfterViewInit() {
     Feather.replace();
   }
+  
   ngOnInit(): void {
     this.authenticationService.getUser().subscribe(
       value => {

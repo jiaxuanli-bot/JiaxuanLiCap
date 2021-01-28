@@ -1,16 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
-body {
-  background:url('/assets/background.png') no-repeat center center fixed;
-  background-size:100%,100%;
+.splash {
+  background-color: rgb(128,0,41);
 }
 
-html,body{ margin:0; padding:0; height:100%; width:100%; }
+html, body { 
+  margin:0; 
+  padding:0; 
+  height:100%; 
+  width:100%; 
+}
 
 /* custom template */
-
 .nav {
   font-size:15px;
 
+}
+
+.table-compact td, th {
+  font-size: 75%;
+  padding: .5em;
 }
 
 .selected{
@@ -94,7 +102,7 @@ a {
 #main {
   width: 100% !important;
   height: 100%!important;
-  background-color:#f2f2f2;
+  background-color: white;
   padding-left:0;
   padding-right:0;
 }
@@ -123,17 +131,6 @@ a {
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(166, 166, 166, .4);
   cursor: pointer;
-}
-
-.table {
-  border: 1px solid rgba(0,0,0,.125);
-  -webkit-box-shadow: 0 0 10px rgba(166, 166, 166, .4);
-  border-radius: 4px;
-  box-shadow: 0 0 10px rgba(166, 166, 166, .4);
-  width: 85% !important;
-  font-size: 13px;
-  margin-top: 30px;
-  margin-bottom: 20px;
 }
 
 #reportTable{
@@ -192,7 +189,6 @@ a {
 
 input{
   width: 100%;
-
 }
 
 .file-x-icon{
@@ -220,10 +216,6 @@ h3,h1,h2,h4{
   cursor: default;
 }
 
-.table td {
-  height: 57px;
-  vertical-align: middle !important;
-}
 
 .reportTable td{
   height: 57px;
@@ -239,11 +231,6 @@ h3,h1,h2,h4{
   -webkit-box-shadow: 0 0 10px rgba(166, 166, 166, .4);
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(166, 166, 166, .4);
-}
-
-#tableFooterGroup{
-  margin-left: 8%;
-  width: 85%;
 }
 
 .pieChart{
@@ -294,10 +281,6 @@ h3,h1,h2,h4{
   color: #ffffff;
 }
 
-#facultyTable{
-  margin-top: 7%!important;
-  margin-left: 8%;
-}
 
 span.badge {
   color: #ffffff;
@@ -427,94 +410,6 @@ td a {
   padding-right: 45px;
 }
 
-
-
-/*css for check box*/
-.myCheckBox {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* Hide the browser's default checkbox */
-.myCheckBox input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-/* Create a custom checkbox */
-.checkmark {
-  position: absolute;
-  border-radius: 4px;
-  top: -8px;
-  left: 10px;
-  height: 25px;
-  width: 25px;
-  background-color: #8c8c8c;
-}
-
-.emptyCheckBox {
-  position: absolute;
-  border-radius: 4px;
-  top: -8px;
-  left: 10px;
-  height: 25px;
-  width: 25px;
-  background-color: #8c8c8c;
-}
-
-
-/* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: block;
-}
-
-.emptyCheckBox:after {
-  content: "";
-  position: absolute;
-  display: block;
-}
-
-/* Style the checkmark/indicator */
-.myCheckBox .checkmark:after {
-  left: 10px;
-  top: 8px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-
-
-input[type='checkbox'] {
-  width:25px;
-  height:25px;
-  border-radius:4px;
-}
-
-input[type='checkbox']:hover{
-  cursor: pointer;
-}
-
-table input[type='checkbox']{
-  margin-left: 10px;
-}
-
 #addMemberFormGroup{
   width: 86%;
   margin-left: 8%;
@@ -552,9 +447,6 @@ table input[type='checkbox']{
   vertical-align: middle;
 }
 
-.checkInline input[type='checkbox']{
-  margin-top: auto;
-}
 
 .view-link{
   cursor: pointer;
@@ -576,24 +468,6 @@ input[type="radio"]{
   cursor: pointer;
 }
 
-#h1 ,#h2,#h3,#h4{
-  font-size: 25px;
-}
-
-#h1 .btn{
-  margin-left: 78.8%;
-}
-
-#h2 .btn{
-  margin-left: 85.2%;
-}
-
-#h3 .btn{
-  margin-left: 84.3%;
-}
-#h4 .btn{
-  margin-left: 82%;
-}
 /*动画*/
 .menu ul {
   height: 0px;
@@ -715,4 +589,16 @@ input[type="radio"]{
   background-color: #5e5e5e;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.app-red {
+  color: red !important;
+}
+
+.app-green {
+  color: green !important;
+}
+
+.app-bottom-padded {
+  padding-bottom: 10em;
 }

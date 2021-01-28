@@ -13,8 +13,21 @@
   box-sizing: border-box !important;
 }
 
+.mini-link {
+  margin-right: .5em;
+  padding: 0 .5em;
+  color:white;
+  font-size: 75%;
+}
+
+
+
 td a {
   color: #5e5e5e;
+}
+
+.expandable {
+  margin-top: 1em;
 }
 
 /* Element counter */
@@ -32,11 +45,26 @@ td a {
   -webkit-text-fill-color: transparent;
 }
 
+.body-paragraph {
+  padding-left: 2rem;
+  padding-top: 1rem;
+  font-size: 1.25rem;
+}
+
+.top-border {
+  border-top: 1px solid lightgray;
+}
+
 .disabled{
   cursor: default;
 }
 
-.btn-link{
-  padding: 0 0 0 0;
-  font-size: 15px;
+.criteria-is-satisfied {
+  color: green;
 }
+
+.criteria-is-not-satisfied {
+  color: red;
+  text-decoration: line-through;
+}
+
