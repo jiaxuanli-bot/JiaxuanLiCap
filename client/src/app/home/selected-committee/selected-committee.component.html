@@ -1,87 +1,40 @@
-<div class="modal-dialog" role="document">
-  <div class="modal-content">
-    <div>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span class="closeBtn mr-4" aria-hidden="true">&times;</span>
-      </button>
-      <h3 class="featuredHead">{{selectedCommittee.name}}</h3>
-      <ul class="nav nav-tabs mb-4" role="tablist">
-        <li role="presentation" class="active">
-        </li>
-      </ul>
-      <div class="mb-3 mt-4">
-        <div id="h1">
-          <div class="input-group mb-2">
-            Introduction
-            <button (click)="expandIntroduction()" class="btn btn-sm pull-right">
-              <svg *ngIf="introductionExpand === true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up file-text-icon"><polyline points="18 15 12 9 6 15"></polyline></svg>
-              <svg *ngIf="introductionExpand === false" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down file-text-icon"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
-          </div>
-        </div>
-        <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active">
-          </li>
-        </ul>
-        <p *ngIf="introductionExpand === true" class="lead mt-4" id="1">
-          {{selectedCommittee.introduction}}
-        </p>
-      </div>
+<div class="modal-header modal-wide">
+  <h4 class="modal-title" id="modal-basic-title">{{committee.name}}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 
-      <div class="mb-3" >
-        <div id="h2">
-          <div class="input-group mb-2 mt-4">
-            Duties
-            <button (click)="expandDuty()" class="btn btn-sm pull-right">
-              <svg *ngIf="dutyExpand === true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up file-text-icon"><polyline points="18 15 12 9 6 15"></polyline></svg>
-              <svg *ngIf="dutyExpand === false" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down file-text-icon"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
-          </div>
-        </div>
-        <ul class="nav nav-tabs mb-4" role="tablist">
-          <li role="presentation" class="active">
-          </li>
-        </ul>
-        <div *ngIf="dutyExpand === true"  class="tab-content" id="2">
-          <div role="tabpanel" class="tab-pane active">
-            <div>
-              <div class="List">
-                <ol>
-                  <li *ngFor="let duty of selectedCommittee.duties" class="mt-1">
-                    {{duty.duty}}
-                  </li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mb-3 mt-4">
-        <div id="h3">
-          <div class="input-group mb-2">
-            Criteria
-            <button (click)="expandCriteria()" class="btn btn-sm pull-right">
-              <svg *ngIf="critreriaExpand === true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up file-text-icon"><polyline points="18 15 12 9 6 15"></polyline></svg>
-              <svg *ngIf="critreriaExpand === false" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down file-text-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-          </div>
-        </div>
-        <ul class="nav nav-tabs mb-4" role="tablist">
-          <li role="presentation" class="active">
-          </li>
-        </ul>
-        <div *ngIf="critreriaExpand === true" class="tab-content" id="3">
-          <div role="tabpanel" class="tab-pane active">
-            <div>
-              <div class="List">
-                <ol>
-                  <li *ngFor="let criterion of selectedCommittee.criteria"class="mt-1">
-                    {{criterion.criteria}}
-                  </li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<div class="modal-body">
+  <div class="expandable">
+    <div>
+      <h4>Introduction
+        <button (click)="toggleView('introduction')" class="btn btn-sm pull-right">
+          <fa-icon [icon]="views.introduction?icons.faAngleUp:icons.faAngleDown"></fa-icon>
+        </button>
+      </h4>
+    </div>
+
+    <div class="top-border">
+      <p class="body-paragraph" *ngIf="views.introduction">{{committee?.introduction}}</p>
+    </div>
+  </div>
+
+  <div class="expandable">
+    <div>
+      <h4>Duties
+        <button (click)="toggleView('duties')" class="btn btn-sm pull-right">
+          <fa-icon [icon]="views.duties?icons.faAngleUp:icons.faAngleDown"></fa-icon>
+        </button>
+      </h4>
+    </div>
+
+    <div class="top-border">
+      <ol class="list-group mt-2" *ngIf="views.duties">
+        <li class="list-group-item" *ngFor="let duty of committee?.duties">
+          {{duty?.duty}}
+        </li>
+      </ol>
     </div>
   </div>
 </div>

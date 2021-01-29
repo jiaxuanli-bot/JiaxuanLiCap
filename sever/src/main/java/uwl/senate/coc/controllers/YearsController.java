@@ -19,7 +19,8 @@ public class YearsController {
     private CommitteeService committeeService;
 
     @RequestMapping( value="/{year}", method=RequestMethod.POST )
-    public String create(@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong")  @PathVariable String year) {
+    public String create(@Pattern( regexp="\\b\\d{4}\\b", message="the year format is wrong")  
+    					@PathVariable String year) {
         committeeService.createYear(year);
         return year;
     }

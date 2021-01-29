@@ -7,6 +7,8 @@ import {User} from '../models/user';
 import {Survey} from '../models/survey';
 import {YearService} from '../service/year.service';
 import {SurveyResponse} from '../models/survey-response';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SelectedCommitteeComponent } from './selected-committee/selected-committee.component';
 
 @Component({
   selector: 'app-home',
@@ -17,8 +19,7 @@ export class HomeComponent implements OnInit {
   introductionExpand = true;
   dutyExpand = true;
   critreriaExpand = true;
-  yearsForm: FormGroup;
-  selectedCommittee: Committee;
+  yearsForm: FormGroup;  
   
   survey: Survey;
   user: User;
@@ -28,7 +29,8 @@ export class HomeComponent implements OnInit {
     private apiService: ApiService, 
     private formBuilder: FormBuilder, 
     private yearService : YearService,
-    private authenticationService: AuthenticationService) {
+    private authenticationService: AuthenticationService,
+    private modalService : NgbModal ) {
     }
 
   ngOnInit(): void {
@@ -51,11 +53,14 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  popUp(committee) {
-    this.introductionExpand = true;
-    this.dutyExpand = true;
-    this.critreriaExpand = true ;
-    this.selectedCommittee = committee;
+
+  openCommitteeModal(response) {    
+    // the response.committee object has only id and name.  Get the full object prior to invoking the modal.
+    this.apiService.getCommitteeById( response.committee.id ).subscribe( commitee => {
+      const modalRef = this.modalService.open(SelectedCommitteeComponent, {backdropClass: 'light-blue-backdrop'});
+      modalRef.componentInstance.committee = commitee;
+    });
+
   }
 
   createSurvey(surveyResponse: SurveyResponse) {

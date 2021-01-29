@@ -29,7 +29,8 @@ public class DepartmentController {
 	
     @RequestMapping( method= RequestMethod.GET)
     public List<Department> getDepartments(
-    		@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(required=true) String year) {
+    		@Pattern( regexp="\\b\\d{4}\\b", message="the year format is wrong") 
+    		@RequestParam(required=true) String year) {
         return this.deptService.getByYear(year);
     }
     

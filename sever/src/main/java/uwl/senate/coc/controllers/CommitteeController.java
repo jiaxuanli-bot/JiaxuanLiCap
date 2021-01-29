@@ -34,8 +34,8 @@ public class CommitteeController {
 
     @RequestMapping( method=RequestMethod.GET )
     public List<CommitteeSummary> getYearsCommittees(
-            @Pattern( regexp = "\\b\\d{4}\\b", message = "the start year format is wrong") @RequestParam(defaultValue = "2000") String startYear,
-            @Pattern(regexp = "\\b\\d{4}\\b", message = "the end year format is wrong") @RequestParam(defaultValue = "2050")String endYear) {
+            @Pattern( regexp="\\b\\d{4}\\b", message="the start year format is wrong") @RequestParam(defaultValue = "2000") String startYear,
+            @Pattern(regexp="\\b\\d{4}\\b", message="the end year format is wrong") @RequestParam(defaultValue = "2050")String endYear) {
         return committeeService.getYearsCommittees(startYear, endYear);
     }
     

@@ -176,6 +176,10 @@ a {
   font-size: 0.9em;
 }
 
+.modal-dialog {
+  max-width: 90% !important;
+}
+
 .file-check-icon , .file-x-icon , .file-search-icon {
   cursor: pointer;
   stroke-width: 4px;

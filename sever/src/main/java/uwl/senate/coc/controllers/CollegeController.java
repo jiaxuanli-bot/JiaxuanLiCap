@@ -27,7 +27,8 @@ public class CollegeController {
     private CollegeService collegeService;
 	
     @RequestMapping( method= RequestMethod.GET)
-    public List<College> getByYear(@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(required=true) String year) {
+    public List<College> getByYear(@Pattern( regexp="\\b\\d{4}\\b", message="the year format is wrong") 
+    							@RequestParam(required=true) String year) {
         return this.collegeService.findByYear(year);
     }
     
@@ -36,13 +37,11 @@ public class CollegeController {
         return this.collegeService.create( college );
     }
     
-    
     @RequestMapping( value="/{id}", method= RequestMethod.GET)
     public College read(@PathVariable Long id ) {
     	return this.collegeService.read( id );
     }
-    
-    
+        
     @RequestMapping( value="/{id}", method= RequestMethod.DELETE)
     public ResponseEntity<String> delete(@PathVariable Long id ) {
     	this.collegeService.delete( id );

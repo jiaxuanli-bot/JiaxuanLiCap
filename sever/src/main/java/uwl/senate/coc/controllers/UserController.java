@@ -69,8 +69,6 @@ public class UserController {
                 .dept( new Department.Builder().name(department).build() )
                 .build();
         
-        System.out.println( user );
-
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withMatcher("first", m -> m.contains())
                 .withMatcher("last", m -> m.contains());
