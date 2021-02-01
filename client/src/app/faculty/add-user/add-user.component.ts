@@ -6,6 +6,7 @@ import {Gender} from '../../models/gender';
 import {College} from '../../models/college';
 import {Department} from '../../models/department';
 import {User} from '../../models/user';
+import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-add-user',
@@ -13,12 +14,16 @@ import {User} from '../../models/user';
   styleUrls: ['./add-user.component.css']
 })
 export class AddUserComponent implements OnInit {
+  parentComponent: any;
+  pageNum: number;
   genders: Gender[];
   colleges: College[];
   depts: Department[];
-  @Output() addUser = new EventEmitter();
   addUserForm: FormGroup;
-  constructor(private formBuilder: FormBuilder, private yearService: YearService, private apiService: ApiService) {
+  constructor(private formBuilder: FormBuilder,
+              private yearService: YearService,
+              private apiService: ApiService,
+              public activeModal: NgbActiveModal) {
     this.addUserForm = this.formBuilder.group({
       email: [''],
       first: [''],
@@ -61,11 +66,11 @@ export class AddUserComponent implements OnInit {
       }
     );
     user.year =  this.yearService.getYearValue;
-    console.log(user);
     this.apiService.createUser(user).
     subscribe(
       value => {
-        this.addUser.emit();
+        this.parentComponent.gotoPage(this.pageNum);
+        this.activeModal.dismiss();
       }
     );
   }

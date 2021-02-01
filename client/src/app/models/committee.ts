@@ -12,8 +12,8 @@ export class Committee {
   criteria: Criteria[];
   duties: Duty[];
 
-  size() : number {
-    if( this.criteria ) {
+  size(): number {
+    if(this.criteria ) {
       let sizeCriteria = this.criteria.filter( crit => crit.criteria.startsWith("(size") )[0];
       let result = sizeCriteria.criteria.substring(6, sizeCriteria.criteria.length-1);
       return Number(result);

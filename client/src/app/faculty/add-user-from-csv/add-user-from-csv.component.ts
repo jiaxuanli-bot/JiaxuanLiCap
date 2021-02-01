@@ -8,6 +8,7 @@ import {YearService} from '../../service/year.service';
 import {Gender} from '../../models/gender';
 import {College} from '../../models/college';
 import {Department} from '../../models/department';
+import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-add-user-from-csv',
@@ -15,7 +16,8 @@ import {Department} from '../../models/department';
   styleUrls: ['./add-user-from-csv.component.css']
 })
 export class AddUserFromCSVComponent implements OnInit {
-  @Output() addUserFromCSV = new EventEmitter();
+  pageNum: number;
+  parentComponent: any;
   selectedFile: any;
   file: any;
   fileHeaders = new Array<any>();
@@ -28,7 +30,11 @@ export class AddUserFromCSVComponent implements OnInit {
   genderNameAndObjMap = new Map<string, Gender>();
   collegeNameAndObjMap = new Map<string, College>();
   deptNameAndObjMap = new Map<string, Department>();
-  constructor(private papa: Papa, private formBuilder: FormBuilder, private apiService: ApiService, private yearService: YearService) { }
+  constructor(private papa: Papa,
+              private formBuilder: FormBuilder,
+              private apiService: ApiService,
+              private yearService: YearService,
+              public activeModal: NgbActiveModal) { }
   ngOnInit(): void {
     this.yearService.getValue().subscribe(
       year => {
@@ -108,6 +114,7 @@ export class AddUserFromCSVComponent implements OnInit {
   }
 
   cancelSaveCSV() {
+    this.activeModal.dismiss();
     this.selectedFile = null;
     this.propertyMapFileName = new Map<any, any>();
     this.fileNameMapProperty = new Map<any, any>();
@@ -132,7 +139,7 @@ export class AddUserFromCSVComponent implements OnInit {
         if (this.mapTheProperty(result)) {
           this.apiService.uploadFacultiesFromCSV(this.uploadedFaculties).subscribe(
             value => {
-              this.addUserFromCSV.emit();
+              this.parentComponent.gotoPage(this.pageNum);
             }
           );
         }

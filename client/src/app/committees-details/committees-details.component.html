@@ -1,29 +1,5 @@
-<div>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top" id="topNav">
-    <a class="navbar-brand" href="#">Committee</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
-      aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbar">
-      <ul class="navbar-nav mr-auto">
-      </ul>
-      <ul class="navbar-nav ml-auto mr-3">
-        <div ngbDropdown class="d-inline-block">
-          <button class="btn btn-outline-primary" id="dropdownMenuButton" ngbDropdownToggle>
-            {{authentication.currentUserValue.first}} {{authentication.currentUserValue.last}}
-          </button>
-          <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
-            <button ngbDropdownItem (click)="authentication.logout()">Logout</button>
-          </div>
-        </div>
-      </ul>
-    </div>
-  </nav>
-
-  <div class="container mt-4">
+<div class="container mt-4">
     <h2 class="featuredHead mb-4">{{committee?.name}}</h2>
-
     <div class="expandable">
       <div>
         <h4>Introduction
@@ -132,8 +108,8 @@
                 </ng-container>
               </td>
               <td>
-                <span class="btn btn-sm bg-danger" data-toggle="modal" data-target="#refuseModal"
-                  (click)="selectUser(user.id)">Remove</span>
+                <span data-toggle="modal" class="btn btn-sm bg-danger"
+                  (click)="deleteUser(user.id)">Remove</span>
               </td>
             </tr>
           </tbody>
@@ -149,7 +125,7 @@
             </button>
           </h4>
         </div>
-  
+
         <div class="top-border">
           <table
             class="table table-bordered table-condensed table-compact table-striped col-xs-12 col-md-12 col-lg-12 mt-3"
@@ -195,31 +171,13 @@
                   </ng-container>
                 </td>
                 <td>
-                  <span class="btn btn-sm bg-success" data-toggle="modal" data-target="#refuseModal"
-                    (click)="selectUser(user.id)">Assign</span>
+                  <span data-toggle="modal" class="btn btn-sm bg-success"
+                    (click)="assignUser(user.id)">Assign</span>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-  
-      <!-- Modal for delete-->
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <app-assign-member (assignVolunteer)="assignVolunteer()"></app-assign-member>
-      </div>
-
-      <!-- Modal for refuse-->
-      <div class="modal fade" id="refuseModal" tabindex="-1" role="dialog" aria-labelledby="refuseModalLabel"
-        aria-hidden="true">
-        <app-remove-member (removeMember)="removeMember()"></app-remove-member>
-      </div>
     </div>
-
-
-    <footer class="footer">
-      <div class="container" id="footerText">
-        <span class="text-dark">UWLAX</span>
-      </div>
-    </footer>
+  </div>
   </div>

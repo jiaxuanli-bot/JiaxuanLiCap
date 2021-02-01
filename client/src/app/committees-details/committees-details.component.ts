@@ -1,13 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {YearService} from '../service/year.service';
 import {ApiService} from '../service/api.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {Committee} from '../models/committee';
 import {forkJoin} from 'rxjs';
-import {User} from '../models/user';
 import {AuthenticationService} from '../service/authentication.service';
 
 import { faCircle, faCheckCircle, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import {TopBarService} from '../service/top-bar.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {AssignMemberComponent} from './assign-member/assign-member.component';
+import {RemoveMemberComponent} from './remove-member/remove-member.component';
 
 @Component({
   selector: 'app-committees-details',
@@ -15,10 +18,8 @@ import { faCircle, faCheckCircle, faAngleDown, faAngleUp } from '@fortawesome/fr
   styleUrls: ['./committees-details.component.css']
 })
 export class CommitteesDetailsComponent implements OnInit {
-  seletedUserid: string;  
-  committee: Committee;  
+  committee: Committee;
   usersCommittees: Committee[][];
-  volunteers: User[] = [];
   volunteersCommittees: Committee[][];
 
   views = {
@@ -37,13 +38,16 @@ export class CommitteesDetailsComponent implements OnInit {
   }
 
   constructor(
-    public authentication: AuthenticationService, 
+    private modalService: NgbModal,
+    public authentication: AuthenticationService,
+    private topBarService: TopBarService,
     private yearService: YearService,
-    private apiService: ApiService, 
-    private route: ActivatedRoute, 
-    private router: Router) { }
+    private apiService: ApiService,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    this.topBarService.setTopBarName('Committee Details');
     this.route.params.subscribe(
       param => {
         this.uploadCommitteeById( param.id );
@@ -52,12 +56,12 @@ export class CommitteesDetailsComponent implements OnInit {
     );
   }
 
-  toggleView( view : string ) : void {
+  toggleView( view: string ): void {
     this.views[view] = !this.views[view];
   }
 
-  removeMember(): void {
-    this.apiService.removeUserFromCommittee(this.committee.id, this.seletedUserid).subscribe(
+  removeMember(id: string): void {
+    this.apiService.removeUserFromCommittee(this.committee.id, id).subscribe(
       committee => {
         this.uploadCommitteeById(this.committee.id);
       }
@@ -87,14 +91,21 @@ export class CommitteesDetailsComponent implements OnInit {
       }
     );
   }
-  assignVolunteer(): void {
-    this.apiService.assignUserToOneCommittee(this.committee.id, this.seletedUserid).subscribe(
+  assignVolunteer(id: string): void {
+    this.apiService.assignUserToOneCommittee(this.committee.id, id).subscribe(
       value => {
         this.uploadCommitteeById(this.committee.id);
       }
     );
   }
-  selectUser(id): void {
-    this.seletedUserid = id;
+  deleteUser(id): void {
+    const modalRef = this.modalService.open(RemoveMemberComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.parentComponent = this;
+    modalRef.componentInstance.userId = id;
+  }
+  assignUser(id): void {
+    const modalRef = this.modalService.open(AssignMemberComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.parentComponent = this;
+    modalRef.componentInstance.userId = id;
   }
 }

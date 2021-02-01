@@ -18,17 +18,16 @@ export class AppComponent implements OnInit, AfterViewInit {
   title = 'committees';
   user: User;
   constructor(
-    private yearService: YearService, 
-    private apiService: ApiService, 
-    private formBuilder: FormBuilder, 
+    private yearService: YearService,
+    private apiService: ApiService,
+    private formBuilder: FormBuilder,
     private router: Router,
-    private authenticationService: AuthenticationService) {      
+    private authenticationService: AuthenticationService) {
   }
 
   ngAfterViewInit() {
     Feather.replace();
   }
-  
   ngOnInit(): void {
     this.authenticationService.getUser().subscribe(
       value => {

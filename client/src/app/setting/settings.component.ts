@@ -8,6 +8,11 @@ import {College} from '../models/college';
 import {Department} from '../models/department';
 
 import { faTrash, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import {TopBarService} from "../service/top-bar.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {AddDeptComponent} from "./add-dept/add-dept.component";
+import {AddGenderComponent} from "./add-gender/add-gender.component";
+import {AddCollegeComponent} from "./add-college/add-college.component";
 
 @Component({
   selector: 'app-settings',
@@ -38,13 +43,19 @@ export class SettingsComponent implements OnInit {
     faTrash : faTrash,
     faEdit : faEdit,
     faPlusSquare : faPlusSquare
-  }
+  };
 
-  constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
-              private router: Router) {
+  constructor(
+    public authentication: AuthenticationService,
+    private yearService: YearService,
+    private apiService: ApiService,
+    private topBarService: TopBarService,
+    private modalService: NgbModal,
+    private router: Router) {
   }
 
   ngOnInit(): void {
+    this.topBarService.setTopBarName('Settings');
     this.apiService.getGendersByYear(this.yearService.getYearValue).subscribe(
       genders => {
         this.genders = genders;
@@ -164,5 +175,20 @@ export class SettingsComponent implements OnInit {
         this.depts = depts;
       }
     );
+  }
+
+  addDept() {
+    const modalRef = this.modalService.open(AddDeptComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.parentComponent = this;
+  }
+
+  addGen() {
+    const modalRef = this.modalService.open(AddGenderComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.parentComponent = this;
+  }
+
+  addCollege() {
+    const modalRef = this.modalService.open(AddCollegeComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.parentComponent = this;
   }
 }

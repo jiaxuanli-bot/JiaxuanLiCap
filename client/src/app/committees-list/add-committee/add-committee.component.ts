@@ -1,9 +1,10 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Criteria} from '../../models/criteria';
 import {Duty} from '../../models/duty';
 import {Committee} from '../../models/committee';
 import {YearService} from '../../service/year.service';
 import {ApiService} from '../../service/api.service';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-add-committee',
@@ -11,7 +12,6 @@ import {ApiService} from '../../service/api.service';
   styleUrls: ['./add-committee.component.css']
 })
 export class AddCommitteeComponent implements OnInit {
-  @Output() addCommittee = new EventEmitter();
   newIntr = '';
   Du  = '';
   newName = '';
@@ -22,9 +22,12 @@ export class AddCommitteeComponent implements OnInit {
     editDuties: false,
     editIntroduction: false,
   };
+  parentComponent: any;
   newCommittee: Committee = new Committee();
-  constructor( private yearService: YearService, private apiService: ApiService) { }
-
+  constructor(
+    private yearService: YearService,
+    private apiService: ApiService,
+    public activeModal: NgbActiveModal) { }
   ngOnInit(): void {
   }
   modifyIntr() {
@@ -75,11 +78,11 @@ export class AddCommitteeComponent implements OnInit {
     this.newCommittee.name = this.newName;
   }
   saveAll() {
+    this.activeModal.dismiss();
     this.newCommittee.year = this.yearService.getYearValue;
-    console.log(this.newCommittee);
     this.apiService.createCommittee(this.newCommittee).subscribe(
       value => {
-        this.addCommittee.emit();
+        this.parentComponent.getCommitteeList();
       }
     );
   }

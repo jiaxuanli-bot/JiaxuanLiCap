@@ -1,26 +1,4 @@
-
-<div class="container" *ngIf="year">
-  <!-- top nav -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Faculty</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbar">
-      <ul class="navbar-nav mr-auto">
-      </ul>
-      <ul class="navbar-nav ml-auto mr-3">
-        <div ngbDropdown class="d-inline-block">
-          <button class="btn btn-outline-primary" id="dropdownMenuButton" ngbDropdownToggle>{{authentication.currentUserValue.first}} {{authentication.currentUserValue.last}}</button>
-          <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
-            <button ngbDropdownItem (click)="authentication.logout()">Logout</button>
-          </div>
-        </div>
-      </ul>
-    </div>
-  </nav>
-
+<div id="facultyContent" class="container" *ngIf="year">
   <div class="mt-5">
     <form [formGroup]="facultiesForm">
     <table class="table table-bordered table-condensed table-compact table-striped col-xs-12 col-md-12 col-lg-12" id="facultyTable">
@@ -37,7 +15,6 @@
               <option *ngFor="let opt of options[controlName]">{{opt}}</option>
             </select>
           </th>
-
           <th>
             <div class="btn btn-primary btn-sm" (click)="clear()">
               Clear
@@ -53,12 +30,11 @@
       <tbody>
 
       <tr *ngFor="let faculty of faculties; index as i;" id="firstLine">
-        <ng-container *ngIf="i!==editIndex">
-          <td>
-            {{faculty.last}}
-          </td>
           <td>
             {{faculty.first}}
+          </td>
+          <td>
+            {{faculty.last}}
           </td>
           <td>
             {{faculty.rank}}
@@ -79,62 +55,16 @@
             <fa-icon [icon]="icons.faCheckCircle" *ngIf="faculty.adminResponsibility"></fa-icon>
           </td>
           <td class="text-center">
-            <fa-icon [icon]="icons.faCheckCircle" *ngIf="faculty.chair"></fa-icon>                          
+            <fa-icon [icon]="icons.faCheckCircle" *ngIf="faculty.chair"></fa-icon>
           </td>
           <td class="text-center">
             {{faculty.gender.name}}
           </td>
           <td>
-            <fa-icon [icon]="icons.faTrash" data-target="#exampleModal" (click)="delete(i)"></fa-icon>
-            <fa-icon [icon]="icons.faEdit" (click)="edit(i)"></fa-icon>
+            <fa-icon data-toggle="modal" [icon]="icons.faTrash"  (click)="delete(i)"></fa-icon>
+            <fa-icon [icon]="icons.faEdit"  data-toggle="modal" (click)="edit(faculty)"></fa-icon>
             <fa-icon [icon]="icons.faInfoCircle"  data-toggle="modal" data-target="#committeeListModal"  (click)="getUserCommittees(i)" ></fa-icon>
           </td>
-      </ng-container>
-
-        <ng-container *ngIf="i==editIndex">
-          <td>
-            <input type="text" formControlName="editFirst">
-          </td>
-          <td>
-            <input type="text" formControlName="editLast">
-          </td>
-          <td>
-            <select class="form-control" formControlName="editRank">
-              <option *ngFor="let rank of ranks">{{rank}}</option>
-            </select>
-          </td>
-          <td>
-            <select class="form-control" formControlName="editCollege">
-              <option id = "editCollege" *ngFor="let college of colleges" [ngValue]="college">{{college.name}}</option>
-            </select>
-          </td>
-          <td>
-            <input  formControlName="editTenured" type="checkbox" class="check" [checked]="faculties[i].tenured">
-          </td>
-          <td>
-            <input type="checkbox" class="check" formControlName="editSoe" [checked]="faculties[i].soe">
-          </td>
-          <td>
-            <input type="checkbox" formControlName="editAdmin" class="check" [checked]="faculties[i].adminResponsibility">
-          </td>
-          <td>
-            <select class="form-control" formControlName="editGender">
-              <option id = "editGender" *ngFor="let gender of genders" [ngValue]="gender">{{gender.name}}</option>
-            </select>
-          </td>
-          <td>
-            <select class="form-control" formControlName="editDept">
-              <option id ="editDept" *ngFor="let dept of depts" [ngValue]="dept">{{dept.name}}</option>
-            </select>
-          </td>
-          <td>
-            <input type="checkbox" formControlName="editChair" class="check" [checked]="faculties[i].chair">
-          </td>
-          <td>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check file-check-icon" data-target="#modifyModal" data-toggle="modal"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x file-x-icon" data-target="#cancelModal" data-toggle="modal"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </td>
-        </ng-container>
       </tr>
       </tbody>
     </table>
@@ -175,37 +105,12 @@
       <ul class="mr-auto">
       </ul>
 
-      <button type="button" class="btn btn-primary mb-5 mr-3" data-toggle="modal" data-target="#addUsersModal">
+      <button type="button" class="btn btn-primary mb-5 mr-3" data-toggle="modal" (click)="uploadCSV()">
         Upload CSV</button>
 
-      <button type="button" class="btn btn-primary mb-5" data-toggle="modal" data-target="#userModal">
+      <button type="button" class="btn btn-primary mb-5" data-toggle="modal" (click)="addFaculty()">
         Add Faculty</button>
     </ul>
-  </div>
-
-  <!-- Modal for delete-->
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <app-delete-user (deleteUser)="deleteUser()"></app-delete-user>
-  </div>
-
-  <!-- Modal for modify-->
-  <div class="modal fade" id="modifyModal" tabindex="-1" role="dialog" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-modify-user (modifyUser) = "modifyUser()"></app-modify-user>
-  </div>
-
-  <!-- Modal for add user-->
-  <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <app-add-user (addUser) = "this.gotoPage(this.page.number);"></app-add-user>
-  </div>
-
-  <!-- Modal add users from csv-->
-  <div class="modal fade" id="addUsersModal" tabindex="-1" role="dialog" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-add-user-from-csv (addUserFromCSV) = "this.gotoPage(this.page.number);"></app-add-user-from-csv>
-  </div>
-
-  <!-- Modal for cancel modify user-->
-  <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-cancel-modify [(editIndex)]="editIndex"></app-cancel-modify>
   </div>
 
   <div class="modal fade" id="committeeListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -243,7 +148,6 @@
                 </table>
               </div>
             </div>
-
             <div class="mb-3" >
               <div id="h2">
                 <div class="input-group mb-2 mt-4">
@@ -272,10 +176,4 @@
       </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container" id="footerText">
-      <span class="text-dark">UWLAX</span>
-    </div>
-  </footer>
 </div>

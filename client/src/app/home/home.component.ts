@@ -7,6 +7,9 @@ import {User} from '../models/user';
 import {Survey} from '../models/survey';
 import {YearService} from '../service/year.service';
 import {SurveyResponse} from '../models/survey-response';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SelectedCommitteeComponent } from './selected-committee/selected-committee.component';
+import {TopBarService} from "../service/top-bar.service";
 
 @Component({
   selector: 'app-home',
@@ -14,48 +17,52 @@ import {SurveyResponse} from '../models/survey-response';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  introductionExpand = true;
-  dutyExpand = true;
-  critreriaExpand = true;
   yearsForm: FormGroup;
-  selectedCommittee: Committee;
-  
+
   survey: Survey;
   user: User;
 
   constructor(
-    public authentication: AuthenticationService, 
-    private apiService: ApiService, 
-    private formBuilder: FormBuilder, 
-    private yearService : YearService,
-    private authenticationService: AuthenticationService) {
-    }
+    public authentication: AuthenticationService,
+    private apiService: ApiService,
+    private formBuilder: FormBuilder,
+    private yearService: YearService,
+    private authenticationService: AuthenticationService,
+    private topBarService: TopBarService,
+    private modalService: NgbModal ) {
+  }
 
   ngOnInit(): void {
+    this.topBarService.setTopBarName('survey');
     this.apiService.getUserYears(this.authentication.currentUserValue.email).subscribe( years => {
       this.yearService.setYears( years );
     });
 
     this.user = this.authenticationService.currentUserValue;
-    this.yearService.setValue( this.authenticationService.currentUserValue.year );    
+    this.yearService.setValue( this.authenticationService.currentUserValue.year );
     this.yearsForm =  this.formBuilder.group({ year: [] });
 
     this.apiService.getSurvey( this.authenticationService.currentUserValue.id).subscribe(
       survey => {
         survey.responses.sort( (r1, r2) => {
-          let c1 = r1.committee;
-          let c2 = r2.committee;
+          const c1 = r1.committee;
+          const c2 = r2.committee;
           return c1.name.localeCompare( c2.name );
         });
         this.survey = survey;
-    });
+      });
   }
 
-  popUp(committee) {
-    this.introductionExpand = true;
-    this.dutyExpand = true;
-    this.critreriaExpand = true ;
-    this.selectedCommittee = committee;
+
+  openCommitteeModal(response) {
+    // the response.committee object has only id and name.  Get the full object prior to invoking the modal.
+    this.apiService.getCommitteeById( response.committee.id ).subscribe( commitee => {
+      const modalRef = this.modalService.open(SelectedCommitteeComponent, {backdropClass: 'light-blue-backdrop'});
+      modalRef.componentInstance.committee = commitee;
+      modalRef.componentInstance.parentComponent = this;
+    }
+    );
+
   }
 
   createSurvey(surveyResponse: SurveyResponse) {

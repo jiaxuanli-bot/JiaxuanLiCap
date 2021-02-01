@@ -5,6 +5,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {newArray} from '@angular/compiler/src/util';
 import {HashedCommittees} from '../models/hashed-committees';
 import {YearService} from '../service/year.service';
+import {TopBarService} from "../service/top-bar.service";
 
 @Component({
   selector: 'app-report',
@@ -33,9 +34,14 @@ export class ReportComponent implements OnInit {
   yearForm: FormGroup;
 
 
-  constructor(private yearService: YearService, public authentication: AuthenticationService,
-              private apiservice: ApiService, private formBuilder: FormBuilder) { }
+  constructor(
+    private yearService: YearService,
+    public authentication: AuthenticationService,
+    private apiservice: ApiService,
+    private topBarService: TopBarService,
+    private formBuilder: FormBuilder) { }
   ngOnInit(): void {
+    this.topBarService.setTopBarName('Analysis');
     this.yearForm = this.formBuilder.group({
       startYear: [''],
       endYear: ['']

@@ -14,6 +14,12 @@ import {Gender} from '../models/gender';
 import {Department} from '../models/department';
 
 import { faEdit, faCheckCircle, faTrash, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import {TopBarService} from "../service/top-bar.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {AddUserFromCSVComponent} from "./add-user-from-csv/add-user-from-csv.component";
+import {AddUserComponent} from "./add-user/add-user.component";
+import {DeleteUserComponent} from "./delete-user/delete-user.component";
+import {ModifyUserComponent} from "./modify-user/modify-user.component";
 
 @Component({
   selector: 'app-faculty',
@@ -51,8 +57,8 @@ export class FacultyComponent implements OnInit {
 
   editIndex: number;
   deleteIndex: number;
-  file: any;    t
-  searchFormChanged : boolean =  false;
+  file: any;
+  searchFormChanged: boolean =  false;
 
 
   queries = {
@@ -71,13 +77,19 @@ export class FacultyComponent implements OnInit {
   facultiesForm: FormGroup;
   searchTextChanged = new Subject<string>();
   year: Observable<string>;
-  ranks = ['Assistant', 'Associate', 'Full'];
   genders: Gender[];
   colleges: College[];
   depts: Department[];
   editedUser: User;
-  constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService,
-              private router: Router, private formBuilder: FormBuilder, private papa: Papa) {
+  constructor(
+    private modalService: NgbModal,
+    public authentication: AuthenticationService,
+    private yearService: YearService,
+    private apiService: ApiService,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private topBarService: TopBarService,
+    private papa: Papa) {
     this.searchTextChanged.pipe(debounceTime(1000)).subscribe( () => this.getFaculty() );
     this.apiService.getYears().subscribe( years => {
       this.yearService.setYears( years );
@@ -129,6 +141,7 @@ export class FacultyComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.topBarService.setTopBarName('Users');
     this.facultiesForm = this.formBuilder.group({
       first: [''],
       last: [''],
@@ -140,54 +153,11 @@ export class FacultyComponent implements OnInit {
       gender: [''],
       dept: [''],
       chair: [''],
-      editFirst: [''],
-      editLast: [''],
-      editRank: [''],
-      editCollege: new FormControl(null),
-      editTenured: [''],
-      editAdmin: [''],
-      editSoe: [''],
-      editGender: new FormControl(null),
-      editDept: new FormControl(null),
-      editChair: ['']
     });
     this.year = this.yearService.getValue();
     this.year.subscribe(year => {
       this.getFaculty();
       this.apiService.getFacultyByYear(year).subscribe();
-      this.apiService.getGendersByYear(year).subscribe(
-        genders => {
-          this.genders = genders;
-          this.options.gender = [''];
-          genders.forEach(
-            gender => {
-              this.options.gender.push(gender.name);
-            }
-          );
-        }
-      );
-      this.apiService.getCollegeByYear(year).subscribe(
-        colleges => {
-          this.colleges = colleges;
-          this.options.college = [''];
-          colleges.forEach(
-            college => {
-              this.options.college.push(college.name);
-            }
-          );
-        }
-      );
-      this.apiService.getDeptByYear(year).subscribe(
-        depts => {
-          this.options.dept = [''];
-          this.depts = depts;
-          depts.forEach(
-            dept => {
-              this.options.dept.push(dept.name);
-            }
-          );
-        }
-      );
     });
   }
 
@@ -195,71 +165,24 @@ export class FacultyComponent implements OnInit {
     this.searchTextChanged.next();
     this.searchFormChanged = true;
   }
-
-  edit(i: number): void {
-    this.editIndex = i;
-    this.facultiesForm.controls.editFirst.setValue(this.faculties[i].first);
-    this.facultiesForm.controls.editLast.setValue(this.faculties[i].last);
-    this.facultiesForm.controls.editRank.setValue(this.faculties[i].rank);
-    this.facultiesForm.controls.editCollege.setValue(
-      this.colleges[ this.colleges.findIndex(
-        college => college.id === this.faculties[i].college.id
-      )]
-    );
-    this.facultiesForm.controls.editGender.setValue(
-      this.genders[this.genders.findIndex(
-        gender => gender.id === this.faculties[i].gender.id
-      )]
-    );
-    this.facultiesForm.controls.editDept.setValue(
-      this.depts[this.depts.findIndex(
-        dept => dept.id === this.faculties[i].dept.id
-      )]
-    );
-    this.facultiesForm.controls.editTenured.setValue(this.faculties[i].tenured);
-    this.facultiesForm.controls.editSoe.setValue(this.faculties[i].soe);
-    this.facultiesForm.controls.editAdmin.setValue(this.faculties[i].adminResponsibility);
-    this.facultiesForm.controls.editChair.setValue(this.faculties[i].chair);
-    this.editedUser = this.faculties[this.editIndex];
-  }
-
   clear(): void {
     Object.keys(this.facultiesForm.controls).forEach( key => this.facultiesForm.controls[key].setValue(''));
     this.getFaculty();
   }
 
-  modifyUser(): void {
-    this.editedUser.first = this.facultiesForm.controls.editFirst.value;
-    this.editedUser.last = this.facultiesForm.controls.editLast.value;
-    this.editedUser.rank = this.facultiesForm.controls.editRank.value;
-    this.editedUser.tenured = this.facultiesForm.controls.editTenured.value;
-    this.editedUser.soe = this.facultiesForm.controls.editSoe.value;
-    this.editedUser.adminResponsibility = this.facultiesForm.controls.editAdmin.value;
-    this.editedUser.chair = this.facultiesForm.controls.editChair.value;
-    this.editedUser.gender = this.facultiesForm.controls.editGender.value;
-    this.editedUser.college = this.facultiesForm.controls.editCollege.value;
-    this.editedUser.dept = this.facultiesForm.controls.editDept.value;
-    this.apiService.modifyUser(this.editedUser).subscribe(
-        res => {
-          this.faculties[this.editIndex] = res;
-          this.editIndex = -1;
-        }
-      );
-  }
-
   deleteUser(): void {
     this.apiService.deleteUser(this.faculties[this.deleteIndex].id).subscribe(
       res => {
-        this.faculties.splice(this.deleteIndex, 1);
-        this.deleteIndex = -1;
+        this.gotoPage(this.page.number);
       }
     );
-
-    this.gotoPage(this.page.number);
   }
 
   delete(i: number): void {
     this.deleteIndex = i;
+    const modalRef = this.modalService.open(DeleteUserComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.pageNum = this.page.number;
+    modalRef.componentInstance.parentComponent = this;
   }
 
   gotoPage(pageIndex: number): void {
@@ -299,23 +222,21 @@ export class FacultyComponent implements OnInit {
       }
     );
   }
+  uploadCSV() {
+    const modalRef = this.modalService.open(AddUserFromCSVComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.pageNum = this.page.number;
+    modalRef.componentInstance.parentComponent = this;
+  }
 
-  // changeCollege(college: string) {
-  //   this.editedUser.college = this.colleges[college.split(':')[0]];
-  //   this.editedUser.dept.college = this.colleges[college.split(':')[0]];
-  // }
-  //
-  // changeGen(gen: string) {
-  //   this.editedUser.gender = this.genders[gen.split(':')[0]];
-  // }
-  //
-  // changeDept(dept: string) {
-  //   this.editedUser.dept = this.depts[dept.split(':')[0]];
-  //   this.editedUser.college = this.depts[dept.split(':')[0]].college;
-  //   this.facultiesForm.controls.editCollege.setValue(
-  //     this.colleges[ this.colleges.findIndex(
-  //       college => college.id === this.depts[dept.split(':')[0]].college.id
-  //     )]
-  //   );
-  // }
+  addFaculty() {
+    const modalRef = this.modalService.open(AddUserComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.parentComponent = this;
+  }
+
+  edit(faculty: User) {
+    const modalRef = this.modalService.open(ModifyUserComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.parentComponent = this;
+    modalRef.componentInstance.modifyUser = faculty;
+    modalRef.componentInstance.pageNum = this.page.number;
+  }
 }

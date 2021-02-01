@@ -1,24 +1,4 @@
-<div>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Settings</a>
-
-    <div class="collapse navbar-collapse" id="navbar">
-      <ul class="navbar-nav mr-auto">
-      </ul>
-      <ul class="navbar-nav ml-auto mr-3">
-        <div ngbDropdown class="d-inline-block">
-          <button class="btn btn-outline-primary" id="dropdownMenuButton"
-            ngbDropdownToggle>{{authentication.currentUserValue.first}}
-            {{authentication.currentUserValue.last}}</button>
-          <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
-            <button ngbDropdownItem (click)="authentication.logout()">Logout</button>
-          </div>
-        </div>
-      </ul>
-    </div>
-  </nav>
-
-  <div class="col-12 mb-4 mt-4 container">
+<div class="col-12 mb-4 mt-4 container">
     <div class="row">
       <table class="table table-bordered table-condensed table-compact table-striped ml-5 col-5">
         <thead>
@@ -27,7 +7,7 @@
               <div class="input-group">
                 Departments
                 <div class="ml-auto">
-                  <fa-icon [icon]="icons.faPlusSquare" data-toggle="modal" data-backdrop="false" data-target="#addDeptModal" class="app-ok"></fa-icon>
+                  <fa-icon [icon]="icons.faPlusSquare" data-toggle="modal" (click)="addDept()"></fa-icon>
                 </div>
               </div>
             </th>
@@ -62,7 +42,7 @@
               <div class="input-group">
                 Genders
                 <div class="ml-auto">
-                  <fa-icon [icon]="icons.faPlusSquare" data-toggle="modal" data-backdrop="false" data-target="#addGenderModal"></fa-icon>
+                  <fa-icon [icon]="icons.faPlusSquare" data-toggle="modal" (click)="addGen()"></fa-icon>
                 </div>
               </div>
             </th>
@@ -98,7 +78,7 @@
               <div class="input-group">
                 Colleges
                 <div class="ml-auto">
-                  <fa-icon [icon]="icons.faPlusSquare" data-toggle="modal" data-backdrop="false" data-target="#addCollegeModal"></fa-icon>
+                  <fa-icon [icon]="icons.faPlusSquare" data-toggle="modal" (click)="addCollege()"></fa-icon>
                 </div>
               </div>
             </th>
@@ -128,23 +108,18 @@
     </div>
   </div>
 
-  <div class="modal fade" id="addGenderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <app-add-gender (addGen)="getGen()"></app-add-gender>
-  </div>
+<!--<div class="modal fade" id="addGenderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"-->
+<!--    aria-hidden="true">-->
+<!--    <app-add-gender (addGen)="getGen()"></app-add-gender>-->
+<!--  </div>-->
 
-  <div class="modal fade" id="addCollegeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <app-add-college (addCollege)="getCollege()"></app-add-college>
-  </div>
+<!--<div class="modal fade" id="addCollegeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"-->
+<!--    aria-hidden="true">-->
+<!--    <app-add-college (addCollege)="getCollege()"></app-add-college>-->
+<!--  </div>-->
 
-  <div class="modal fade" id="addDeptModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <app-add-dept (addDept)="getDept()"></app-add-dept>
-  </div>
-  <footer class="footer">
-    <div class="container" id="footerText">
-      <span class="text-dark">UWLAX</span>
-    </div>
-  </footer>
-</div>
+<!--<div class="modal fade" id="addDeptModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"-->
+<!--    aria-hidden="true">-->
+<!--    <app-add-dept (addDept)="getDept()"></app-add-dept>-->
+<!--  </div>-->
+

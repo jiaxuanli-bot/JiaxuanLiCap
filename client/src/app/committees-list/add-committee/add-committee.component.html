@@ -1,7 +1,7 @@
-<div class="modal-dialog" role="document">
-  <div class="modal-content">
+
+  <div class="modal-body">
     <div>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <button type="button" class="close" (click)="this.activeModal.dismiss()" aria-label="Close">
         <span class="closeBtn mr-4" aria-hidden="true">&times;</span>
       </button>
       <div class="input-group mt-5 mb-3">
@@ -140,7 +140,7 @@
     </div>
     <div class="input-group mt-5">
       <ul class="ml-auto">
-        <button type="button" data-dismiss="modal" class="btn-sm btn-danger mr-2">
+        <button type="button" (click)="this.activeModal.dismiss()" class="btn-sm btn-danger mr-2">
           Cancel
         </button>
         <button type="button" aria-hidden="true" data-dismiss="modal" class="btn-sm btn-primary" (click)="saveAll()">
@@ -149,4 +149,3 @@
       </ul>
     </div>
   </div>
-</div>

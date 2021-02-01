@@ -1,4 +1,5 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-remove-member',
@@ -6,10 +7,14 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
   styleUrls: ['./remove-member.component.css']
 })
 export class RemoveMemberComponent implements OnInit {
-  @Output() closePop = new EventEmitter();
-  @Output() removeMember = new EventEmitter();
-  constructor() { }
+  public parentComponent: any;
+  public userId: string;
+  constructor(public activeModal: NgbActiveModal) { }
   ngOnInit(): void {
   }
 
+  removeUser() {
+    this.activeModal.dismiss();
+    this.parentComponent.removeMember(this.userId);
+  }
 }

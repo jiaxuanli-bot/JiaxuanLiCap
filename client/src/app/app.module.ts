@@ -33,6 +33,8 @@ import { SettingsComponent } from './setting/settings.component';
 import { AddDeptComponent } from './setting/add-dept/add-dept.component';
 import { AddCollegeComponent } from './setting/add-college/add-college.component';
 import { AddGenderComponent } from './setting/add-gender/add-gender.component';
+import { TopBarComponent } from './top-bar/top-bar.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
 
@@ -74,6 +76,8 @@ import { AddGenderComponent } from './setting/add-gender/add-gender.component';
     AddDeptComponent,
     AddCollegeComponent,
     AddGenderComponent,
+    TopBarComponent,
+    FooterComponent,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true}

@@ -40,11 +40,11 @@ export class SlideBarComponent implements OnInit {
   years: any;
 
   constructor(
-    public yearService: YearService, 
-    private apiService: ApiService, 
+    public yearService: YearService,
+    private apiService: ApiService,
     private formBuilder: FormBuilder,
-    private router: Router, 
-    private authenticationService: AuthenticationService) { 
+    private router: Router,
+    private authenticationService: AuthenticationService) {
   }
 
   ngOnInit(): void {
@@ -75,7 +75,7 @@ export class SlideBarComponent implements OnInit {
     this.yearService.setValue(this.selectedYear);
   }
 
-  goTo( page : string ) : void {
+  goTo( page: string ): void {
     this.clear();
     this.pages[page] = true;
     this.router.navigate(['/uwl', page ], { fragment: this.selectedYear } );

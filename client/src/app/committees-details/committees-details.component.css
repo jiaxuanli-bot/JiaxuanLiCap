@@ -68,3 +68,15 @@ td a {
   text-decoration: line-through;
 }
 
+.modal-dialog{
+  max-width: 1000px!important;
+}
+
+.modal-content{
+  padding-top: 20px;
+  padding-left: 65px;
+  padding-right: 45px;
+}
+
+
+

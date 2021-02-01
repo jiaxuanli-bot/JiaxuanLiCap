@@ -3,11 +3,11 @@
   background-color: rgb(128,0,41);
 }
 
-html, body { 
-  margin:0; 
-  padding:0; 
-  height:100%; 
-  width:100%; 
+html, body {
+  margin:0;
+  padding:0;
+  height:100%;
+  width:100%;
 }
 
 /* custom template */
@@ -201,7 +201,10 @@ input{
   margin-top: 30px;
 }
 
-#reportFormGroup{
+#pageNav{
+  -webkit-box-shadow: 0 0 10px rgba(166, 166, 166, .6);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(166, 166, 166, .6);
   width: 85%;
   margin-left: 8%;
   margin-top: 30px;
@@ -224,12 +227,6 @@ h3,h1,h2,h4{
 
 .pieChart > div >div {
   -webkit-box-shadow: 0 0 5px rgba(166, 166, 166, .8);
-  box-shadow: 0 0 10px rgba(166, 166, 166, .4);
-}
-
-#main >nav{
-  -webkit-box-shadow: 0 0 10px rgba(166, 166, 166, .4);
-  border-radius: 4px;
   box-shadow: 0 0 10px rgba(166, 166, 166, .4);
 }
 
@@ -601,4 +598,8 @@ input[type="radio"]{
 
 .app-bottom-padded {
   padding-bottom: 10em;
+}
+
+.modal-dialog {
+  max-width: 70% !important;
 }

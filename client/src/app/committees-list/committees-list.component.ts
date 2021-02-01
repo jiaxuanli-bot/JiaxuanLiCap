@@ -3,11 +3,12 @@ import {YearService} from '../service/year.service';
 import {ApiService} from '../service/api.service';
 import {AuthenticationService} from '../service/authentication.service';
 import {CommitteeSummary} from '../models/committee-summary';
-import {forkJoin} from 'rxjs';
-import {CommitteeUser} from '../models/committee-user';
 import {Criteria} from '../models/criteria';
 
 import { faTimesCircle, faCheckCircle, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {TopBarService} from "../service/top-bar.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {AddCommitteeComponent} from "./add-committee/add-committee.component";
 
 @Component({
   selector: 'app-committees-list',
@@ -24,9 +25,15 @@ export class CommitteesListComponent implements OnInit {
     faTrash : faTrash
   }
 
-  constructor(public authentication: AuthenticationService, private yearService: YearService, private apiService: ApiService) {}
+  constructor(
+    private modalService: NgbModal,
+    public authentication: AuthenticationService,
+    private yearService: YearService,
+    private apiService: ApiService,
+    private topBarService: TopBarService) {}
 
   ngOnInit(): void {
+    this.topBarService.setTopBarName('Committees');
     this.getCommitteeList();
   }
 
@@ -48,5 +55,10 @@ export class CommitteesListComponent implements OnInit {
   delete(committee: CommitteeSummary, i: number) {
     this.apiService.deleteCommittee(committee.id).subscribe();
     this.committees.splice(i, 1);
+  }
+
+  addCommittee() {
+    const modalRef = this.modalService.open(AddCommitteeComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.parentComponent = this;
   }
 }

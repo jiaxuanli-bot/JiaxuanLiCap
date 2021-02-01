@@ -4,19 +4,6 @@
   box-shadow: 0 0 10px rgba(115, 115, 115, .4);
 }
 
-.modal-dialog{
-  max-width: 65%!important;
-  width: 70%!important;
-  margin-left: 25%!important;
-  margin-top: 6%;
-}
-
-.modal-dialog .modal-content{
-  padding-top: 20px;
-  padding-left: 65px;
-  padding-right: 45px;
-}
-
 .popUpHead{
   font-size: 25px;
   font-weight: 500;
@@ -28,4 +15,11 @@ input{
 
 .List{
   width: 100%;
+}
+
+.modal-dialog{
+  max-width: 1000px!important;
+  padding-top: 20px;
+  padding-left: 65px;
+  padding-right: 45px;
 }

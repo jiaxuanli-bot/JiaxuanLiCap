@@ -1,4 +1,5 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-assign-member',
@@ -6,10 +7,16 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
   styleUrls: ['./assign-member.component.css']
 })
 export class AssignMemberComponent implements OnInit {
-  @Output() assignVolunteer = new EventEmitter();
-  constructor() { }
+
+  public parentComponent: any;
+  public userId: string;
+  constructor(public activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
   }
 
+  assignMember() {
+    this.activeModal.dismiss();
+    this.parentComponent.assignVolunteer(this.userId);
+  }
 }

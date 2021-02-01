@@ -1,62 +1,32 @@
- <!-- /sidebar -->
-  <!-- main right col -->
-  <div id="main" *ngIf="survey">
-    <!-- top nav -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-      <a class="navbar-brand" href="#">Survey</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbar">
-        <ul class="navbar-nav mr-auto">
-        </ul>
-        <ul class="navbar-nav ml-auto mr-3">
-          <div ngbDropdown class="d-inline-block">
-            <button class="btn btn-outline-primary" id="dropdownMenuButton" ngbDropdownToggle>{{authentication.currentUserValue.first}} {{authentication.currentUserValue.last}}</button>
-            <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
-              <button ngbDropdownItem (click)="authentication.logout()">Logout</button>
-            </div>
-          </div>
-        </ul>
-      </div>
-    </nav>
-
-    <nav id="reportFormGroup" class="navbar navbar-expand-lg navbar-light bg-light mt-5">
-      <h3>Committees</h3>
-    </nav>
-
-    <div class="table-responsive  mb-4">
-      <table class="table table-bordered table-striped table-condensed table-compact col-xs-12 col-md-12 col-lg-12 mt-4 mb-5" id="committeeList">
-        <thead>
-          <tr><th>Name</th><th class="text-center">Willing to Serve</th></tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let response of survey.responses">
-            <td>
-              <span data-toggle="modal" data-target="#committeeModal" class="clickAble" (click)="popUp(response.committee)">
+<!-- /sidebar -->
+<!-- main right col -->
+<div *ngIf="survey">
+  <!-- top nav -->
+  <div class="table-responsive  mb-4">
+    <table class="table table-bordered table-striped table-condensed table-compact col-xs-12 col-md-12 col-lg-12 mt-4 mb-5" id="committeeList">
+      <thead>
+      <tr><th>Name</th><th class="text-center">Willing to Serve</th></tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let response of survey.responses">
+        <td>
+              <span data-toggle="modal"  class="clickAble" (click)="openCommitteeModal(response)">
                 {{response.committee.name}}
               </span>
-            </td>
-            <td>
-              <input type="checkbox" class="check" [checked]="response.selected" (click)="createSurvey(response)">
-            </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-
-
-    <div *ngIf="selectedCommittee" class="modal fade" id="committeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div>Xxxxxxxxxxxxxxx</div>
-      <app-selected-committee [(selectedCommittee)]="selectedCommittee"></app-selected-committee>
-    </div>
-
-
-    <footer class="footer">
-      <div class="container" id="footerText">
-        <span class="text-dark">UWLAX</span>
-      </div>
-    </footer>
+        </td>
+        <td>
+          <input type="checkbox" class="check" [checked]="response.selected" (click)="createSurvey(response)">
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
+
+
+  <footer class="footer">
+    <div class="container" id="footerText">
+      <span class="text-dark">UWLAX</span>
+    </div>
+  </footer>
+</div>
 

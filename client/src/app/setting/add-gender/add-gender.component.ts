@@ -3,6 +3,7 @@ import {YearService} from '../../service/year.service';
 import {ApiService} from '../../service/api.service';
 import {Department} from '../../models/department';
 import {Gender} from '../../models/gender';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-add-gender',
@@ -10,9 +11,9 @@ import {Gender} from '../../models/gender';
   styleUrls: ['./add-gender.component.css']
 })
 export class AddGenderComponent implements OnInit {
-  @Output() addGen = new EventEmitter();
+  parentComponent: any;
   genName: string;
-  constructor(private yearService: YearService, private apiService: ApiService) { }
+  constructor(private yearService: YearService, private apiService: ApiService, public activeModal: NgbActiveModal) { }
   ngOnInit(): void {
   }
 
@@ -22,7 +23,8 @@ export class AddGenderComponent implements OnInit {
     gen.year = this.yearService.getYearValue;
     this.apiService.createGender(gen).subscribe(
       resGen => {
-        this.addGen.emit();
+        this.parentComponent.getGen();
+        this.activeModal.dismiss();
       }
     );
   }

@@ -3,6 +3,7 @@ import {YearService} from '../../service/year.service';
 import {ApiService} from '../../service/api.service';
 import {College} from '../../models/college';
 import {Department} from '../../models/department';
+import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-add-dept',
@@ -11,19 +12,19 @@ import {Department} from '../../models/department';
 })
 export class AddDeptComponent implements OnInit {
   @Output() addDept = new EventEmitter();
+  parentComponent: any;
   deptName: string;
-  constructor(private yearService: YearService, private apiService: ApiService) { }
+  constructor(private yearService: YearService, private apiService: ApiService, public activeModal: NgbActiveModal) { }
   ngOnInit(): void {
   }
 
   addNewDept() {
-    alert(this.deptName);
     const dept = new Department();
     dept.name = this.deptName;
     dept.year = this.yearService.getYearValue;
     this.apiService.createDept(dept).subscribe(
       resDept => {
-        this.addDept.emit();
+        this.parentComponent.getDept();
       }
     );
   }

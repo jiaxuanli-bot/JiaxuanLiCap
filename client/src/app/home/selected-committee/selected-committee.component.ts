@@ -1,8 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
 import {Committee} from '../../models/committee';
-import {Survey} from '../../models/survey';
-import {User} from '../../models/user';
+import { faCircle, faCheckCircle, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-selected-committee',
@@ -10,24 +9,26 @@ import {User} from '../../models/user';
   styleUrls: ['./selected-committee.component.css']
 })
 export class SelectedCommitteeComponent implements OnInit {
-  @Input() selectedCommittee: Committee;
-  @Output() selectedCommitteeChange = new EventEmitter();
-  introductionExpand = true;
-  dutyExpand = true;
-  critreriaExpand = true;
-  committees: Committee[] = [];
-  user: User;
-  constructor() { }
+  committee: Committee;
+  views = {
+    introduction: false,
+    duties : false,
+    criteria : false
+  }
+
+  icons = {
+    faCircle : faCircle,
+    faCheckCircle : faCheckCircle,
+    faAngleDown : faAngleDown,
+    faAngleUp : faAngleUp
+  }
+
+  constructor(public activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
   }
-  expandCriteria() {
-    this.critreriaExpand = !this.critreriaExpand;
-  }
-  expandDuty() {
-    this.dutyExpand = !this.dutyExpand;
-  }
-  expandIntroduction() {
-    this.introductionExpand = !this.introductionExpand;
+
+  toggleView( view: string ): void {
+    this.views[view] = !this.views[view];
   }
 }
