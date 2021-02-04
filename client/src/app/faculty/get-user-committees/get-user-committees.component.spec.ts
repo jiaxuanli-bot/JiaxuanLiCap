@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CancelModifyComponent } from './cancel-modify.component';
+import { GetUserCommitteesComponent } from './get-user-committees.component';
 
-describe('CancelModifyComponent', () => {
-  let component: CancelModifyComponent;
-  let fixture: ComponentFixture<CancelModifyComponent>;
+describe('GetUserCommitteesComponent', () => {
+  let component: GetUserCommitteesComponent;
+  let fixture: ComponentFixture<GetUserCommitteesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CancelModifyComponent ]
+      declarations: [ GetUserCommitteesComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CancelModifyComponent);
+    fixture = TestBed.createComponent(GetUserCommitteesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

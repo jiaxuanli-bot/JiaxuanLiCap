@@ -20,7 +20,6 @@ import { ReportComponent } from './report/report.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {GoogleChartsModule} from 'angular-google-charts';
 import { UWLComponent } from './uwl/uwl.component';
-import { CancelModifyComponent } from './faculty/cancel-modify/cancel-modify.component';
 import { DeleteUserComponent } from './faculty/delete-user/delete-user.component';
 import { ModifyUserComponent } from './faculty/modify-user/modify-user.component';
 import { AddUserComponent } from './faculty/add-user/add-user.component';
@@ -35,6 +34,7 @@ import { AddCollegeComponent } from './setting/add-college/add-college.component
 import { AddGenderComponent } from './setting/add-gender/add-gender.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { FooterComponent } from './footer/footer.component';
+import { GetUserCommitteesComponent } from './faculty/get-user-committees/get-user-committees.component';
 
 @NgModule({
 
@@ -63,7 +63,6 @@ import { FooterComponent } from './footer/footer.component';
     CommitteesListComponent,
     ReportComponent,
     UWLComponent,
-    CancelModifyComponent,
     DeleteUserComponent,
     ModifyUserComponent,
     AddUserComponent,
@@ -78,6 +77,7 @@ import { FooterComponent } from './footer/footer.component';
     AddGenderComponent,
     TopBarComponent,
     FooterComponent,
+    GetUserCommitteesComponent,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true}

@@ -60,14 +60,6 @@ export class CommitteesDetailsComponent implements OnInit {
     this.views[view] = !this.views[view];
   }
 
-  removeMember(id: string): void {
-    this.apiService.removeUserFromCommittee(this.committee.id, id).subscribe(
-      committee => {
-        this.uploadCommitteeById(this.committee.id);
-      }
-    );
-  }
-
   uploadCommitteeById(committeeId: string) {
     this.apiService.getCommitteeById(committeeId).subscribe (
       committee => {
@@ -91,21 +83,20 @@ export class CommitteesDetailsComponent implements OnInit {
       }
     );
   }
-  assignVolunteer(id: string): void {
-    this.apiService.assignUserToOneCommittee(this.committee.id, id).subscribe(
-      value => {
-        this.uploadCommitteeById(this.committee.id);
-      }
-    );
-  }
   deleteUser(id): void {
     const modalRef = this.modalService.open(RemoveMemberComponent, {backdropClass: 'light-blue-backdrop'});
-    modalRef.componentInstance.parentComponent = this;
+    modalRef.componentInstance.committeeId = this.committee.id;
     modalRef.componentInstance.userId = id;
+    modalRef.result.then(() => {
+      this.uploadCommitteeById(this.committee.id);
+    });
   }
   assignUser(id): void {
     const modalRef = this.modalService.open(AssignMemberComponent, {backdropClass: 'light-blue-backdrop'});
-    modalRef.componentInstance.parentComponent = this;
+    modalRef.componentInstance.committeeId = this.committee.id;
     modalRef.componentInstance.userId = id;
+    modalRef.result.then(() => {
+      this.uploadCommitteeById(this.committee.id);
+    });
   }
 }

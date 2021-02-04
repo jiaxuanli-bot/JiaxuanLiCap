@@ -8,7 +8,7 @@ import {YearService} from '../../service/year.service';
 import {Gender} from '../../models/gender';
 import {College} from '../../models/college';
 import {Department} from '../../models/department';
-import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-add-user-from-csv',
@@ -16,8 +16,6 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./add-user-from-csv.component.css']
 })
 export class AddUserFromCSVComponent implements OnInit {
-  pageNum: number;
-  parentComponent: any;
   selectedFile: any;
   file: any;
   fileHeaders = new Array<any>();
@@ -139,7 +137,7 @@ export class AddUserFromCSVComponent implements OnInit {
         if (this.mapTheProperty(result)) {
           this.apiService.uploadFacultiesFromCSV(this.uploadedFaculties).subscribe(
             value => {
-              this.parentComponent.gotoPage(this.pageNum);
+              this.activeModal.close('return');
             }
           );
         }
@@ -174,13 +172,6 @@ export class AddUserFromCSVComponent implements OnInit {
         faculty.roles = roles;
         index++;
       }
-      //
-      //
-      //
-      //
-      //
-      //
-      //
       // need to check
       if (faculty.dept !== undefined) {
         faculty.college = faculty.dept.college;
@@ -206,7 +197,6 @@ export class AddUserFromCSVComponent implements OnInit {
   isBooleanTypeProperty(property: any): boolean {
     return property === 'tenured' || property === 'soe' || property === 'adminResponsibility';
   }
-
   isBooleanType(value: string): boolean {
     return value.toLowerCase() === 'true' || value.toLowerCase() === 'false';
   }

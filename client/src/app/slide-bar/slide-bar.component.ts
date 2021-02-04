@@ -19,7 +19,7 @@ export class SlideBarComponent implements OnInit {
     faculty: false,
     survey: false,
     committees: false,
-    report:  false,
+    reports:  false,
     settings: false
   }
 

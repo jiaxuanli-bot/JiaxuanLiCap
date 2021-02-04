@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import {ApiService} from "../../service/api.service";
 
 @Component({
   selector: 'app-assign-member',
@@ -7,16 +8,20 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./assign-member.component.css']
 })
 export class AssignMemberComponent implements OnInit {
-
-  public parentComponent: any;
   public userId: string;
-  constructor(public activeModal: NgbActiveModal) { }
+  public committeeId: string;
+  constructor(
+    public activeModal: NgbActiveModal,
+    public apiService: ApiService) { }
 
   ngOnInit(): void {
   }
 
   assignMember() {
-    this.activeModal.dismiss();
-    this.parentComponent.assignVolunteer(this.userId);
+    this.apiService.assignUserToOneCommittee(this.committeeId, this.userId).subscribe(
+      value => {
+        this.activeModal.close('return');
+      }
+    );
   }
 }

@@ -7,11 +7,8 @@ import { YearService } from '../service/year.service';
 import { Papa } from 'ngx-papaparse';
 import { Committee } from '../models/committee';
 import { Router } from '@angular/router';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import { AuthenticationService } from '../service/authentication.service';
-import {College} from '../models/college';
-import {Gender} from '../models/gender';
-import {Department} from '../models/department';
 
 import { faEdit, faCheckCircle, faTrash, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import {TopBarService} from "../service/top-bar.service";
@@ -20,6 +17,7 @@ import {AddUserFromCSVComponent} from "./add-user-from-csv/add-user-from-csv.com
 import {AddUserComponent} from "./add-user/add-user.component";
 import {DeleteUserComponent} from "./delete-user/delete-user.component";
 import {ModifyUserComponent} from "./modify-user/modify-user.component";
+import {GetUserCommitteesComponent} from "./get-user-committees/get-user-committees.component";
 
 @Component({
   selector: 'app-faculty',
@@ -50,13 +48,7 @@ export class FacultyComponent implements OnInit {
     faTrash: faTrash,
     faEdit: faEdit,
     faInfoCircle: faInfoCircle
-  }
-
-  userVolunteeredCommittees: Committee[];
-  userAssignedCommittees: Committee[];
-
-  editIndex: number;
-  deleteIndex: number;
+  };
   file: any;
   searchFormChanged: boolean =  false;
 
@@ -77,10 +69,6 @@ export class FacultyComponent implements OnInit {
   facultiesForm: FormGroup;
   searchTextChanged = new Subject<string>();
   year: Observable<string>;
-  genders: Gender[];
-  colleges: College[];
-  depts: Department[];
-  editedUser: User;
   constructor(
     private modalService: NgbModal,
     public authentication: AuthenticationService,
@@ -122,9 +110,9 @@ export class FacultyComponent implements OnInit {
         return acc;
       }, {});
 
-      if( this.searchFormChanged ) {
-        this.page.number = 0;
-      }
+    if ( this.searchFormChanged ) {
+      this.page.number = 0;
+    }
 
     this.apiService.getFacultyByYearAndQueries(this.yearService.getYearValue, this.queries, this.page.number).subscribe(
       value => {
@@ -170,19 +158,17 @@ export class FacultyComponent implements OnInit {
     this.getFaculty();
   }
 
-  deleteUser(): void {
-    this.apiService.deleteUser(this.faculties[this.deleteIndex].id).subscribe(
-      res => {
-        this.gotoPage(this.page.number);
+  delete(id: string): void {
+    const modalRef = this.modalService.open(DeleteUserComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.result.then(
+      () => {
+        this.apiService.deleteUser(id).subscribe(
+          user => {
+            this.gotoPage(this.page.number);
+          }
+        );
       }
     );
-  }
-
-  delete(i: number): void {
-    this.deleteIndex = i;
-    const modalRef = this.modalService.open(DeleteUserComponent, {backdropClass: 'light-blue-backdrop'});
-    modalRef.componentInstance.pageNum = this.page.number;
-    modalRef.componentInstance.parentComponent = this;
   }
 
   gotoPage(pageIndex: number): void {
@@ -209,34 +195,40 @@ export class FacultyComponent implements OnInit {
     this.page.number = this.page.totalPages - 1;
     this.getFaculty();
   }
-
-  getUserCommittees(i: number): void {
-    this.apiService.getUserAssignedCommittees(this.faculties[i].id).subscribe(
-      committees => {
-        this.userAssignedCommittees = committees;
-      }
-    );
-    this.apiService.getUserVolunteeredCommittees(this.faculties[i].id).subscribe(
-      committees => {
-        this.userVolunteeredCommittees = committees;
-      }
-    );
-  }
   uploadCSV() {
     const modalRef = this.modalService.open(AddUserFromCSVComponent, {backdropClass: 'light-blue-backdrop'});
     modalRef.componentInstance.pageNum = this.page.number;
-    modalRef.componentInstance.parentComponent = this;
+    modalRef.result.then(() => {
+      this.gotoPage(this.page.pageNum);
+    });
   }
 
   addFaculty() {
     const modalRef = this.modalService.open(AddUserComponent, {backdropClass: 'light-blue-backdrop'});
-    modalRef.componentInstance.parentComponent = this;
+    modalRef.result.then(() => {
+      this.gotoPage(this.page.pageNum);
+    });
   }
 
+  getUserCommittees(id: string): void {
+    this.apiService.getUserAssignedCommittees(id).subscribe(
+      committees => {
+        const modalRef = this.modalService.open(GetUserCommitteesComponent, {backdropClass: 'light-blue-backdrop'});
+        modalRef.componentInstance.userAssignedCommittees = committees;
+      }
+    );
+    this.apiService.getUserVolunteeredCommittees(id).subscribe(
+      committees => {
+        const modalRef = this.modalService.open(GetUserCommitteesComponent, {backdropClass: 'light-blue-backdrop'});
+        modalRef.componentInstance.userVolunteeredCommittees = committees;
+      }
+    );
+  }
   edit(faculty: User) {
     const modalRef = this.modalService.open(ModifyUserComponent, {backdropClass: 'light-blue-backdrop'});
-    modalRef.componentInstance.parentComponent = this;
     modalRef.componentInstance.modifyUser = faculty;
-    modalRef.componentInstance.pageNum = this.page.number;
+    modalRef.result.then(() => {
+      this.gotoPage(this.page.pageNum);
+    });
   }
 }

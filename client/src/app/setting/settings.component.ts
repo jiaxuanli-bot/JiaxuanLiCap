@@ -52,6 +52,9 @@ export class SettingsComponent implements OnInit {
     private topBarService: TopBarService,
     private modalService: NgbModal,
     private router: Router) {
+    this.apiService.getYears().subscribe( years => {
+      this.yearService.setYears( years );
+    });
   }
 
   ngOnInit(): void {
@@ -180,15 +183,28 @@ export class SettingsComponent implements OnInit {
   addDept() {
     const modalRef = this.modalService.open(AddDeptComponent, {backdropClass: 'light-blue-backdrop'});
     modalRef.componentInstance.parentComponent = this;
+    modalRef.result.then(
+      () => {
+        this.getDept();
+      }
+    );
   }
 
   addGen() {
     const modalRef = this.modalService.open(AddGenderComponent, {backdropClass: 'light-blue-backdrop'});
-    modalRef.componentInstance.parentComponent = this;
+    modalRef.result.then(
+      () => {
+        this.getGen();
+      }
+    );
   }
 
   addCollege() {
     const modalRef = this.modalService.open(AddCollegeComponent, {backdropClass: 'light-blue-backdrop'});
-    modalRef.componentInstance.parentComponent = this;
+    modalRef.result.then(
+      () => {
+        this.getCollege();
+      }
+    );
   }
 }

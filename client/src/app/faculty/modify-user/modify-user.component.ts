@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {YearService} from "../../service/year.service";
-import {ApiService} from "../../service/api.service";
+import {YearService} from '../../service/year.service';
+import {ApiService} from '../../service/api.service';
 import {Gender} from "../../models/gender";
 import {College} from "../../models/college";
 import {Department} from "../../models/department";
@@ -14,8 +14,7 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./modify-user.component.css']
 })
 export class ModifyUserComponent implements OnInit {
-  pageNum: number;
-  parentComponent: any;
+  @Output() result: EventEmitter<any> = new EventEmitter();
   modifyUser: User;
   constructor(
     private formBuilder: FormBuilder,
@@ -109,7 +108,7 @@ export class ModifyUserComponent implements OnInit {
     );
   }
 
-  Save() {
+  save() {
       const user = this.modifyUser;
       user.first = this.editUserForm.controls.editFirst.value;
       user.last = this.editUserForm.controls.editLast.value;
@@ -123,9 +122,8 @@ export class ModifyUserComponent implements OnInit {
       user.dept = this.editUserForm.controls.editDept.value;
       this.apiService.modifyUser(user).subscribe(
       res => {
-        this.parentComponent.gotoPage(this.pageNum);
+        this.activeModal.close('return');
       }
     );
-      this.activeModal.dismiss();
   }
 }

@@ -19,7 +19,7 @@
       <li *ngIf="(hasRole('Normal') || hasRole('Nominate'))" (click)="goTo('survey')" [ngClass]="pages.survey? 'selected':''">
         <fa-icon [icon]="icons.faQuestionCircle"></fa-icon>Survey
       </li>
-      <li *ngIf="hasRole( 'Admin')" (click)="goTo('reports')" [ngClass]="pages.report? 'selected':''">
+      <li *ngIf="hasRole( 'Admin')" (click)="goTo('reports')" [ngClass]="pages.reports? 'selected':''">
         <fa-icon [icon]="icons.faChartPie"></fa-icon>Analysis
       </li>
       <li *ngIf="hasRole( 'Admin')"  (click)="goTo('settings')" [ngClass]="pages.settings? 'selected':''">

@@ -11,7 +11,6 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./add-gender.component.css']
 })
 export class AddGenderComponent implements OnInit {
-  parentComponent: any;
   genName: string;
   constructor(private yearService: YearService, private apiService: ApiService, public activeModal: NgbActiveModal) { }
   ngOnInit(): void {
@@ -23,8 +22,7 @@ export class AddGenderComponent implements OnInit {
     gen.year = this.yearService.getYearValue;
     this.apiService.createGender(gen).subscribe(
       resGen => {
-        this.parentComponent.getGen();
-        this.activeModal.dismiss();
+        this.activeModal.close('return');
       }
     );
   }

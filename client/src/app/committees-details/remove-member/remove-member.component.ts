@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {ApiService} from "../../service/api.service";
 
 @Component({
   selector: 'app-remove-member',
@@ -7,14 +8,19 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./remove-member.component.css']
 })
 export class RemoveMemberComponent implements OnInit {
-  public parentComponent: any;
   public userId: string;
-  constructor(public activeModal: NgbActiveModal) { }
+  public committeeId: string;
+  constructor(
+    public activeModal: NgbActiveModal,
+    public apiService: ApiService) { }
   ngOnInit(): void {
   }
-
   removeUser() {
     this.activeModal.dismiss();
-    this.parentComponent.removeMember(this.userId);
+    this.apiService.removeUserFromCommittee(this.committeeId, this.userId).subscribe(
+      committee => {
+        this.activeModal.close('return');
+      }
+    );
   }
 }

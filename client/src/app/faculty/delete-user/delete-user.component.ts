@@ -1,6 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ApiService} from '../../service/api.service';
-import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
+import {Component, OnInit} from '@angular/core';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-delete-user',
@@ -8,14 +7,12 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./delete-user.component.css']
 })
 export class DeleteUserComponent implements OnInit {
-  parentComponent: any;
   constructor(
-    public activeModal: NgbActiveModal) { }
+    public activeModal: NgbActiveModal,
+  ) {}
   ngOnInit(): void {
   }
-
   deleteUser() {
-    this.parentComponent.deleteUser();
-    this.activeModal.dismiss();
+    this.activeModal.close('return');
   }
 }

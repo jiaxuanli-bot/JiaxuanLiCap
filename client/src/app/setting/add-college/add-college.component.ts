@@ -24,7 +24,7 @@ export class AddCollegeComponent implements OnInit {
     college.name = this.collegeName;
     this.apiService.createCollege(college).subscribe(
       resCollege => {
-        this.parentComponent.getCollege();
+        this.activeModal.close('return');
       }
     );
   }

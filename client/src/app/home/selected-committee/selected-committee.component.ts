@@ -14,14 +14,14 @@ export class SelectedCommitteeComponent implements OnInit {
     introduction: false,
     duties : false,
     criteria : false
-  }
+  };
 
   icons = {
     faCircle : faCircle,
     faCheckCircle : faCheckCircle,
     faAngleDown : faAngleDown,
     faAngleUp : faAngleUp
-  }
+  };
 
   constructor(public activeModal: NgbActiveModal) { }
 

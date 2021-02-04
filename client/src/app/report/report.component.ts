@@ -39,7 +39,9 @@ export class ReportComponent implements OnInit {
     public authentication: AuthenticationService,
     private apiservice: ApiService,
     private topBarService: TopBarService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder) {
+    this.yearService.setYears([]);
+  }
   ngOnInit(): void {
     this.topBarService.setTopBarName('Analysis');
     this.yearForm = this.formBuilder.group({

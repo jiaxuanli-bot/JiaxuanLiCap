@@ -30,7 +30,7 @@ public class DepartmentService {
 	}
 
 	public Department update( Long pathId, Department department) {
-		if( department == null || pathId != department.getId() ) throw new IllegalArgumentException();
+		if( department == null || !pathId.equals(department.getId()) ) throw new IllegalArgumentException();
 		
 		Boolean exists = this.departmentRepo.findById( department.getId() ).isPresent();
 		

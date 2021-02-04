@@ -59,6 +59,10 @@ export class CommitteesListComponent implements OnInit {
 
   addCommittee() {
     const modalRef = this.modalService.open(AddCommitteeComponent, {backdropClass: 'light-blue-backdrop'});
-    modalRef.componentInstance.parentComponent = this;
+    modalRef.result.then(
+      () => {
+        this.getCommitteeList();
+      }
+    );
   }
 }

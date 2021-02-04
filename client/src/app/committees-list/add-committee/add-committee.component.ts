@@ -78,10 +78,10 @@ export class AddCommitteeComponent implements OnInit {
     this.newCommittee.name = this.newName;
   }
   saveAll() {
-    this.activeModal.dismiss();
     this.newCommittee.year = this.yearService.getYearValue;
     this.apiService.createCommittee(this.newCommittee).subscribe(
       value => {
+        this.activeModal.close('return');
         this.parentComponent.getCommitteeList();
       }
     );

@@ -11,8 +11,6 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./add-dept.component.css']
 })
 export class AddDeptComponent implements OnInit {
-  @Output() addDept = new EventEmitter();
-  parentComponent: any;
   deptName: string;
   constructor(private yearService: YearService, private apiService: ApiService, public activeModal: NgbActiveModal) { }
   ngOnInit(): void {
@@ -24,7 +22,7 @@ export class AddDeptComponent implements OnInit {
     dept.year = this.yearService.getYearValue;
     this.apiService.createDept(dept).subscribe(
       resDept => {
-        this.parentComponent.getDept();
+        this.activeModal.close('return');
       }
     );
   }

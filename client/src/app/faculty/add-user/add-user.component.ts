@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ApiService} from '../../service/api.service';
 import {YearService} from '../../service/year.service';
@@ -14,8 +14,6 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./add-user.component.css']
 })
 export class AddUserComponent implements OnInit {
-  parentComponent: any;
-  pageNum: number;
   genders: Gender[];
   colleges: College[];
   depts: Department[];
@@ -69,8 +67,7 @@ export class AddUserComponent implements OnInit {
     this.apiService.createUser(user).
     subscribe(
       value => {
-        this.parentComponent.gotoPage(this.pageNum);
-        this.activeModal.dismiss();
+        this.activeModal.close('return');
       }
     );
   }

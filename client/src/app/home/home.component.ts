@@ -59,10 +59,8 @@ export class HomeComponent implements OnInit {
     this.apiService.getCommitteeById( response.committee.id ).subscribe( commitee => {
       const modalRef = this.modalService.open(SelectedCommitteeComponent, {backdropClass: 'light-blue-backdrop'});
       modalRef.componentInstance.committee = commitee;
-      modalRef.componentInstance.parentComponent = this;
     }
     );
-
   }
 
   createSurvey(surveyResponse: SurveyResponse) {
