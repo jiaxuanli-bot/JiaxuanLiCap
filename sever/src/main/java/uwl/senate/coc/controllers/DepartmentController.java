@@ -23,8 +23,8 @@ import uwl.senate.coc.services.DepartmentService;
 @Validated
 public class DepartmentController {
 
-    @Autowired
     //DepartmentRepository deptRepo;
+    @Autowired
     private DepartmentService deptService;
 	
     @RequestMapping( method= RequestMethod.GET)

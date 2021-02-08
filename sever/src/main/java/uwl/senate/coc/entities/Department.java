@@ -1,16 +1,13 @@
 package uwl.senate.coc.entities;
 
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.lang.NonNull;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import java.util.List;
 
 
 @Entity
@@ -19,19 +16,27 @@ public class Department {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    
+
     @NonNull
     private String name;
     @NonNull
     private String year;
-    
-    @NonNull
+
+    @JsonIgnore
+    @OneToMany(cascade=CascadeType.PERSIST, orphanRemoval=true)
+    @JoinTable(name = "user_dept",
+            joinColumns =
+                    { @JoinColumn(name = "dept_id", referencedColumnName = "id") },
+            inverseJoinColumns =
+                    { @JoinColumn(name = "user_id", referencedColumnName = "id")})
+    private List<User> users;
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinTable(name = "dept_college",
 			joinColumns =
 					{ @JoinColumn(name = "dept_id", referencedColumnName = "id") },
 			inverseJoinColumns =
-					{ @JoinColumn(name = "college_id", referencedColumnName = "id") })
+				   { @JoinColumn(name = "college_id", referencedColumnName = "id") })
 	private College college;
 
     public Department() {

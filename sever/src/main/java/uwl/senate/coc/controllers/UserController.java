@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uwl.senate.coc.entities.*;
 import uwl.senate.coc.projections.CommitteeSummary;
 import uwl.senate.coc.projections.SurveySummary;
+import uwl.senate.coc.repositories.UserRepository;
 import uwl.senate.coc.services.SurveyService;
 import uwl.senate.coc.services.UserService;
 
@@ -36,6 +37,9 @@ public class UserController {
     
     @Autowired
     private SurveyService surveyService;
+
+    @Autowired
+    private UserRepository u;
     
     @RequestMapping( method=RequestMethod.GET )
     public Page<User> getUsers(
@@ -54,33 +58,36 @@ public class UserController {
             @RequestParam(name="dept", required=false) String department,
             @RequestParam(name="gender", required=false) String gender) {
         rank = rank != null ? rank + " Professor" : null;
-        
-        User user = new User.Builder()
-        		.year(year)
+
+        User.Builder userBuilder = new User.Builder();
+        userBuilder.year(year)
                 .first(first)
                 .last(last)
-                .college(new College.Builder().name(college).build())
-                .gender(new Gender.Builder().name(gender).build())
                 .adminResponsibility( admin )
                 .rank( rank )
                 .tenured( tenured )
                 .soe( soe )
                 .chair( chair )
-                .dept( new Department.Builder().name(department).build() )
                 .build();
-        
-        System.out.println( user );
-
+        if (college != null) {
+            userBuilder.college(new College.Builder().name(college).build());
+        }
+        if (department != null) {
+            userBuilder.dept(new Department.Builder().name(department).build());
+        }
+        if (gender != null) {
+            userBuilder.gender(new Gender.Builder().name(gender).build());
+        }
+        User user = userBuilder.build();
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withMatcher("first", m -> m.contains())
                 .withMatcher("last", m -> m.contains());
-        
+
         Example<User> example = Example.of(user, matcher);
         Pageable paging = PageRequest.of( pageNo, pageSize, Sort.by(sortBy));
-        
         return userService.getUsers(example, paging );
     }
-    
+
     @RequestMapping( value="/{uid}", method=RequestMethod.GET)
     public User getUser( @PathVariable Long uid ) {
     	return userService.getUser( uid );

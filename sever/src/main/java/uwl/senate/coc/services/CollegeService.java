@@ -17,10 +17,10 @@ public class CollegeService {
 	private CollegeRepository collegeRepo;
 
 	public College update(Long pathId, College c) {
-		if( pathId == null || c == null || pathId != c.getId() ) {
+		if( pathId == null || c == null || !pathId.equals(c.getId()) ) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		Boolean exists = this.collegeRepo.findById( c.getId() ).isPresent();		
 		if( exists ) { 
 			College temp = this.collegeRepo.findById( c.getId() ).get();

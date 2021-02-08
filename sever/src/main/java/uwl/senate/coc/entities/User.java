@@ -23,9 +23,9 @@ public class User {
 	private Boolean gradStatus;
 	private Boolean soe;
 	private Boolean chair;
-	
-	
-	
+
+
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", first=" + first + ", last=" + last + ", adminResponsibility=" + adminResponsibility
@@ -35,7 +35,7 @@ public class User {
 				+ ", roles=" + roles + "]";
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinTable(name = "user_college",
 			joinColumns =
 					{ @JoinColumn(name = "user_id", referencedColumnName = "id") },
@@ -43,7 +43,7 @@ public class User {
 					{ @JoinColumn(name = "college_id", referencedColumnName = "id") })
 	private College college;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinTable(name = "user_gender",
 			joinColumns =
 					{ @JoinColumn(name = "user_id", referencedColumnName = "id") },
@@ -51,7 +51,7 @@ public class User {
 					{ @JoinColumn(name = "gender_id", referencedColumnName = "id") })
 	private Gender gender;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinTable(name = "user_dept",
 			joinColumns =
 					{ @JoinColumn(name = "user_id", referencedColumnName = "id") },

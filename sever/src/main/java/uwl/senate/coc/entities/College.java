@@ -1,10 +1,9 @@
 package uwl.senate.coc.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class College {
@@ -14,6 +13,24 @@ public class College {
     private Long id;
     private String name;
     private String year;
+
+    @JsonIgnore
+    @OneToMany(cascade=CascadeType.PERSIST, orphanRemoval=true)
+    @JoinTable(name = "dept_college",
+            joinColumns =
+                    { @JoinColumn(name = "college_id", referencedColumnName = "id") },
+            inverseJoinColumns =
+                    { @JoinColumn(name = "dept_id", referencedColumnName = "id")} )
+    public List<Department> departments;
+
+    @JsonIgnore
+    @OneToMany(cascade=CascadeType.PERSIST, orphanRemoval=true)
+    @JoinTable(name = "user_college",
+            joinColumns =
+                    { @JoinColumn(name = "college_id", referencedColumnName = "id")},
+            inverseJoinColumns =
+                    { @JoinColumn(name = "user_id", referencedColumnName = "id")})
+    private List<User> users;
 
     public College() {
     }

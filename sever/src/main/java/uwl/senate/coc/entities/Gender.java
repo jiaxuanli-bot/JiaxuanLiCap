@@ -1,9 +1,9 @@
 package uwl.senate.coc.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Gender {
@@ -13,6 +13,15 @@ public class Gender {
     private Long id;
     private String name;
     private String year;
+
+    @JsonIgnore
+    @OneToMany(cascade=CascadeType.PERSIST, orphanRemoval=true)
+    @JoinTable(name = "user_gender",
+            joinColumns =
+                    { @JoinColumn(name = "gender_id", referencedColumnName = "id") },
+            inverseJoinColumns =
+                    { @JoinColumn(name = "user_id", referencedColumnName = "id") })
+    private List<User> users;
 
     public Gender() {
     }

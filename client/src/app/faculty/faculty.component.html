@@ -40,10 +40,10 @@
             {{faculty.rank}}
           </td>
           <td>
-            {{faculty.college.name}}
+            {{faculty.college?.name}}
           </td>
           <td>
-            {{faculty.dept.name}}
+            {{faculty.dept?.name}}
           </td>
           <td class="text-center">
               <fa-icon [icon]="icons.faCheckCircle" *ngIf="faculty.tenured"></fa-icon>
@@ -58,7 +58,7 @@
             <fa-icon [icon]="icons.faCheckCircle" *ngIf="faculty.chair"></fa-icon>
           </td>
           <td class="text-center">
-            {{faculty.gender.name}}
+            {{faculty.gender?.name}}
           </td>
           <td>
             <fa-icon data-toggle="modal" [icon]="icons.faTrash"  (click)="delete(faculty.id)"></fa-icon>
@@ -112,68 +112,4 @@
         Add Faculty</button>
     </ul>
   </div>
-
-<!--  <div class="modal fade" id="committeeListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
-<!--    <div class="modal-dialog" role="document">-->
-<!--      <div class="modal-content">-->
-<!--        <div>-->
-<!--          <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--            <span class="closeBtn mr-4" aria-hidden="true">&times;</span>-->
-<!--          </button>-->
-<!--          <div>-->
-<!--            <h3 class="featuredHead">Committees List</h3>-->
-<!--            <ul class="nav nav-tabs mb-4" role="tablist">-->
-<!--              <li role="presentation" class="active">-->
-<!--              </li>-->
-<!--            </ul>-->
-<!--            <div class="mb-3 mt-4">-->
-<!--              <div id="h1">-->
-<!--                <div class="input-group mb-2">-->
-<!--                  Assigned Committees-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <ul class="nav nav-tabs" role="tablist">-->
-<!--                <li role="presentation" class="active">-->
-<!--                </li>-->
-<!--              </ul>-->
-<!--              <div class="table-responsive ">-->
-<!--                <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">-->
-<!--                  <tbody class="committeeListClickable">-->
-<!--                  <tr *ngFor = "let committee of userAssignedCommittees;index as i" data-dismiss="modal">-->
-<!--                    <td [routerLink]="['/committees', committee.id]">-->
-<!--                      {{committee.name}}-->
-<!--                    </td>-->
-<!--                  </tr>-->
-<!--                  </tbody>-->
-<!--                </table>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="mb-3" >-->
-<!--              <div id="h2">-->
-<!--                <div class="input-group mb-2 mt-4">-->
-<!--                  Volunteered Committees-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <ul class="nav nav-tabs mb-2" role="tablist">-->
-<!--                <li role="presentation" class="active">-->
-<!--                </li>-->
-<!--              </ul>-->
-<!--              <div class="table-responsive">-->
-<!--                <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">-->
-<!--                  <tbody class="committeeListClickable">-->
-
-<!--                  <tr *ngFor = "let committee of userVolunteeredCommittees;index as i" data-dismiss="modal">-->
-<!--                    <td [routerLink]="['/committees', committee.id]">-->
-<!--                      {{committee.name}}-->
-<!--                    </td>-->
-<!--                  </tr>-->
-<!--                  </tbody>-->
-<!--                </table>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
 </div>

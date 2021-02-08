@@ -8,11 +8,11 @@ import {College} from '../models/college';
 import {Department} from '../models/department';
 
 import { faTrash, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import {TopBarService} from "../service/top-bar.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {AddDeptComponent} from "./add-dept/add-dept.component";
-import {AddGenderComponent} from "./add-gender/add-gender.component";
-import {AddCollegeComponent} from "./add-college/add-college.component";
+import {TopBarService} from '../service/top-bar.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {AddDeptComponent} from './add-dept/add-dept.component';
+import {AddGenderComponent} from './add-gender/add-gender.component';
+import {AddCollegeComponent} from './add-college/add-college.component';
 
 @Component({
   selector: 'app-settings',
@@ -59,26 +59,11 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.topBarService.setTopBarName('Settings');
-    this.apiService.getGendersByYear(this.yearService.getYearValue).subscribe(
-      genders => {
-        this.genders = genders;
-      }
-    );
-    this.apiService.getCollegeByYear(this.yearService.getYearValue).subscribe(
-      colleges => {
-        this.colleges = colleges;
-      }
-    );
-    this.apiService.getDeptByYear(this.yearService.getYearValue).subscribe(
-      depts => {
-        this.depts = depts;
-      }
-    );
     this.yearService.getValue().subscribe(
       year => {
         this.getCollege();
         this.getGen();
-        this.getGen();
+        this.getDept();
       }
     );
   }
@@ -86,21 +71,27 @@ export class SettingsComponent implements OnInit {
   deleteDept(deptId: string, index: number) {
     this.apiService.deleteDept(deptId).subscribe(
       dept => {
-        this.depts.splice(index, 1);
+        this.getGen();
+        this.getDept();
+        this.getCollege();
       }
     );
   }
   deleteGender(genderId: string, index: number) {
     this.apiService.deleteGender(genderId).subscribe(
       gender => {
-        this.genders.splice(index, 1);
+        this.getGen();
+        this.getDept();
+        this.getCollege();
       }
     );
   }
   deleteCollege(collegeId: string, index: number) {
     this.apiService.deleteCollege(collegeId).subscribe(
       college => {
-        this.colleges.splice(index, 1);
+        this.getGen();
+        this.getDept();
+        this.getCollege();
       }
     );
   }

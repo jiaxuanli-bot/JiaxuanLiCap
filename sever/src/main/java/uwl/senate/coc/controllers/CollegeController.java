@@ -48,7 +48,7 @@ public class CollegeController {
     	this.collegeService.delete( id );
     	return new ResponseEntity<>("OK", HttpStatus.NO_CONTENT);
     }
-    
+
     @RequestMapping( value="/{id}", method= RequestMethod.PUT)
     public College update(
     		@PathVariable Long id,

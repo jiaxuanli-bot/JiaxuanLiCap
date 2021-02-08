@@ -28,7 +28,7 @@ public class Committee {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="committee_id")
 	private Long id;
-	
+
 	@Column(name="introduction")		
     private String introduction;
 	

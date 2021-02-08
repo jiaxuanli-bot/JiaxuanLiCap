@@ -30,7 +30,7 @@ public class GenderService {
 	}
 
 	public Gender update(Long id, Gender gender) {
-		if( id == null || gender == null || id != gender.getId() ) {
+		if( id == null || gender == null || !id.equals(gender.getId()) ) {
 			throw new IllegalArgumentException();
 		}
 		

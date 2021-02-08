@@ -3,7 +3,6 @@ package uwl.senate.coc.services;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,7 +42,7 @@ public class UserService {
     public Page<User> getUsers(Example<User> example, Pageable paging){
         return userRepo.findAll(example, paging );
     }
-    
+
     public User getUser( Long id ) {
     	return userRepo.findById( id ).get();
     }

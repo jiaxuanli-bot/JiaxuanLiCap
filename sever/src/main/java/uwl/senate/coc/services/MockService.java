@@ -169,7 +169,6 @@ public class MockService {
     				.map( name -> new Gender.Builder().name(name).year(year).build() )
     				.collect(Collectors.toList() );
     		allYears.addAll( genders );
-    		
     	});
     	
     	return genderRepo.saveAll( allYears );
@@ -356,7 +355,7 @@ public class MockService {
     public void makeData() {
     	// ROLES are not year-based
         List<Role> roles = roles();
-        
+
         // EVERYTHING ELSE IS year-based so construct years first
     	List<String> years = years( 1998, 2023 );
     	
