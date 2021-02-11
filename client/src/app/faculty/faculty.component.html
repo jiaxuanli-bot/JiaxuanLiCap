@@ -61,9 +61,9 @@
             {{faculty.gender?.name}}
           </td>
           <td>
-            <fa-icon data-toggle="modal" [icon]="icons.faTrash"  (click)="delete(faculty.id)"></fa-icon>
-            <fa-icon [icon]="icons.faEdit"  data-toggle="modal" (click)="edit(faculty)"></fa-icon>
-            <fa-icon [icon]="icons.faInfoCircle"  data-toggle="modal" (click)="getUserCommittees(faculty.id)" ></fa-icon>
+            <fa-icon class="clickableIcon" data-toggle="modal" [icon]="icons.faTrash"  (click)="delete(faculty.id)"></fa-icon>
+            <fa-icon class="clickableIcon" [icon]="icons.faEdit"  data-toggle="modal" (click)="edit(faculty)"></fa-icon>
+            <fa-icon class="clickableIcon" [icon]="icons.faInfoCircle"  data-toggle="modal" (click)="getUserCommittees(faculty.id)" ></fa-icon>
           </td>
       </tr>
       </tbody>

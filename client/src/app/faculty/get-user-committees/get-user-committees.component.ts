@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {ApiService} from "../../service/api.service";
 import {Committee} from "../../models/committee";
+import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-get-user-committees',
@@ -9,7 +9,7 @@ import {Committee} from "../../models/committee";
 })
 export class GetUserCommitteesComponent implements OnInit {
   constructor(
-    private apiService: ApiService
+    public activeModal: NgbActiveModal,
   ) { }
   userVolunteeredCommittees: Committee[];
   userAssignedCommittees: Committee[];

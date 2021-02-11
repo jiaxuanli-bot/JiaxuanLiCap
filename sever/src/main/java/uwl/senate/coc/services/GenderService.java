@@ -35,13 +35,12 @@ public class GenderService {
 		}
 		
 		Boolean exists = this.genderRepo.findById( id ).isPresent();
-		
 		if( exists ) {
 			Gender existing = this.genderRepo.findById( id ).get();
 			if( !existing.getYear().equals( gender.getYear() ) ) {
 				throw new IllegalArgumentException(); 
 			}
-			
+			gender.setUsers(existing.getUsers());
 			return this.genderRepo.save( gender );
 		} else {
 			throw new IllegalArgumentException();

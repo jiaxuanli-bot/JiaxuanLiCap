@@ -461,6 +461,10 @@ select{
   cursor: pointer;
 }
 
+.clickableIcon{
+  cursor: pointer;
+}
+
 input[type="radio"]{
   cursor: pointer;
 }

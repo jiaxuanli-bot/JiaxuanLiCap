@@ -7,6 +7,8 @@ import {User} from '../models/user';
 import {YearService} from '../service/year.service';
 
 import { faUser, faUsers, faQuestionCircle, faCog, faChartPie, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {CreateYearComponent} from "./create-year/create-year.component";
 
 @Component({
   selector: 'app-slide-bar',
@@ -37,9 +39,10 @@ export class SlideBarComponent implements OnInit {
   user: User;
 
   newYear: number;
-  years: any;
+  years: string[];
 
   constructor(
+    private modalService: NgbModal,
     public yearService: YearService,
     private apiService: ApiService,
     private formBuilder: FormBuilder,
@@ -86,8 +89,10 @@ export class SlideBarComponent implements OnInit {
   }
 
   createYear() {
-    this.apiService.createYear(this.newYear.toString()).subscribe(
-      value => {
+    const modalRef = this.modalService.open(CreateYearComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.newYear = 1 + Number(this.years[this.years.length - 1]);
+    modalRef.result.then(
+      () => {
         location.reload();
       }
     );

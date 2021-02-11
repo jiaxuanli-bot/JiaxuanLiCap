@@ -35,6 +35,13 @@ import { AddGenderComponent } from './setting/add-gender/add-gender.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { FooterComponent } from './footer/footer.component';
 import { GetUserCommitteesComponent } from './faculty/get-user-committees/get-user-committees.component';
+import { CreateYearComponent } from './slide-bar/create-year/create-year.component';
+import { EditCollegeComponent } from './setting/edit-college/edit-college.component';
+import { EditGenderComponent } from './setting/edit-gender/edit-gender.component';
+import { EditDeptComponent } from './setting/edit-dept/edit-dept.component';
+import { DeleteGenComponent } from './setting/delete-gen/delete-gen.component';
+import { DeleteCollegeComponent } from './setting/delete-college/delete-college.component';
+import { DeleteDeptComponent } from './setting/delete-dept/delete-dept.component';
 
 @NgModule({
 
@@ -78,6 +85,13 @@ import { GetUserCommitteesComponent } from './faculty/get-user-committees/get-us
     TopBarComponent,
     FooterComponent,
     GetUserCommitteesComponent,
+    CreateYearComponent,
+    EditCollegeComponent,
+    EditGenderComponent,
+    EditDeptComponent,
+    DeleteGenComponent,
+    DeleteCollegeComponent,
+    DeleteDeptComponent,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true}

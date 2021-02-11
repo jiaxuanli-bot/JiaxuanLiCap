@@ -29,7 +29,7 @@ public class DepartmentController {
 	
     @RequestMapping( method= RequestMethod.GET)
     public List<Department> getDepartments(
-    		@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(required=true) String year) {
+    	 @Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(required=true) String year) {
         return this.deptService.getByYear(year);
     }
     
@@ -48,7 +48,7 @@ public class DepartmentController {
     	this.deptService.delete( id );
     	return new ResponseEntity<>("OK", HttpStatus.NO_CONTENT);
     }
-    
+
     @RequestMapping( value="/{id}", method= RequestMethod.PUT)
     public Department updateDepartment( 
     		@PathVariable Long id, 

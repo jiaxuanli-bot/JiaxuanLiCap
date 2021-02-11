@@ -27,6 +27,8 @@ public class CollegeService {
 			if( c.getYear() == null || !c.getYear().equals( temp.getYear() ) ) {
 				throw new IllegalArgumentException();
 			} else {
+				c.setUsers(temp.getUsers());
+				c.setDepartments(temp.getDepartments());
 				return this.collegeRepo.save( c );
 			}
 		} else {

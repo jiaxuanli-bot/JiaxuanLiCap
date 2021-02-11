@@ -7,7 +7,7 @@
               <div class="input-group">
                 Departments
                 <div class="ml-auto">
-                  <fa-icon [icon]="icons.faPlusSquare" data-toggle="modal" (click)="addDept()"></fa-icon>
+                  <fa-icon [icon]="icons.faPlusSquare" (click)="addDept()"></fa-icon>
                 </div>
               </div>
             </th>
@@ -15,20 +15,13 @@
         </thead>
         <tbody *ngIf="depts">
           <tr *ngFor="let dept of depts;index as i">
-            <td *ngIf="editIndex.editDeptIndex !== i">
+            <td>
               <div class="input-group">
                  {{dept.name}}
                 <div class="ml-auto">
-                  <fa-icon [icon]="icons.faTrash" (click)="deleteDept( dept.id, i)"></fa-icon>
-                  <fa-icon [icon]="icons.faEdit" (click)="editDept(i)"></fa-icon>
+                  <fa-icon [icon]="icons.faTrash" (click)="deleteDept( dept.id.toString())"></fa-icon>
+                  <fa-icon [icon]="icons.faEdit" (click)="editDept(dept)"></fa-icon>
                 </div>
-              </div>
-            </td>
-            <td *ngIf="editIndex.editDeptIndex === i">
-              <div class="row">
-                <input type="text" class="col-8" [(ngModel)]="editDeptText">
-                <button class="btn btn-primary btn-sm ml-3" (click)="saveDept(dept)">Save</button>
-                <button class="btn btn-danger btn-sm ml-2" (click)="cancelEditDept()">Cancel</button>
               </div>
             </td>
           </tr>
@@ -42,7 +35,7 @@
               <div class="input-group">
                 Genders
                 <div class="ml-auto">
-                  <fa-icon [icon]="icons.faPlusSquare" data-toggle="modal" (click)="addGen()"></fa-icon>
+                  <fa-icon [icon]="icons.faPlusSquare" (click)="addGen()"></fa-icon>
                 </div>
               </div>
             </th>
@@ -50,20 +43,13 @@
         </thead>
         <tbody *ngIf="genders">
           <tr *ngFor="let gender of genders;index as i">
-            <td *ngIf="editIndex.editGenderIndex !== i">
+            <td>
               <div class="input-group">
                   {{gender.name}}
                 <div class="ml-auto">
-                  <fa-icon [icon]="icons.faTrash" (click)="deleteGender( gender.id, i)"></fa-icon>
-                  <fa-icon [icon]="icons.faEdit" (click)="editGender(i)"></fa-icon>
+                  <fa-icon [icon]="icons.faTrash" (click)="deleteGender( gender.id)"></fa-icon>
+                  <fa-icon [icon]="icons.faEdit" (click)="editGender(gender)"></fa-icon>
                 </div>
-              </div>
-            </td>
-            <td *ngIf="editIndex.editGenderIndex === i">
-              <div class="row">
-                <input type="text" class="col-8" [(ngModel)]="editGenderText">
-                <button class="btn btn-primary btn-sm ml-3" (click)="saveGender(gender)">Save</button>
-                <button class="btn btn-danger btn-sm ml-2" (click)="cancelEditGender()">Cancel</button>
               </div>
             </td>
           </tr>
@@ -78,7 +64,7 @@
               <div class="input-group">
                 Colleges
                 <div class="ml-auto">
-                  <fa-icon [icon]="icons.faPlusSquare" data-toggle="modal" (click)="addCollege()"></fa-icon>
+                  <fa-icon [icon]="icons.faPlusSquare" (click)="addCollege()"></fa-icon>
                 </div>
               </div>
             </th>
@@ -86,20 +72,13 @@
         </thead>
         <tbody *ngIf="colleges" id="committeeListClickable">
           <tr *ngFor="let college of colleges;index as i">
-            <td *ngIf="editIndex.editCollegeIndex !== i">
+            <td>
               <div class="input-group">
                   {{college.name}}
                   <div class="ml-auto">
-                    <fa-icon [icon]="icons.faTrash" (click)="deleteCollege( college.id, i)"></fa-icon>
-                    <fa-icon [icon]="icons.faEdit" (click)="editCollege(i)"></fa-icon>
+                    <fa-icon [icon]="icons.faTrash" (click)="deleteCollege( college.id)"></fa-icon>
+                    <fa-icon [icon]="icons.faEdit" (click)="editCollege(college)"></fa-icon>
                   </div>
-              </div>
-            </td>
-            <td *ngIf="editIndex.editCollegeIndex === i">
-              <div class="row">
-                <input type="text" class="col-8" [(ngModel)]="editCollegeText">
-                <button class="btn btn-primary btn-sm ml-3" (click)="saveCollege(college)">Save</button>
-                <button class="btn btn-danger btn-sm ml-2" (click)="cancelEditCollege()">Cancel</button>
               </div>
             </td>
           </tr>
@@ -107,19 +86,4 @@
       </table>
     </div>
   </div>
-
-<!--<div class="modal fade" id="addGenderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"-->
-<!--    aria-hidden="true">-->
-<!--    <app-add-gender (addGen)="getGen()"></app-add-gender>-->
-<!--  </div>-->
-
-<!--<div class="modal fade" id="addCollegeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"-->
-<!--    aria-hidden="true">-->
-<!--    <app-add-college (addCollege)="getCollege()"></app-add-college>-->
-<!--  </div>-->
-
-<!--<div class="modal fade" id="addDeptModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"-->
-<!--    aria-hidden="true">-->
-<!--    <app-add-dept (addDept)="getDept()"></app-add-dept>-->
-<!--  </div>-->
 

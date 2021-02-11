@@ -126,7 +126,7 @@ public class MockService {
     				.collect( Collectors.toList() );
     		allYears.addAll( colleges );    		
          } );
-    	
+
     	return collegeRepo.saveAll( allYears );
     }
 
@@ -138,7 +138,7 @@ public class MockService {
        	collegeNameToListOfDepartmentNames.put( "CASSH", Arrays.asList("ENG", "EDS", "CHM", "MUS", "SOC", "PHY", "POL") );
        	collegeNameToListOfDepartmentNames.put( "CBA", Arrays.asList("FIN", "ECO", "MGT", "ACT") );
        	collegeNameToListOfDepartmentNames.put( "SOE", Arrays.asList("EDS") );
-       	
+
     	colleges.forEach( college -> {
     		List<Department> departments = 
     				collegeNameToListOfDepartmentNames.get( college.getName() )
@@ -361,10 +361,10 @@ public class MockService {
     	
     	// YEAR-BASED DATA
         List<Gender> genders = genders( years );
-    	List<College> colleges = colleges( years );
+        List<College> colleges = colleges( years );
     	List<Department> departments = departments( colleges );
         List<Committee> committees = committees( years, colleges, departments, genders );
-        
+
         // The USERS are aware of years via departments
         
         @SuppressWarnings("unused")

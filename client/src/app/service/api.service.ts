@@ -168,12 +168,7 @@ export class ApiService {
     return this.http.get<Department[]>(`${AppConstants.API_URL}/settings/departments?year=${year}`);
   }
   modifyDept(dept: Department): Observable<Department> {
-    const data = {
-      id: dept.id,
-      name: dept.name,
-      year: dept.year
-    };
-    return this.http.put<Department>(`${AppConstants.API_URL}/settings/departments/${dept.id}`, data);
+    return this.http.put<Department>(`${AppConstants.API_URL}/settings/departments/${dept.id}`, dept);
   }
   deleteDept(id: string): Observable<any> {
     return this.http.delete<any>(`${AppConstants.API_URL}/settings/departments/${id}`);

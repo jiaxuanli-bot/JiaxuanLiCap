@@ -33,14 +33,15 @@ public class DepartmentService {
 		if( department == null || !pathId.equals(department.getId()) ) throw new IllegalArgumentException();
 
 		Boolean exists = this.departmentRepo.findById( department.getId() ).isPresent();
-		
+
 		if( exists ) {
 			Department existing = this.departmentRepo.findById( department.getId() ).get();
-			
 			if( department.getYear() == null || !department.getYear().equals( existing.getYear() )) {
 				throw new IllegalArgumentException();
 			} else {
-				return this.departmentRepo.save( department );
+				department.setUsers(existing.getUsers());
+				department.setCollege(existing.getCollege());
+		     	return this.departmentRepo.save( department );
 			}
 		} else {
 			throw new IllegalArgumentException();

@@ -31,7 +31,7 @@ public class Department {
                     { @JoinColumn(name = "user_id", referencedColumnName = "id")})
     private List<User> users;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinTable(name = "dept_college",
 			joinColumns =
 					{ @JoinColumn(name = "dept_id", referencedColumnName = "id") },
@@ -47,6 +47,7 @@ public class Department {
         this.name = b.name;
         this.year = b.year;
         this.college = b.college;
+        this.users = b.users;
     }
 
     public void setName(String name) {
@@ -81,11 +82,20 @@ public class Department {
     	return this.college;
     }
 
+    public List<User> getUsers() {
+        return this.users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
     public static class Builder {
         private Long id;
         private String name;
         private String year;
         private College college;
+        private List<User> users;
 
         public Builder id( Long id ) {
             this.id = id;
@@ -99,6 +109,11 @@ public class Department {
 
         public Builder name(String name){
             this.name = name;
+            return this;
+        }
+
+        public Builder users(List<User> users) {
+            this.users = users;
             return this;
         }
 

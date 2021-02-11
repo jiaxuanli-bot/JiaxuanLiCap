@@ -39,6 +39,8 @@ public class College {
         this.id = b.id;
         this.name = b.name;
         this.year = b.year;
+        this.users = b.users;
+        this.departments = b.departments;
     }
 
     public void setName(String name) {
@@ -64,11 +66,29 @@ public class College {
     public String getYear() {
         return year;
     }
-    
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setDepartments(List<Department> departments) {
+        this.departments = departments;
+    }
+
+    public List<Department> getDepartments() {
+        return departments;
+    }
+
     public static class Builder {
         private Long id;
         private String name;
         private String year;
+        private List<User> users;
+        private List<Department> departments;
 
         public Builder id( Long id ) {
             this.id = id;
@@ -82,6 +102,15 @@ public class College {
 
         public Builder year(String year){
             this.year = year;
+            return this;
+        }
+        public Builder users(List<User> users){
+            this.users = users;
+            return this;
+        }
+
+        public Builder departments(List<Department> departments){
+            this.departments = departments;
             return this;
         }
 

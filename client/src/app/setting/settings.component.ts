@@ -13,6 +13,12 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AddDeptComponent} from './add-dept/add-dept.component';
 import {AddGenderComponent} from './add-gender/add-gender.component';
 import {AddCollegeComponent} from './add-college/add-college.component';
+import {EditDeptComponent} from "./edit-dept/edit-dept.component";
+import {EditGenderComponent} from "./edit-gender/edit-gender.component";
+import {EditCollegeComponent} from "./edit-college/edit-college.component";
+import {DeleteCollegeComponent} from "./delete-college/delete-college.component";
+import {DeleteGenComponent} from "./delete-gen/delete-gen.component";
+import {DeleteDeptComponent} from "./delete-dept/delete-dept.component";
 
 @Component({
   selector: 'app-settings',
@@ -20,11 +26,6 @@ import {AddCollegeComponent} from './add-college/add-college.component';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  editIndex = {
-    editCollegeIndex: -1,
-    editGenderIndex: -1,
-    editDeptIndex : -1,
-  };
   add = {
     addCollege: false,
     addGender: false,
@@ -35,9 +36,6 @@ export class SettingsComponent implements OnInit {
   genders: Gender[] = [];
   colleges: College[] = [];
   depts: Department[] = [];
-  editGenderText: string;
-  editCollegeText: string;
-  editDeptText: string;
 
   icons = {
     faTrash : faTrash,
@@ -68,81 +66,63 @@ export class SettingsComponent implements OnInit {
     );
   }
 
-  deleteDept(deptId: string, index: number) {
-    this.apiService.deleteDept(deptId).subscribe(
-      dept => {
+  deleteDept(deptId: string) {
+    const modalRef = this.modalService.open(DeleteDeptComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.deptId = deptId;
+    modalRef.result.then(
+      () => {
         this.getGen();
         this.getDept();
         this.getCollege();
       }
     );
   }
-  deleteGender(genderId: string, index: number) {
-    this.apiService.deleteGender(genderId).subscribe(
-      gender => {
+  deleteGender(genderId: string) {
+    const modalRef = this.modalService.open(DeleteGenComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.genId = genderId;
+    modalRef.result.then(
+      () => {
         this.getGen();
         this.getDept();
         this.getCollege();
       }
     );
   }
-  deleteCollege(collegeId: string, index: number) {
-    this.apiService.deleteCollege(collegeId).subscribe(
-      college => {
+  deleteCollege(collegeId: string) {
+    const modalRef = this.modalService.open(DeleteCollegeComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.collegeId = collegeId;
+    modalRef.result.then(
+      () => {
         this.getGen();
         this.getDept();
         this.getCollege();
       }
     );
   }
-  cancelEditDept() {
-    this.editDeptText = '';
-    this.editIndex.editDeptIndex = -1;
-  }
-  saveDept(dept: Department) {
-    dept.name = this.editDeptText;
-    this.apiService.modifyDept(dept).subscribe(
-      resDept => {
-        dept = resDept;
-        this.editDeptText = '';
-        this.editIndex.editDeptIndex = -1;
+  editDept(dept: Department) {
+    const modalRef = this.modalService.open(EditDeptComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.dept = dept;
+    modalRef.result.then(
+      () => {
+        this.getDept();
       }
     );
   }
-  editDept(index: number) {
-    this.editIndex.editDeptIndex = index;
-  }
-  editGender(index: number) {
-    this.editIndex.editGenderIndex = index;
-  }
-  editCollege(index: number) {
-    this.editIndex.editCollegeIndex = index;
-  }
-  cancelEditCollege() {
-    this.editCollegeText = '';
-    this.editIndex.editCollegeIndex = -1;
-  }
-  saveCollege(college: College) {
-    college.name = this.editCollegeText;
-    this.apiService.modifyCollege(college).subscribe(
-      resCollege => {
-        college = resCollege;
-        this.editIndex.editCollegeIndex = -1;
-        this.editCollegeText = '';
+  editGender(gen: Gender) {
+    const modalRef = this.modalService.open(EditGenderComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.gender = gen;
+    modalRef.result.then(
+      () => {
+        this.getGen();
       }
     );
   }
-  cancelEditGender() {
-    this.editGenderText = '';
-    this.editIndex.editGenderIndex = -1;
-  }
-  saveGender(gender: Gender) {
-    gender.name = this.editGenderText;
-    this.apiService.modifyGender(gender).subscribe(
-      resGender => {
-        gender = resGender;
-        this.editGenderText = '';
-        this.editIndex.editGenderIndex = -1;
+  editCollege(college: College) {
+    const modalRef = this.modalService.open(EditCollegeComponent, {backdropClass: 'light-blue-backdrop'});
+    modalRef.componentInstance.college = college;
+    modalRef.result.then(
+      () => {
+        this.getCollege();
       }
     );
   }
@@ -150,6 +130,7 @@ export class SettingsComponent implements OnInit {
   getCollege() {
     this.apiService.getCollegeByYear(this.yearService.getYearValue).subscribe(
       colleges => {
+        console.log(colleges);
         this.colleges = colleges;
       }
     );
@@ -158,6 +139,7 @@ export class SettingsComponent implements OnInit {
   getGen() {
     this.apiService.getGendersByYear(this.yearService.getYearValue).subscribe(
       genders => {
+        console.log(genders);
         this.genders = genders;
       }
     );
@@ -166,6 +148,7 @@ export class SettingsComponent implements OnInit {
   getDept() {
     this.apiService.getDeptByYear(this.yearService.getYearValue).subscribe(
       depts => {
+        console.log(depts);
         this.depts = depts;
       }
     );

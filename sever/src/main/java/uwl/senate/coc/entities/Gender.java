@@ -30,6 +30,7 @@ public class Gender {
         this.id = b.id;
         this.name = b.name;
         this.year = b.year;
+        this.users = b.users;
     }
 
     public void setName(String name) {
@@ -44,7 +45,15 @@ public class Gender {
         this.year = year;
     }
 
-    public void setId( Long id ) {
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setId(Long id ) {
         this.id = id;
     }
 
@@ -60,6 +69,7 @@ public class Gender {
         private Long id;
         private String name;
         private String year;
+        private List<User> users;
 
         public Builder id( Long id ) {
             this.id = id;
@@ -73,6 +83,11 @@ public class Gender {
 
         public Builder year(String year){
             this.year = year;
+            return this;
+        }
+
+        public Builder users(List<User> users) {
+            this.users = users;
             return this;
         }
 

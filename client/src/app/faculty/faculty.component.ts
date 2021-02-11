@@ -27,7 +27,7 @@ import {GetUserCommitteesComponent} from "./get-user-committees/get-user-committ
 export class FacultyComponent implements OnInit {
   options = {
     rank: ['', 'Associate Professor', 'Assistant Professor', 'Full Professor'],
-    college: ['', 'CASH', 'CBA', 'CSH'],
+    college: [''],
     tenured: ['', 'Yes', 'No'],
     soe: ['', 'Yes', 'No'],
     admin: ['', 'Yes', 'No'],
@@ -146,6 +146,36 @@ export class FacultyComponent implements OnInit {
     this.year.subscribe(year => {
       this.getFaculty();
       this.apiService.getFacultyByYear(year).subscribe();
+      this.apiService.getCollegeByYear(year).subscribe(
+        colleges => {
+          this.options.college = [''];
+          colleges.forEach(
+            college => {
+              this.options.college.push(college.name);
+            }
+          );
+        }
+      );
+      this.apiService.getDeptByYear(year).subscribe(
+        departments => {
+          this.options.dept = [''];
+          departments.forEach(
+            department => {
+              this.options.dept.push(department.name);
+            }
+          );
+        }
+      );
+      this.apiService.getGendersByYear(year).subscribe(
+        genders => {
+          this.options.gender = [''];
+          genders.forEach(
+            gender => {
+              this.options.gender.push(gender.name);
+            }
+          );
+        }
+      );
     });
   }
 
