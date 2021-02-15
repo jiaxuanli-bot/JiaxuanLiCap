@@ -353,32 +353,27 @@ public class MockService {
 
     //	@PostConstruct
     public void makeData() {
-    	// ROLES are not year-based
         List<Role> roles = roles();
-
         // EVERYTHING ELSE IS year-based so construct years first
-    	List<String> years = years( 1998, 2023 );
-    	
+   		List<String> years = years( 1998, 2023 );
     	// YEAR-BASED DATA
         List<Gender> genders = genders( years );
         List<College> colleges = colleges( years );
-    	List<Department> departments = departments( colleges );
+        List<Department> departments = departments( colleges );
         List<Committee> committees = committees( years, colleges, departments, genders );
 
         // The USERS are aware of years via departments
-        
         @SuppressWarnings("unused")
-		List<User> users = users(roles, genders, departments);
-
+        List<User> users = users(roles, genders, departments);
         committees
                 .stream()
                 .forEach( c -> {
                     List<User> volunteers = choose( userRepo.findByYear(c.getYear()) , randomBetween( 0, 20 ) );
                     List<User> members = choose( volunteers, randomBetween(0, volunteers.size() ) );
-                                        
+
                     c.setMembers( new HashSet<>( members ) );
                     c.setVolunteers( new HashSet<>( volunteers ) );
                 });
         committeeRepo.saveAll( committees );
-    }
+   }
 }

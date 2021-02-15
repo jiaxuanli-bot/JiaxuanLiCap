@@ -29,7 +29,7 @@ public class DepartmentService {
 		return this.departmentRepo.getOne( id );
 	}
 
-	public Department update( Long pathId, Department department) {
+	public void update( Long pathId, Department department) {
 		if( department == null || !pathId.equals(department.getId()) ) throw new IllegalArgumentException();
 
 		Boolean exists = this.departmentRepo.findById( department.getId() ).isPresent();
@@ -39,9 +39,7 @@ public class DepartmentService {
 			if( department.getYear() == null || !department.getYear().equals( existing.getYear() )) {
 				throw new IllegalArgumentException();
 			} else {
-				department.setUsers(existing.getUsers());
-				department.setCollege(existing.getCollege());
-		     	return this.departmentRepo.save( department );
+				this.departmentRepo.updateDepartmentName(department.getName(), pathId);
 			}
 		} else {
 			throw new IllegalArgumentException();

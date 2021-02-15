@@ -29,19 +29,18 @@ public class GenderService {
 		this.genderRepo.deleteById( id );
 	}
 
-	public Gender update(Long id, Gender gender) {
+	public void update(Long id, Gender gender) {
 		if( id == null || gender == null || !id.equals(gender.getId()) ) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		Boolean exists = this.genderRepo.findById( id ).isPresent();
 		if( exists ) {
 			Gender existing = this.genderRepo.findById( id ).get();
 			if( !existing.getYear().equals( gender.getYear() ) ) {
 				throw new IllegalArgumentException(); 
 			}
-			gender.setUsers(existing.getUsers());
-			return this.genderRepo.save( gender );
+			this.genderRepo.updateGenderName( gender.getName(), id );
 		} else {
 			throw new IllegalArgumentException();
 		}

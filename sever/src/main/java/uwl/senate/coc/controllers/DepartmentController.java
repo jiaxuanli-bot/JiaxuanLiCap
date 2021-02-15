@@ -50,9 +50,10 @@ public class DepartmentController {
     }
 
     @RequestMapping( value="/{id}", method= RequestMethod.PUT)
-    public Department updateDepartment( 
+    public ResponseEntity<String> updateDepartment(
     		@PathVariable Long id, 
     		@RequestBody( required=true ) Department department ) {
-    	return this.deptService.update( id, department );
+    	this.deptService.update( id, department );
+        return new ResponseEntity<>("OK", HttpStatus.NO_CONTENT);
     }    
 }

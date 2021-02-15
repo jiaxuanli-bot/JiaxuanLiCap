@@ -16,7 +16,7 @@ public class CollegeService {
 	@Autowired
 	private CollegeRepository collegeRepo;
 
-	public College update(Long pathId, College c) {
+	public void update(Long pathId, College c) {
 		if( pathId == null || c == null || !pathId.equals(c.getId()) ) {
 			throw new IllegalArgumentException();
 		}
@@ -27,9 +27,7 @@ public class CollegeService {
 			if( c.getYear() == null || !c.getYear().equals( temp.getYear() ) ) {
 				throw new IllegalArgumentException();
 			} else {
-				c.setUsers(temp.getUsers());
-				c.setDepartments(temp.getDepartments());
-				return this.collegeRepo.save( c );
+			    this.collegeRepo.updateCollegeName( c.getName(), pathId);
 			}
 		} else {
 			throw new IllegalArgumentException();

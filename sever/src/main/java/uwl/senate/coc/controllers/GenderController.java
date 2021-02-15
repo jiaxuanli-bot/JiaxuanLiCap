@@ -45,11 +45,12 @@ public class GenderController {
     	this.genderService.delete( id );
     	return new ResponseEntity<>("OK", HttpStatus.NO_CONTENT);
     }
-    
+
     @RequestMapping( value="/{id}", method= RequestMethod.PUT)
-    public Gender update(
+    public ResponseEntity<String> update(
     		@PathVariable Long id,
     		@RequestBody( required=true ) Gender gender ) {
-    	return this.genderService.update( id, gender );
+        this.genderService.update( id, gender );
+        return new ResponseEntity<>("OK", HttpStatus.NO_CONTENT);
     }    
 }

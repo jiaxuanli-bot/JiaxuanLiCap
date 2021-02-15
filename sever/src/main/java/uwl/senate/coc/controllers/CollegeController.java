@@ -30,7 +30,7 @@ public class CollegeController {
     public List<College> getByYear(@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(required=true) String year) {
         return this.collegeService.findByYear(year);
     }
-    
+
     @RequestMapping( method= RequestMethod.POST)
     public College create( @RequestBody(required=true) College college) {
         return this.collegeService.create( college );
@@ -50,9 +50,10 @@ public class CollegeController {
     }
 
     @RequestMapping( value="/{id}", method= RequestMethod.PUT)
-    public College update(
+    public ResponseEntity<String> update(
     		@PathVariable Long id,
     		@RequestBody(required=true) College c ) {
-    	return this.collegeService.update( id, c );
+        this.collegeService.update( id, c );
+        return new ResponseEntity<>("OK", HttpStatus.NO_CONTENT);
     }
 }
