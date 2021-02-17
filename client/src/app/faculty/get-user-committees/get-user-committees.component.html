@@ -1,61 +1,44 @@
+
+
+
+
+<div class="modal-header">
+  <h4 class="modal-title" id="exampleModalLabel">Committees List</h4>
+  <button type="button" class="close" (click)="activeModal.dismiss()" aria-label="Close">
+    <span class="closeBtn" aria-hidden="true">&times;</span>
+  </button>
+</div>
 <div class="modal-body">
-  <div>
-    <button type="button" class="close" (click)="this.activeModal.dismiss()" aria-label="Close">
-      <span class="closeBtn mr-4" aria-hidden="true">&times;</span>
-    </button>
-    <div>
-      <h3 class="featuredHead">Committees List</h3>
-      <ul class="nav nav-tabs mb-4" role="tablist">
-        <li role="presentation" class="active">
-        </li>
-      </ul>
-      <div class="mb-3 mt-4">
-        <div id="h1">
-          <div class="input-group mb-2">
-            Assigned Committees
-          </div>
-        </div>
-        <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active">
-          </li>
-        </ul>
-        <div class="table-responsive ">
-          <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">
-
-            <tbody class="committeeListClickable">
-            <tr *ngFor = "let committee of userAssignedCommittees;index as i" data-dismiss="modal">
-              <td [routerLink]="['/committees', committee.id]">
-                {{committee.name}}
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="mb-3" >
-        <div id="h2">
-          <div class="input-group mb-2 mt-4">
-            Volunteered Committees
-          </div>
-        </div>
-        <ul class="nav nav-tabs mb-2" role="tablist">
-          <li role="presentation" class="active">
-          </li>
-        </ul>
-        <div class="table-responsive">
-          <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">
-            <tbody class="committeeListClickable">
-
-            <tr *ngFor = "let committee of userVolunteeredCommittees;index as i" data-dismiss="modal">
-              <td [routerLink]="['/committees', committee.id]">
-                {{committee.name}}
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="input-group mb-2">
+      Assigned Committees
     </div>
-  </div>
+    <ul class="nav nav-tabs" role="tablist">
+    </ul>
+    <div class="table-responsive ">
+      <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">
+        <tbody class="committeeListClickable">
+        <tr *ngFor = "let committee of userAssignedCommittees;index as i" data-dismiss="modal">
+          <td [routerLink]="['/uwl/committees', committee.id]">
+            {{committee.name}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="input-group mb-2 mt-4">
+      Volunteered Committees
+    </div>
+    <ul class="nav nav-tabs mb-2" role="tablist">
+    </ul>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12">
+        <tbody class="committeeListClickable">
+        <tr *ngFor = "let committee of userVolunteeredCommittees;index as i" data-dismiss="modal">
+          <td [routerLink]="['/uwl/committees', committee.id]">
+            {{committee.name}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
 </div>

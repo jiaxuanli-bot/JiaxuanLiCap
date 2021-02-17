@@ -210,6 +210,15 @@ input{
   margin-top: 30px;
 }
 
+.pageNav{
+  -webkit-box-shadow: 0 0 10px rgba(166, 166, 166, .6);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(166, 166, 166, .6);
+  width: 85%;
+  margin-left: 8%;
+  margin-top: 30px;
+}
+
 #piechart{
   margin-left: 4%;
 

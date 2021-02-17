@@ -182,6 +182,9 @@ export class ApiService {
   getCollegeByYear(year: string): Observable<College[]> {
     return this.http.get<College[]>(`${AppConstants.API_URL}/settings/colleges?year=${year}`);
   }
+  getCollegeByYears(startYear: string, endYear: string): Observable<College[]> {
+    return this.http.get<College[]>(`${AppConstants.API_URL}/settings/colleges/years?startYear=${startYear}&endYear=${endYear}`);
+  }
   modifyCollege(college: College): Observable<College> {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     return this.http.put<College>(`${AppConstants.API_URL}/settings/colleges/${college.id}`, college, config);

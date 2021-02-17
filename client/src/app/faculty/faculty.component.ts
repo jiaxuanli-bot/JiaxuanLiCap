@@ -243,14 +243,13 @@ export class FacultyComponent implements OnInit {
   getUserCommittees(id: string): void {
     this.apiService.getUserAssignedCommittees(id).subscribe(
       committees => {
-        const modalRef = this.modalService.open(GetUserCommitteesComponent, {backdropClass: 'light-blue-backdrop'});
-        modalRef.componentInstance.userAssignedCommittees = committees;
-      }
-    );
-    this.apiService.getUserVolunteeredCommittees(id).subscribe(
-      committees => {
-        const modalRef = this.modalService.open(GetUserCommitteesComponent, {backdropClass: 'light-blue-backdrop'});
-        modalRef.componentInstance.userVolunteeredCommittees = committees;
+        this.apiService.getUserVolunteeredCommittees(id).subscribe(
+          committees2 => {
+            const modalRef = this.modalService.open(GetUserCommitteesComponent, {backdropClass: 'light-blue-backdrop'});
+            modalRef.componentInstance.userAssignedCommittees = committees;
+            modalRef.componentInstance.userVolunteeredCommittees = committees2;
+          }
+        );
       }
     );
   }

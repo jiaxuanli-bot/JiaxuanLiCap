@@ -29,11 +29,18 @@
                       [data]="TData">
         </google-chart>
       </div>
+      <div class="col-sm-12 col-xs-8 col-md-8 col-lg-5 pieChart ml-5 mt-5" id="piechart3">
+        <google-chart #chart
+                      [title]="CTitle"
+                      [type]="type"
+                      [data]="CData">
+        </google-chart>
+      </div>
     </div>
   </div>
 <ng-container *ngIf="committees">
     <ng-container *ngFor="let item of committees | keyvalue">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light mt-5">
+      <nav class="pageNav navbar navbar-expand-lg navbar-light bg-light mt-5">
         <h3>{{item.key}}</h3>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#tableBtn2" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -42,11 +49,11 @@
       <div *ngIf="committees" class="table-responsive" >
         <table class="table table-bordered table-striped col-xs-12 col-md-12 col-lg-12 mb-5" id="reportTable">
           <thead>
-          <ng-container *ngIf="item.value[j]">
             <th *ngFor="let year of years;index as j">
+              <ng-container *ngIf="item.value[j]">
               {{year}}
+              </ng-container>
             </th>
-          </ng-container>
           </thead>
           <tbody>
           <tr *ngFor="let a of [].constructor(max[item.key]);index as i">

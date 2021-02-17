@@ -90,7 +90,9 @@ export class SlideBarComponent implements OnInit {
 
   createYear() {
     const modalRef = this.modalService.open(CreateYearComponent, {backdropClass: 'light-blue-backdrop'});
-    modalRef.componentInstance.newYear = 1 + Number(this.years[this.years.length - 1]);
+    this.apiService.getYears().subscribe( years => {
+      modalRef.componentInstance.newYear = 1 + Number(years[years.length - 1]);
+    });
     modalRef.result.then(
       () => {
         location.reload();

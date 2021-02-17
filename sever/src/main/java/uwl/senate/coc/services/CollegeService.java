@@ -39,6 +39,12 @@ public class CollegeService {
 		return this.collegeRepo.findByYear( year );
 	}
 
+	public List<College> findByYears(
+			@Pattern(regexp = "\\b\\d{4}\\b", message = "the year format is wrong") String startYear,
+			@Pattern(regexp = "\\b\\d{4}\\b", message = "the year format is wrong") String endYear ) {
+		return this.collegeRepo.findAllByYearBetween( startYear, endYear);
+	}
+
 	public College create(College college) {
 		return this.collegeRepo.save( college );
 	}

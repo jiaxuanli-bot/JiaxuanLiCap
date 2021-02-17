@@ -6,6 +6,7 @@ import {newArray} from '@angular/compiler/src/util';
 import {HashedCommittees} from '../models/hashed-committees';
 import {YearService} from '../service/year.service';
 import {TopBarService} from "../service/top-bar.service";
+import {College} from "../models/college";
 
 @Component({
   selector: 'app-report',
@@ -13,23 +14,25 @@ import {TopBarService} from "../service/top-bar.service";
   styleUrls: ['./report.component.css']
 })
 export class ReportComponent implements OnInit {
-  CASH = 0;
-  CSH = 0;
-  CBA = 0;
-  M = 0;
-  FP = 0;
-  AP = 0;
-  ATP = 0;
-  TT = 0;
-  TF = 0;
-  j = 0;
   max = {};
   committees: HashedCommittees;
   type = 'PieChart';
   RTitle = 'Rank';
   TTitle = 'Tenured';
-  RData: any;
-  TData: any;
+  CTitle = 'College';
+  RData = [];
+  TData = [];
+  CData = [];
+  CNum = {};
+  RNum = {
+    'Full Professor': 0,
+    'Associate Professor' : 0,
+   'Assistant Professor': 0
+  };
+  TNum = {
+    true: 0,
+    false: 0
+  };
   years: string[];
   yearForm: FormGroup;
 
@@ -43,6 +46,9 @@ export class ReportComponent implements OnInit {
     this.yearService.setYears([]);
   }
   ngOnInit(): void {
+    this.apiservice.getYears().subscribe( years => {
+      this.yearService.setYears( years );
+    });
     this.topBarService.setTopBarName('Analysis');
     this.yearForm = this.formBuilder.group({
       startYear: [''],
@@ -52,7 +58,6 @@ export class ReportComponent implements OnInit {
 
   get f() { return this.yearForm.controls; }
   search() {
-    this.M = 0;
     this.apiservice.getHashedCommitteesByYears(this.f.startYear.value, this.f.endYear.value).subscribe(
       value => {
         this.committees = value;
@@ -67,24 +72,76 @@ export class ReportComponent implements OnInit {
   }
 
   private initPiecgart(committees: HashedCommittees) {
-    for (const property in committees) {
-      for (let j = 0; j < committees[property].length; j++) {
-        this.FP += committees[property][j].members.filter(item => item.rank === 'Full Professor').length;
-        this.AP += committees[property][j].members.filter(item => item.rank === 'Associate Professor').length;
-        this.ATP += committees[property][j].members.filter(item => item.rank === 'Assistant Professor').length;
-        this.TT += committees[property][j].members.filter(item => item.tenured === true).length;
-        this.TF += committees[property][j].members.filter(item => item.tenured === false).length;
+    this.apiservice.getCollegeByYears(this.f.startYear.value, this.f.endYear.value ).subscribe(
+      colleges => {
+        const collegeSet = new Set();
+        colleges.forEach(
+          college => {
+            if (!collegeSet.has(college.name)) {
+              this.CNum[college.name] = 0;
+              collegeSet.add(college.name);
+            }
+          }
+        );
+        for (const property in committees) {
+          for (let j = 0; j < committees[property].length; j++) {
+            Object.keys(this.RNum).forEach(
+              rankName => {
+                this.RNum[rankName] += committees[property][j].members.filter(
+                  item => item.rank === rankName).length;
+              }
+            );
+            Object.keys(this.TNum).forEach(
+              tenuredName => {
+                this.TNum[tenuredName] += committees[property][j].members.filter(
+                  item => '' + item.tenured === tenuredName).length;
+              }
+            )
+            Object.keys(this.CNum).forEach(
+              collegeName => {
+                this.CNum[collegeName] += committees[property][j].members.filter(
+                  item => item.college.name === collegeName).length;
+              }
+            );
+          }
+        }
+        for (const property in committees) {
+          for (let j = 0; j < committees[property].length; j++) {
+            Object.keys(this.CNum).forEach(
+              collegeName => {
+                this.CNum[collegeName] += committees[property][j].members.filter(
+                  item => item.college.name === collegeName).length;
+              }
+            );
+          }
+        }
+        Object.keys(this.CNum).forEach(
+          key => {
+            const arr = [];
+            arr.push(key);
+            arr.push(this.CNum[key]);
+            this.CData.push(arr);
+          }
+        );
+        Object.keys(this.TNum).forEach(
+          key => {
+            const arr = [];
+            arr.push(key);
+            arr.push(this.TNum[key]);
+            this.TData.push(arr);
+          }
+        );
+        Object.keys(this.RNum).forEach(
+          key => {
+            const arr = [];
+            arr.push(key);
+            arr.push(this.RNum[key]);
+            this.RData.push(arr);
+          }
+        );
       }
-    }
-    this.RData = [
-      ['Full Professor', this.FP],
-      ['Associate Professor', this.AP],
-      ['Assistant Professor', this.ATP]
-    ];
-    this.TData = [
-      ['True', this.TT],
-      ['False', this.TF]
-    ];
+    );
+    // Object.keys(this.CNumber).forEach();
   }
 
   committeeMemberMaxLength(committees) {

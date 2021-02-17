@@ -1,10 +1,8 @@
 package uwl.senate.coc.services;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import uwl.senate.coc.entities.Department;
 import uwl.senate.coc.repositories.DepartmentRepository;
 
