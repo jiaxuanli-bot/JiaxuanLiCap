@@ -186,7 +186,7 @@ public class CommitteeService {
         this.committeeRepo.deleteById(id);
     }
 
-    public CommitteeSummary createCommittee(Committee c) {
+    public void createCommittee(Committee c) {
     	// Save the basic entity
     	Committee copy = new Committee.Builder()
     			.year( c.getYear() )
@@ -196,31 +196,28 @@ public class CommitteeService {
     	
     	// Fill in the missing parts 
     	Committee committee = committeeRepo.save( copy );
-    	
-    	List<Criteria> criteria = c.getCriteria()
-    		.stream()
-    		.map( crit -> {
-    			crit.setCommittee( committee );
-    			return crit;
-    		})
-    		.collect( Collectors.toList() );
 
-    	List<Duty> duties = c.getDuties()
-        		.stream()
-        		.map( duty -> {
-        			duty.setCommittee( committee );
-        			return duty;
-        		})
-        		.collect( Collectors.toList() );
-    	
-    	criteriaRepo.saveAll( criteria );
-    	dutyRepo.saveAll( duties );
-    	
-    	committee.setCriteria(criteria);
-    	committee.setDuties( duties );
+        List<Criteria> criteria = c.getCriteria()
+                .stream()
+                .map( crit -> {
+                    crit.setCommittee( committee );
+                    return crit;
+                })
+                .collect( Collectors.toList() );
+        criteriaRepo.saveAll( criteria );
+        committee.setCriteria(criteria);
+
+        List<Duty> duties = c.getDuties()
+                .stream()
+                .map( duty -> {
+                    duty.setCommittee( committee );
+                    return duty;
+                })
+                .collect( Collectors.toList() );
+        dutyRepo.saveAll( duties );
+        committee.setDuties( duties );
+
         committeeRepo.save(committee);
-        
-        return committeeRepo.findByNameEqualsAndYearEquals( committee.getName(), committee.getYear(), CommitteeSummary.class );
     }
 
 	public List<CommitteeId> getCommitteeIdsByName(String name, String year) {

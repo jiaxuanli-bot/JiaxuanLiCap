@@ -32,6 +32,8 @@ public class CriteriaPredicateFactory {
 		Function<User, Boolean> getter;
 		switch( property ) {
 			case "tenured" : getter = User::getTenured; break;
+			case "admin" : getter = User::getAdminResponsibility; break;
+			case "soe" : getter = User::getSoe; break;
 			case "grad-status" : getter = User::getGradStatus; break;
 			default: throw new IllegalArgumentException();
 		}
@@ -39,8 +41,23 @@ public class CriteriaPredicateFactory {
 		consume( parser, ")" );
 		return (committee) -> committee.getMembers().stream().allMatch( u -> getter.apply(u) );
 	}
-	
-		
+
+	// (rank Full Professor 9)
+	public static Predicate<Committee> rank( ExpressionParser parser ) {
+		consume( parser, "(", "rank" );
+		String rank = parser.nextToken() + ' ' + parser.nextToken();
+		Integer count = Integer.parseInt( parser.nextToken() );
+		Predicate<User> userCheck = u -> u.getCollege() != null && u.getCollege().getName().toLowerCase().equals( rank );
+		consume( parser, ")");
+
+		return committee ->
+				committee
+						.getMembers()
+						.stream()
+						.filter( userCheck )
+						.count() >= count;
+	}
+
 	// (college cls 3)
 	// (college csh 3) 
 	// (college cba 1)
@@ -73,6 +90,51 @@ public class CriteriaPredicateFactory {
 				.count() >= count;
 	}
 
+	// (ten 1)
+	public static Predicate<Committee> tenured( ExpressionParser parser ) {
+		consume( parser, "(", "tenured" );
+		Integer count = Integer.parseInt( parser.nextToken() );
+		Predicate<User> userCheck = User::getTenured;
+		consume( parser, ")");
+
+		return committee ->
+				committee
+						.getMembers()
+						.stream()
+						.filter( userCheck )
+						.count() >= count;
+	}
+
+	// (admim 1)
+	public static Predicate<Committee> adm( ExpressionParser parser ) {
+		consume( parser, "(", "admin" );
+		Integer count = Integer.parseInt( parser.nextToken() );
+		Predicate<User> userCheck = User::getAdminResponsibility;
+		consume( parser, ")");
+
+		return committee ->
+				committee
+						.getMembers()
+						.stream()
+						.filter( userCheck )
+						.count() >= count;
+	}
+
+	// (chair 1)
+	public static Predicate<Committee> chair( ExpressionParser parser ) {
+		consume( parser, "(", "chair" );
+		Integer count = Integer.parseInt( parser.nextToken() );
+		Predicate<User> userCheck = User::getChair;
+		consume( parser, ")");
+
+		return committee ->
+				committee
+						.getMembers()
+						.stream()
+						.filter( userCheck )
+						.count() >= count;
+	}
+
 	// (size 9)
 	public static Predicate<Committee> sizeOf( ExpressionParser parser ) {
 		consume( parser, "(", "size" );
@@ -81,7 +143,7 @@ public class CriteriaPredicateFactory {
 		
 		return c -> c.getMembers().size() == size;
 	}
-	
+
 	// always of the form (...)
 	public static Predicate<Committee> expression( ExpressionParser parser ) {
 		validate( parser, "(" );
@@ -92,10 +154,14 @@ public class CriteriaPredicateFactory {
 			case "all" : result = all( parser ); break;
 			case "size" : result = sizeOf( parser ); break;
 			case "college" : result = college( parser ); break;
-			case "soe" : result = soe( parser); break;
+	     	case "soe" : result = soe( parser); break;
+			case "chair": result = chair(parser); break;
+			case "admin" : result = adm( parser); break;
+			case "tenured": result = tenured(parser); break;
+			case "rank":  result = rank(parser); break;
 			default: throw new IllegalArgumentException();
 		}
-		
+
 		return result;					
 	}
 

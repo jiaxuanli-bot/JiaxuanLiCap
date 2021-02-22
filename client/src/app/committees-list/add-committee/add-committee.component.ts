@@ -15,7 +15,10 @@ export class AddCommitteeComponent implements OnInit {
   newIntr = '';
   Du  = '';
   newName = '';
-  cri: '';
+  cri1 =  '';
+  cri2 = '';
+  num = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+  booleans = [true, false];
   modifyNewCommittee = {
     editName: false,
     editCriteria: false,
@@ -24,6 +27,20 @@ export class AddCommitteeComponent implements OnInit {
   };
   parentComponent: any;
   newCommittee: Committee = new Committee();
+  criProperty = {
+    all : ['tenured', 'admin', 'soe', 'grad-status'],
+    'college cls' : this.num,
+    'college csh' : this.num,
+    'college cba' : this.num,
+    'rank full professor': this.num,
+    'rank associate professor': this.num,
+    'rank assistant professor': this.num,
+    soe : this.num,
+    tenured: this.num,
+    admin: this.num,
+    size: this.num,
+    chair: this.num
+  };
   constructor(
     private yearService: YearService,
     private apiService: ApiService,
@@ -57,9 +74,10 @@ export class AddCommitteeComponent implements OnInit {
     if (this.newCommittee.criteria === undefined) {
       this.newCommittee.criteria = [];
     }
-    d.criteria = this.cri;
+    d.criteria = '(' + this.cri1 + ' ' + this.cri2 + ')';
     this.newCommittee.criteria.push(d);
-    this.cri = '';
+    this.cri1 = '';
+    this.cri2 = '';
   }
 
   addDu() {
@@ -72,18 +90,21 @@ export class AddCommitteeComponent implements OnInit {
     this.newCommittee.duties.push(d);
     this.Du = '';
   }
-
   saveName() {
     this.modifyNewCommittee.editName = !this.modifyNewCommittee.editName;
     this.newCommittee.name = this.newName;
   }
   saveAll() {
     this.newCommittee.year = this.yearService.getYearValue;
+    console.log(this.newCommittee);
     this.apiService.createCommittee(this.newCommittee).subscribe(
       value => {
         this.activeModal.close('return');
         this.parentComponent.getCommitteeList();
       }
     );
+  }
+  deleteCri(index: number) {
+    this.newCommittee.criteria.splice(index, 1);
   }
 }

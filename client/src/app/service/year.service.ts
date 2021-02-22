@@ -27,23 +27,33 @@ export class YearService {
       .pipe( filter(e => (e instanceof ActivationEnd) ),
              map(e => e instanceof ActivationEnd ? e.snapshot : {} )
       ).subscribe( state => {
+      // @ts-ignore
+        if (state.url.length >= 2) {
+          // @ts-ignore
+          this.path = state.url[0].path;
+          // @ts-ignore
+          this.committeeId = state.url[1].path;
+          // @ts-ignore
+        } else if (state.url[0].path !== 'uwl') {
+          // @ts-ignore
+          this.path = null;
+          // @ts-ignore
+          this.committeeId = null;
+        }
       });
   }
-
-
   setValue(newValue): void {
-    if (this.path === 'committees' && this.committeeId !== undefined && this.committeeId !== null) {
+    if (this.path === 'committees' && this.committeeId !== null) {
+      window.location.hash = newValue;
       this.yearForCommitteePage.next(newValue);
     } else {
       window.location.hash = newValue;
       this.currentYear.next(newValue);
     }
   }
-
   committeeGetValue(): Observable<string> {
     return this.yearForCommitteePage.asObservable();
   }
-
   getValue(): Observable<string> {
     return this.currentYear.asObservable();
   }

@@ -52,8 +52,9 @@ public class CommitteeController {
 
 
     @RequestMapping( method=RequestMethod.POST)
-    public CommitteeSummary createCommitte(@RequestBody(required=true) Committee committee) {
-        return this.committeeService.createCommittee(committee);
+    public ResponseEntity<String> createCommitte(@RequestBody(required=true) Committee committee) {
+        this.committeeService.createCommittee(committee);
+        return new ResponseEntity<>("OK", HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping( value="/hashedCommittees", method=RequestMethod.GET )

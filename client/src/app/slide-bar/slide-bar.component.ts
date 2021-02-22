@@ -7,8 +7,8 @@ import {User} from '../models/user';
 import {YearService} from '../service/year.service';
 
 import { faUser, faUsers, faQuestionCircle, faCog, faChartPie, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {CreateYearComponent} from "./create-year/create-year.component";
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {CreateYearComponent} from './create-year/create-year.component';
 
 @Component({
   selector: 'app-slide-bar',
@@ -63,7 +63,7 @@ export class SlideBarComponent implements OnInit {
       year: []
     });
 
-    this.yearService.getYears.subscribe(
+    this.yearService.getYears.subscribe (
       years => {
         this.years = years;
       }

@@ -5,19 +5,18 @@ import { debounceTime } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { YearService } from '../service/year.service';
 import { Papa } from 'ngx-papaparse';
-import { Committee } from '../models/committee';
 import { Router } from '@angular/router';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import { AuthenticationService } from '../service/authentication.service';
 
 import { faEdit, faCheckCircle, faTrash, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import {TopBarService} from "../service/top-bar.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {AddUserFromCSVComponent} from "./add-user-from-csv/add-user-from-csv.component";
-import {AddUserComponent} from "./add-user/add-user.component";
-import {DeleteUserComponent} from "./delete-user/delete-user.component";
-import {ModifyUserComponent} from "./modify-user/modify-user.component";
-import {GetUserCommitteesComponent} from "./get-user-committees/get-user-committees.component";
+import {TopBarService} from '../service/top-bar.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {AddUserFromCSVComponent} from './add-user-from-csv/add-user-from-csv.component';
+import {AddUserComponent} from './add-user/add-user.component';
+import {DeleteUserComponent} from './delete-user/delete-user.component';
+import {ModifyUserComponent} from './modify-user/modify-user.component';
+import {GetUserCommitteesComponent} from './get-user-committees/get-user-committees.component';
 
 @Component({
   selector: 'app-faculty',
@@ -70,8 +69,8 @@ export class FacultyComponent implements OnInit {
   searchTextChanged = new Subject<string>();
   year: Observable<string>;
   constructor(
-    private modalService: NgbModal,
     public authentication: AuthenticationService,
+    private modalService: NgbModal,
     private yearService: YearService,
     private apiService: ApiService,
     private router: Router,

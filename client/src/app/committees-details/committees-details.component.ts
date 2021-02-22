@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {YearService} from '../service/year.service';
 import {ApiService} from '../service/api.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Committee} from '../models/committee';
 import {forkJoin} from 'rxjs';
 import {AuthenticationService} from '../service/authentication.service';
-
 import { faCircle, faCheckCircle, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import {TopBarService} from '../service/top-bar.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -28,14 +27,14 @@ export class CommitteesDetailsComponent implements OnInit {
     criteria : false,
     members: true,
     volunteers: true
-  }
+  };
 
   icons = {
     faCircle : faCircle,
     faCheckCircle : faCheckCircle,
     faAngleDown : faAngleDown,
     faAngleUp : faAngleUp
-  }
+  };
 
   constructor(
     private modalService: NgbModal,
@@ -43,7 +42,8 @@ export class CommitteesDetailsComponent implements OnInit {
     private topBarService: TopBarService,
     private yearService: YearService,
     private apiService: ApiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -61,8 +61,17 @@ export class CommitteesDetailsComponent implements OnInit {
   }
 
   uploadCommitteeById(committeeId: string) {
-    this.apiService.getCommitteeById(committeeId).subscribe (
+     this.apiService.getCommitteeById(committeeId).subscribe (
       committee => {
+        this.yearService.committeeGetValue().subscribe(
+          year => {
+            this.apiService.getCommitteeIdByYearAndName(year, committee.name).subscribe(
+              newCommittee => {
+                this.router.navigate(['/uwl/committees/' + newCommittee.id] , { fragment: year});
+              }
+            );
+          }
+        );
         this.committee = committee;
         this.committee.members.forEach( m => m.rank = m.rank.split(' ')[0] );
         this.committee.volunteers.forEach( m => m.rank = m.rank.split(' ')[0] );

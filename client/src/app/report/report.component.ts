@@ -5,8 +5,8 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {newArray} from '@angular/compiler/src/util';
 import {HashedCommittees} from '../models/hashed-committees';
 import {YearService} from '../service/year.service';
-import {TopBarService} from "../service/top-bar.service";
-import {College} from "../models/college";
+import {TopBarService} from '../service/top-bar.service';
+import {College} from '../models/college';
 
 @Component({
   selector: 'app-report',
@@ -96,7 +96,7 @@ export class ReportComponent implements OnInit {
                 this.TNum[tenuredName] += committees[property][j].members.filter(
                   item => '' + item.tenured === tenuredName).length;
               }
-            )
+            );
             Object.keys(this.CNum).forEach(
               collegeName => {
                 this.CNum[collegeName] += committees[property][j].members.filter(

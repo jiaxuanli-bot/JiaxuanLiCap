@@ -13,12 +13,12 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AddDeptComponent} from './add-dept/add-dept.component';
 import {AddGenderComponent} from './add-gender/add-gender.component';
 import {AddCollegeComponent} from './add-college/add-college.component';
-import {EditDeptComponent} from "./edit-dept/edit-dept.component";
-import {EditGenderComponent} from "./edit-gender/edit-gender.component";
-import {EditCollegeComponent} from "./edit-college/edit-college.component";
-import {DeleteCollegeComponent} from "./delete-college/delete-college.component";
-import {DeleteGenComponent} from "./delete-gen/delete-gen.component";
-import {DeleteDeptComponent} from "./delete-dept/delete-dept.component";
+import {EditDeptComponent} from './edit-dept/edit-dept.component';
+import {EditGenderComponent} from './edit-gender/edit-gender.component';
+import {EditCollegeComponent} from './edit-college/edit-college.component';
+import {DeleteCollegeComponent} from './delete-college/delete-college.component';
+import {DeleteGenComponent} from './delete-gen/delete-gen.component';
+import {DeleteDeptComponent} from './delete-dept/delete-dept.component';
 
 @Component({
   selector: 'app-settings',
