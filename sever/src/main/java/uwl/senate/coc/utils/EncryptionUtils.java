@@ -14,7 +14,7 @@ public class EncryptionUtils {
 			0x49, 0x73, 0x24, 0x28, 
 			0x78, 0x41, 0x49, 0x63, 
 			0x41, 0x73, 0x30, 0x31 };
-	
+
 	public static String encrypt( String plain ) {
 		try {
 			Cipher cipher = Cipher.getInstance( TYPE );
@@ -25,7 +25,7 @@ public class EncryptionUtils {
 			throw new RuntimeException("encoding error from Encryption Utils: " + e.getMessage() );
 		}
 	}
-	
+
 	public static String decrypt( String encoded ) {
 		try {
 			Cipher cipher = Cipher.getInstance( TYPE );

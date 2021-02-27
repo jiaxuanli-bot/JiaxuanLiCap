@@ -25,13 +25,9 @@ export class AddCommitteeComponent implements OnInit {
     editDuties: false,
     editIntroduction: false,
   };
-  parentComponent: any;
   newCommittee: Committee = new Committee();
   criProperty = {
     all : ['tenured', 'admin', 'soe', 'grad-status'],
-    'college cls' : this.num,
-    'college csh' : this.num,
-    'college cba' : this.num,
     'rank full professor': this.num,
     'rank associate professor': this.num,
     'rank assistant professor': this.num,
@@ -46,6 +42,33 @@ export class AddCommitteeComponent implements OnInit {
     private apiService: ApiService,
     public activeModal: NgbActiveModal) { }
   ngOnInit(): void {
+    this.apiService.getDeptByYear(this.yearService.getYearValue).subscribe(
+      depts => {
+        depts.forEach(
+          dept => {
+            this.criProperty[`department ` + dept.name] = this.num;
+          }
+        );
+      }
+    );
+    this.apiService.getCollegeByYear(this.yearService.getYearValue).subscribe(
+      colleges => {
+        colleges.forEach(
+          college => {
+            this.criProperty[`college ` + college.name] = this.num;
+          }
+        );
+      }
+    );
+    this.apiService.getGendersByYear(this.yearService.getYearValue).subscribe(
+      genders => {
+        genders.forEach(
+          gender => {
+            this.criProperty[`gender ` + gender.name] = this.num;
+          }
+        );
+      }
+    );
   }
   modifyIntr() {
     this.modifyNewCommittee.editIntroduction = !this.modifyNewCommittee.editIntroduction;
@@ -96,13 +119,18 @@ export class AddCommitteeComponent implements OnInit {
   }
   saveAll() {
     this.newCommittee.year = this.yearService.getYearValue;
-    console.log(this.newCommittee);
-    this.apiService.createCommittee(this.newCommittee).subscribe(
-      value => {
-        this.activeModal.close('return');
-        this.parentComponent.getCommitteeList();
-      }
-    );
+    if (this.newCommittee.duties === undefined ||
+      this.newCommittee.criteria === undefined ||
+      this.newCommittee.introduction === undefined ||
+      this.newCommittee.name === undefined) {
+      alert('All properties of committee can not be null');
+    } else {
+      this.apiService.createCommittee(this.newCommittee).subscribe(
+        value => {
+          this.activeModal.close('return');
+        }
+      );
+    }
   }
   deleteCri(index: number) {
     this.newCommittee.criteria.splice(index, 1);

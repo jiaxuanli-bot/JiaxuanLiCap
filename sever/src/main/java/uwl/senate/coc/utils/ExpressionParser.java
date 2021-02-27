@@ -9,7 +9,7 @@ public class ExpressionParser {
 	private StringTokenizer tok;
 	private List<String> tokens;
 	private int next = 0;
-	
+
 	public ExpressionParser( String txt ) {
 		this.tok = new StringTokenizer( txt, "() ", true);
 		fullyParse();

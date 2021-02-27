@@ -11,10 +11,13 @@
       </thead>
 
       <tbody class="clickable">
-        <tr *ngFor="let committee of committees;index as i" [routerLink]="['/uwl/committees', committee.id]" [fragment]="committee.year">
+        <tr *ngFor="let committee of committees;index as i" [routerLink]="['/uwl/committees', committee.id]" (click)="setCommitteeName(committee.name)" [fragment]="committee.year">
           <td>{{committee?.name}}</td>
-          <td class="text-center">
+          <td class="text-center" *ngIf="committeesCriteriaStatus && committeesCriteriaStatus[i] !== 0">
             <fa-icon [icon]="icons.faTimesCircle" class="app-red"></fa-icon>
+          </td>
+          <td class="text-center" *ngIf="committeesCriteriaStatus && committeesCriteriaStatus[i] === 0">
+            <fa-icon [icon]="icons.faCheckCircle" class="app-green"></fa-icon>
           </td>
           <td class="text-center">{{committee?.numMembers}}</td>
           <td class="text-center">{{committee?.numVolunteers}}</td>

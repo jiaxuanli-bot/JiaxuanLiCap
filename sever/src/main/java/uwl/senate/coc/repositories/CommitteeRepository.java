@@ -19,7 +19,6 @@ public interface CommitteeRepository extends JpaRepository<Committee, Long> {
     List<CommitteeWithUserSummaries> findByYearBetween(String startYear, String endYear);
     List<CommitteeSummary> findByYearBetweenAndIdNotNull(String startYear, String endYear);
     List<CommitteeYear> findDistinctByYearNotNullOrderByYearAsc();
-    List<CommitteeYear> findDistinctByYearNotNullAndIdEqualsOrderByYearAsc(Long id);
     List<CommitteeYear> findDistinctByNameEquals(String name);
     List<CommitteeSummary> findByMembers(User u);
     List<CommitteeSummary> findByVolunteers(User v);

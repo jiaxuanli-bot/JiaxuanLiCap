@@ -50,7 +50,7 @@ export class CommitteesDetailsComponent implements OnInit {
     this.topBarService.setTopBarName('Committee Details');
     this.route.params.subscribe(
       param => {
-        this.uploadCommitteeById( param.id );
+        this.initCommitteeById( param.id );
       },
       (err) => console.error(err),
     );
@@ -59,19 +59,50 @@ export class CommitteesDetailsComponent implements OnInit {
   toggleView( view: string ): void {
     this.views[view] = !this.views[view];
   }
-
-  uploadCommitteeById(committeeId: string) {
+  initCommitteeById(committeeId: string) {
      this.apiService.getCommitteeById(committeeId).subscribe (
       committee => {
-        this.yearService.committeeGetValue().subscribe(
-          year => {
-            this.apiService.getCommitteeIdByYearAndName(year, committee.name).subscribe(
-              newCommittee => {
-                this.router.navigate(['/uwl/committees/' + newCommittee.id] , { fragment: year});
-              }
-            );
+        this.apiService.getCommitteeYears(committeeId).subscribe(
+          years => {
+            this.yearService.setYears(years);
           }
         );
+        this.yearService.committeeGetValue().subscribe(
+          year => {
+            if (year !== undefined && year !== '') {
+              this.apiService.getCommitteeByYearAndName(year, committee.name).subscribe(
+                newCommittee => {
+                  if ( newCommittee.id !== this.committee.id && this.committee.name === this.yearService.getCommitteeNameValue()) {
+                    this.router.navigate(['/uwl/committees' , newCommittee.id] , { fragment: year});
+                  }
+                }
+              );
+            }
+          }
+        );
+        this.committee = committee;
+        this.committee.members.forEach( m => m.rank = m.rank.split(' ')[0] );
+        this.committee.volunteers.forEach( m => m.rank = m.rank.split(' ')[0] );
+
+        const assignedUsersReqs = committee.members.map( m => this.apiService.getUserAssignedCommittees(m.id) );
+        forkJoin(assignedUsersReqs).subscribe(
+          results => {
+            this.usersCommittees = results as Committee[][];
+          }
+        );
+
+        const unassignedUserReqs = this.committee.volunteers.map( m => this.apiService.getUserAssignedCommittees(m.id) );
+        forkJoin(unassignedUserReqs).subscribe(
+          results => {
+            this.volunteersCommittees = results as Committee[][];
+          }
+        );
+      }
+    );
+  }
+  uploadCommitteeById(committeeId: string) {
+    this.apiService.getCommitteeById(committeeId).subscribe (
+      committee => {
         this.committee = committee;
         this.committee.members.forEach( m => m.rank = m.rank.split(' ')[0] );
         this.committee.volunteers.forEach( m => m.rank = m.rank.split(' ')[0] );

@@ -37,7 +37,7 @@ public class CriteriaPredicateFactory {
 			case "grad-status" : getter = User::getGradStatus; break;
 			default: throw new IllegalArgumentException();
 		}
-		
+
 		consume( parser, ")" );
 		return (committee) -> committee.getMembers().stream().allMatch( u -> getter.apply(u) );
 	}
@@ -67,14 +67,34 @@ public class CriteriaPredicateFactory {
 		Integer count = Integer.parseInt( parser.nextToken() );
 		Predicate<User> userCheck = u -> u.getCollege() != null && u.getCollege().getName().toLowerCase().equals( college );
 		consume( parser, ")");
-	
+
 		return committee -> 
 		committee
 			.getMembers()
-			.stream()
+				.stream()
 				.filter( userCheck )
 				.count() >= count;
 	}
+
+
+	// (department CS 3)
+	// (department BIO 3)
+	// (department EDS 1)
+	public static Predicate<Committee> department( ExpressionParser parser ) {
+		consume( parser, "(", "department" );
+		String dept = parser.nextToken();
+		Integer count = Integer.parseInt( parser.nextToken() );
+		Predicate<User> userCheck = u -> u.getDept() != null && u.getDept().getName().toLowerCase().equals( dept );
+		consume( parser, ")");
+
+		return committee ->
+				committee
+						.getMembers()
+						.stream()
+						.filter( userCheck )
+						.count() >= count;
+	}
+
 	// (soe 1)
 	public static Predicate<Committee> soe( ExpressionParser parser ) {
 		consume( parser, "(", "soe" );
@@ -154,6 +174,8 @@ public class CriteriaPredicateFactory {
 			case "all" : result = all( parser ); break;
 			case "size" : result = sizeOf( parser ); break;
 			case "college" : result = college( parser ); break;
+			case "department" : result = department( parser );break;
+			case "gender" : result = gender( parser );break;
 	     	case "soe" : result = soe( parser); break;
 			case "chair": result = chair(parser); break;
 			case "admin" : result = adm( parser); break;
@@ -163,6 +185,21 @@ public class CriteriaPredicateFactory {
 		}
 
 		return result;					
+	}
+
+	private static Predicate<Committee> gender(ExpressionParser parser) {
+		consume( parser, "(", "gender" );
+		String gender = parser.nextToken();
+		Integer count = Integer.parseInt( parser.nextToken() );
+		Predicate<User> userCheck = u -> u.getGender() != null && u.getGender().getName().toLowerCase().equals( gender );
+		consume( parser, ")");
+
+		return committee ->
+				committee
+						.getMembers()
+						.stream()
+						.filter( userCheck )
+						.count() >= count;
 	}
 
 

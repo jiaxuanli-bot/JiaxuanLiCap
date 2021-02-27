@@ -25,7 +25,7 @@ public class CollegeController {
 
     @Autowired
     private CollegeService collegeService;
-	
+
     @RequestMapping( method= RequestMethod.GET)
     public List<College> getByYear(@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(required=true) String year) {
         return this.collegeService.findByYear(year);

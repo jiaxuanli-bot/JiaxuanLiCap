@@ -82,7 +82,7 @@ public class CommitteeService {
         List<CommitteeYear> years  = committeeRepo.findDistinctByYearNotNullOrderByYearAsc();        
         String lastYear = years.get(years.size() - 1).getYear();
         List<Committee> committees = committeeRepo.findByYear(lastYear, Committee.class);
-        
+
         committees.forEach(
                 committee -> {
                 	// SAVE THE NEW COMMITTEE
@@ -154,10 +154,7 @@ public class CommitteeService {
         Committee committee = committeeRepo.findById(Long.valueOf(id)).get();
         user.getCommittees().add(committee);
         user.getVolunteeredCommittees().remove(committee);
-        committee.getMembers().add(user);
-        committee.getVolunteers().remove(user);
         userRepo.save(user);
-        committeeRepo.save(committee);
         return res[0];
     }
 
@@ -178,8 +175,8 @@ public class CommitteeService {
         return res[0];
     }
 
-    public CommitteeId getCommitteeIdByYearAndName(String name, String year) {
-        return committeeRepo.findByNameEqualsAndYearEquals(name, year, CommitteeId.class );
+    public CommitteeSummary getCommitteeIdByYearAndName(String name, String year) {
+        return committeeRepo.findByNameEqualsAndYearEquals(name, year, CommitteeSummary.class );
     }
 
     public void deleteCommitteeById(Long id) {

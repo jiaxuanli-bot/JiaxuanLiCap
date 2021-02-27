@@ -9,6 +9,10 @@ import { faTimesCircle, faCheckCircle, faTrash} from '@fortawesome/free-solid-sv
 import {TopBarService} from "../service/top-bar.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AddCommitteeComponent} from "./add-committee/add-committee.component";
+import {User} from "../models/user";
+import {AppConstants} from "../constants/app-constants";
+import {forkJoin} from "rxjs";
+import {Committee} from "../models/committee";
 
 @Component({
   selector: 'app-committees-list',
@@ -17,7 +21,7 @@ import {AddCommitteeComponent} from "./add-committee/add-committee.component";
 })
 export class CommitteesListComponent implements OnInit {
   committees: CommitteeSummary[] = [];
-  committeesCriteriaStatus: Criteria[][] = [];
+  committeesCriteriaStatus: any;
 
   icons = {
     faTimesCircle : faTimesCircle,
@@ -46,7 +50,14 @@ export class CommitteesListComponent implements OnInit {
       year => {
         if (year !== undefined && year !== '' && year !== null) {
           this.apiService.getCommitteesByYear(year).subscribe(
-            committees => this.committees = committees
+            committees => {
+              this.committees = committees;
+              this.apiService.getCommitteeCriteriaStatus(committees).subscribe(
+                status => {
+                  this.committeesCriteriaStatus = status as number[];
+                }
+              );
+            }
           );
         }
       }
@@ -64,5 +75,9 @@ export class CommitteesListComponent implements OnInit {
         this.getCommitteeList();
       }
     );
+  }
+
+  setCommitteeName(name: string) {
+    this.yearService.setCommitteeName(name);
   }
 }

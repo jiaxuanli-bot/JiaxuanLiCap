@@ -50,7 +50,6 @@ public class CommitteeController {
     	return new ResponseEntity<>("OK", HttpStatus.NO_CONTENT);
     }
 
-
     @RequestMapping( method=RequestMethod.POST)
     public ResponseEntity<String> createCommitte(@RequestBody(required=true) Committee committee) {
         this.committeeService.createCommittee(committee);
@@ -68,7 +67,7 @@ public class CommitteeController {
     }
 
     @RequestMapping( value="/{name}/years/{year}", method=RequestMethod.GET )
-    public CommitteeId getCommitteeIdByYearAndName(@PathVariable String name, @PathVariable String year) {
+    public CommitteeSummary getCommitteeIdByYearAndName(@PathVariable String name, @PathVariable String year) {
         return committeeService.getCommitteeIdByYearAndName(name, year);
     }
 
@@ -88,12 +87,9 @@ public class CommitteeController {
     }
 
     @RequestMapping( value="/{cid}/members/{uid}", method=RequestMethod.PUT )
-    public User assignCommitteeMember( 
+    public User assignCommitteeMember(
     		@PathVariable Long cid,
     		@PathVariable Long uid ) {
-        System.out.println();
-        System.out.println(cid);
-        System.out.println(uid);
         return committeeService.assignCommitteeMember( cid, uid );
     }
 
@@ -102,6 +98,11 @@ public class CommitteeController {
     		@PathVariable Long cid,
     		@PathVariable Long uid ) {
         return committeeService.removeMember( cid, uid );
+    }
+
+    @RequestMapping( value="/{id}/unsatisfiedCriteria/size", method=RequestMethod.GET)
+    public Integer unsatisfiedCriteriaSize( @PathVariable Long id ) {
+        return this.committeeService.unsatisfiedCriteria(id).size();
     }
 
     @RequestMapping( value="/{id}/unsatisfiedCriteria", method=RequestMethod.GET)

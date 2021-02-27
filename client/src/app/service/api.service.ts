@@ -102,6 +102,16 @@ export class ApiService {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     return this.http.post <User> (`${AppConstants.API_URL}/users`, user, config);
   }
+  getCommitteeCriteriaStatus(committees: CommitteeSummary[]) {
+    const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    const reqs2 = [];
+    committees.forEach(
+      committee => {
+        reqs2.push(this.http.get <number> (`${AppConstants.API_URL}/committees/${committee.id}/unsatisfiedCriteria/size`, config));
+      }
+    );
+    return forkJoin(reqs2);
+  }
   uploadFacultiesFromCSV(faculties: User[]) {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const reqs2 = [];
@@ -132,7 +142,7 @@ export class ApiService {
     return this.http.post <string> (`${AppConstants.API_URL}/settings/years/${year}`, {});
   }
 
-  getCommitteeIdByYearAndName(year, name): Observable<CommitteeSummary> {
+  getCommitteeByYearAndName(year, name): Observable<CommitteeSummary> {
     return this.http.get<CommitteeSummary>(`${AppConstants.API_URL}/committees/${name}/years/${year}`, {} );
   }
   getUserYears(email): Observable<string[]> {

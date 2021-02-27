@@ -236,7 +236,6 @@ public class MockService {
         return criteria;
     }
 
-    
     // THIS FUNCTION DOESN"T SAVE IN THE REPO.  WE DEFER FOR FASTER BATCH SAVE LATER
     public List<Duty> duties(Committee committee) {
         List<Duty> duties = IntStream
@@ -295,7 +294,7 @@ public class MockService {
 
         userRepo.saveAll( users ); // all users have been saved with ids
         
-        
+
         // CREATE SURVEY DATA
         List<Survey> allSurveys = users
         		.stream()

@@ -4,11 +4,14 @@ import {ActivatedRoute, Router, ActivationEnd} from '@angular/router';
 import { map, filter } from 'rxjs/operators';
 import {ApiService} from './api.service';
 import {AuthenticationService} from './authentication.service';
+import {User} from "../models/user";
+import {AppConstants} from "../constants/app-constants";
 
 @Injectable({
   providedIn: 'root'
 })
 export class YearService {
+  private committeeName: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private currentYear: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private yearForCommitteePage: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private years: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
@@ -42,6 +45,12 @@ export class YearService {
         }
       });
   }
+  setCommitteeName(name: string) {
+    this.committeeName.next(name);
+  }
+  getCommitteeNameValue() {
+    return this.committeeName.value;
+  }
   setValue(newValue): void {
     if (this.path === 'committees' && this.committeeId !== null) {
       window.location.hash = newValue;
@@ -57,7 +66,6 @@ export class YearService {
   getValue(): Observable<string> {
     return this.currentYear.asObservable();
   }
-
   public get getYearValue(): string {
     return this.currentYear.value;
   }
