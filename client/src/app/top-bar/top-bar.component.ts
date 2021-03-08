@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from '../service/authentication.service';
-import {TopBarService} from "../service/top-bar.service";
+import {TopBarService} from '../service/top-bar.service';
 
 
 @Component({

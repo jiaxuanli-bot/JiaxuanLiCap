@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {YearService} from '../../service/year.service';
 import {ApiService} from '../../service/api.service';
 import {College} from '../../models/college';
-import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-add-college',
@@ -23,7 +23,7 @@ export class AddCollegeComponent implements OnInit {
     college.year = this.yearService.getYearValue;
     college.name = this.collegeName;
     this.apiService.createCollege(college).subscribe(
-      resCollege => {
+      () => {
         this.activeModal.close('return');
       }
     );

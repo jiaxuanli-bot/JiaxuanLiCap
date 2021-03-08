@@ -12,7 +12,7 @@ import uwl.senate.coc.repositories.CollegeRepository;
 
 @Service
 public class CollegeService {
-	
+
 	@Autowired
 	private CollegeRepository collegeRepo;
 
@@ -22,7 +22,7 @@ public class CollegeService {
 		}
 
 		Boolean exists = this.collegeRepo.findById( c.getId() ).isPresent();		
-		if( exists ) { 
+		if( exists ) {
 			College temp = this.collegeRepo.findById( c.getId() ).get();
 			if( c.getYear() == null || !c.getYear().equals( temp.getYear() ) ) {
 				throw new IllegalArgumentException();

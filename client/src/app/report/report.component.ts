@@ -65,7 +65,8 @@ export class ReportComponent implements OnInit {
         this.initPiecgart(value);
         this.years =  newArray( this.f.endYear.value - this.f.startYear.value + 1);
         for (let i = 0; i < this.f.endYear.value - this.f.startYear.value + 1; i++) {
-          this.years[i] = (parseInt(this.f.startYear.value) + i).toString();
+          // tslint:disable-next-line:radix
+          this.years[i] = ( parseInt(this.f.startYear.value) + i).toString();
         }
       }
     );
@@ -83,7 +84,9 @@ export class ReportComponent implements OnInit {
             }
           }
         );
+        // tslint:disable-next-line:forin
         for (const property in committees) {
+          // tslint:disable-next-line:prefer-for-of
           for (let j = 0; j < committees[property].length; j++) {
             Object.keys(this.RNum).forEach(
               rankName => {
@@ -105,7 +108,9 @@ export class ReportComponent implements OnInit {
             );
           }
         }
+        // tslint:disable-next-line:forin
         for (const property in committees) {
+          // tslint:disable-next-line:prefer-for-of
           for (let j = 0; j < committees[property].length; j++) {
             Object.keys(this.CNum).forEach(
               collegeName => {
@@ -141,17 +146,18 @@ export class ReportComponent implements OnInit {
         );
       }
     );
-    // Object.keys(this.CNumber).forEach();
   }
 
   committeeMemberMaxLength(committees) {
-    for (const property in committees) {
+    for (const property of committees) {
       let maxNum = 0;
-      for (let j = 0; j < committees[property].length; j++) {
-        if  (committees[property][j].members.length > maxNum) {
-          maxNum = committees[property][j].members.length;
+      committees[property].forEach(
+        value => {
+          if  (value.members.length > maxNum) {
+            maxNum = value.members.length;
+          }
         }
-      }
+      );
       this.max[property] = maxNum;
     }
   }

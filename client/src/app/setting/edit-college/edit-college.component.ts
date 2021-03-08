@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import {College} from "../../models/college";
-import {YearService} from "../../service/year.service";
-import {ApiService} from "../../service/api.service";
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {College} from '../../models/college';
+import {YearService} from '../../service/year.service';
+import {ApiService} from '../../service/api.service';
 
 @Component({
   selector: 'app-edit-college',
@@ -23,7 +23,7 @@ export class EditCollegeComponent implements OnInit {
   saveCollege() {
     this.college.name = this.editCollegeText;
     this.apiService.modifyCollege(this.college).subscribe(
-      resCollege => {
+      () => {
         this.activeModal.close('return');
       }
     );

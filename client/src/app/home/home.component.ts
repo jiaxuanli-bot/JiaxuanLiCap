@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiService} from '../service/api.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {Committee} from '../models/committee';
 import {AuthenticationService} from '../service/authentication.service';
 import {User} from '../models/user';
 import {Survey} from '../models/survey';
@@ -9,7 +8,7 @@ import {YearService} from '../service/year.service';
 import {SurveyResponse} from '../models/survey-response';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SelectedCommitteeComponent } from './selected-committee/selected-committee.component';
-import {TopBarService} from "../service/top-bar.service";
+import {TopBarService} from '../service/top-bar.service';
 
 @Component({
   selector: 'app-home',

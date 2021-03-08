@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import {ApiService} from "../../service/api.service";
+import {ApiService} from '../../service/api.service';
 
 @Component({
   selector: 'app-assign-member',
@@ -19,7 +19,7 @@ export class AssignMemberComponent implements OnInit {
 
   assignMember() {
     this.apiService.assignUserToOneCommittee(this.committeeId, this.userId).subscribe(
-      value => {
+      () => {
         this.activeModal.close('return');
       }
     );

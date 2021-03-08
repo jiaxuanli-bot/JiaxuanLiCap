@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {AuthenticationService} from '../service/authentication.service';
 import {YearService} from '../service/year.service';
 import {ApiService} from '../service/api.service';
-import {Router} from '@angular/router';
 import {Gender} from '../models/gender';
 import {College} from '../models/college';
 import {Department} from '../models/department';
@@ -38,9 +37,9 @@ export class SettingsComponent implements OnInit {
   depts: Department[] = [];
 
   icons = {
-    faTrash : faTrash,
-    faEdit : faEdit,
-    faPlusSquare : faPlusSquare
+    faTrash,
+    faEdit,
+    faPlusSquare
   };
 
   constructor(
@@ -48,8 +47,7 @@ export class SettingsComponent implements OnInit {
     private yearService: YearService,
     private apiService: ApiService,
     private topBarService: TopBarService,
-    private modalService: NgbModal,
-    private router: Router) {
+    private modalService: NgbModal) {
     this.apiService.getYears().subscribe( years => {
       this.yearService.setYears( years );
     });
@@ -58,7 +56,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     this.topBarService.setTopBarName('Settings');
     this.yearService.getValue().subscribe(
-      year => {
+      () => {
         this.getCollege();
         this.getGen();
         this.getDept();

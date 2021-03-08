@@ -2,7 +2,6 @@ package uwl.senate.coc.utils;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
-
 import uwl.senate.coc.entities.Committee;
 import uwl.senate.coc.entities.Criteria;
 import uwl.senate.coc.entities.User;
@@ -18,8 +17,32 @@ public class CriteriaPredicateFactory {
 		for( int i = 0; i < expected.length; i++ ) {
 			if( !parser.peek( i ).equals( expected[i] ) ) throw new IllegalArgumentException(); 
 		}
-		
+
 		parser.advance( expected.length );
+	}
+
+
+	// always of the form (...)
+	public static Predicate<Committee> expression( ExpressionParser parser ) {
+		validate( parser, "(" );
+		String type = parser.peek( 1 );
+
+		Predicate<Committee> result = null;
+		switch( type ) {
+			case "all" : result = all( parser ); break;
+			case "size" : result = sizeOf( parser ); break;
+			case "college" : result = college( parser ); break;
+			case "department" : result = department( parser );break;
+			case "gender" : result = gender( parser );break;
+			case "soe" : result = soe( parser); break;
+			case "chair": result = chair(parser); break;
+			case "admin" : result = adm( parser); break;
+			case "tenured": result = tenured(parser); break;
+			case "rank":  result = rank(parser); break;
+			default: throw new IllegalArgumentException();
+		}
+
+		return result;
 	}
 
 	// (all tenured)
@@ -164,28 +187,6 @@ public class CriteriaPredicateFactory {
 		return c -> c.getMembers().size() == size;
 	}
 
-	// always of the form (...)
-	public static Predicate<Committee> expression( ExpressionParser parser ) {
-		validate( parser, "(" );
-		String type = parser.peek( 1 );
-
-		Predicate<Committee> result = null;
-		switch( type ) {
-			case "all" : result = all( parser ); break;
-			case "size" : result = sizeOf( parser ); break;
-			case "college" : result = college( parser ); break;
-			case "department" : result = department( parser );break;
-			case "gender" : result = gender( parser );break;
-	     	case "soe" : result = soe( parser); break;
-			case "chair": result = chair(parser); break;
-			case "admin" : result = adm( parser); break;
-			case "tenured": result = tenured(parser); break;
-			case "rank":  result = rank(parser); break;
-			default: throw new IllegalArgumentException();
-		}
-
-		return result;					
-	}
 
 	private static Predicate<Committee> gender(ExpressionParser parser) {
 		consume( parser, "(", "gender" );
@@ -201,7 +202,6 @@ public class CriteriaPredicateFactory {
 						.filter( userCheck )
 						.count() >= count;
 	}
-
 
 	public static Predicate<Committee> build(Criteria crit) {
 		ExpressionParser parser = new ExpressionParser( crit.getCriteria().toLowerCase() );

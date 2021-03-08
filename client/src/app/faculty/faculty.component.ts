@@ -4,11 +4,9 @@ import { User } from '../models/user';
 import { debounceTime } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { YearService } from '../service/year.service';
-import { Papa } from 'ngx-papaparse';
 import { Router } from '@angular/router';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import { AuthenticationService } from '../service/authentication.service';
-
 import { faEdit, faCheckCircle, faTrash, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import {TopBarService} from '../service/top-bar.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -43,13 +41,13 @@ export class FacultyComponent implements OnInit {
   };
 
   icons = {
-    faCheckCircle : faCheckCircle,
-    faTrash: faTrash,
-    faEdit: faEdit,
-    faInfoCircle: faInfoCircle
+    faCheckCircle,
+    faTrash,
+    faEdit,
+    faInfoCircle
   };
   file: any;
-  searchFormChanged: boolean =  false;
+  searchFormChanged =  false;
 
 
   queries = {
@@ -75,8 +73,7 @@ export class FacultyComponent implements OnInit {
     private apiService: ApiService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private topBarService: TopBarService,
-    private papa: Papa) {
+    private topBarService: TopBarService) {
     this.searchTextChanged.pipe(debounceTime(1000)).subscribe( () => this.getFaculty() );
     this.apiService.getYears().subscribe( years => {
       this.yearService.setYears( years );
@@ -96,7 +93,6 @@ export class FacultyComponent implements OnInit {
       dept: '',
       chair: '',
     };
-
     // @ts-ignore
     this.queries = Object.keys(this.facultiesForm.controls)
       .filter(key => this.facultiesForm.controls[key].value)
@@ -178,7 +174,7 @@ export class FacultyComponent implements OnInit {
     });
   }
 
-  changed($event: any): void {
+  changed(): void {
     this.searchTextChanged.next();
     this.searchFormChanged = true;
   }
@@ -192,7 +188,7 @@ export class FacultyComponent implements OnInit {
     modalRef.result.then(
       () => {
         this.apiService.deleteUser(id).subscribe(
-          user => {
+          () => {
             this.gotoPage(this.page.number);
           }
         );
@@ -228,14 +224,14 @@ export class FacultyComponent implements OnInit {
     const modalRef = this.modalService.open(AddUserFromCSVComponent, {backdropClass: 'light-blue-backdrop'});
     modalRef.componentInstance.pageNum = this.page.number;
     modalRef.result.then(() => {
-      this.gotoPage(this.page.pageNum);
+      this.gotoPage(this.page.number);
     });
   }
 
   addFaculty() {
     const modalRef = this.modalService.open(AddUserComponent, {backdropClass: 'light-blue-backdrop'});
     modalRef.result.then(() => {
-      this.gotoPage(this.page.pageNum);
+      this.gotoPage(this.page.number);
     });
   }
 
@@ -256,7 +252,7 @@ export class FacultyComponent implements OnInit {
     const modalRef = this.modalService.open(ModifyUserComponent, {backdropClass: 'light-blue-backdrop'});
     modalRef.componentInstance.modifyUser = faculty;
     modalRef.result.then(() => {
-      this.gotoPage(this.page.pageNum);
+      this.gotoPage(this.page.number);
     });
   }
 }

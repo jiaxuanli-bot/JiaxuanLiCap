@@ -22,7 +22,7 @@ public class DepartmentService {
 	public void delete(Long id) {
 		this.departmentRepo.deleteById( id );
 	}
-	
+
 	public Department read( Long id ) {
 		return this.departmentRepo.getOne( id );
 	}

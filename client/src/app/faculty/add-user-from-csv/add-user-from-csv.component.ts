@@ -35,7 +35,7 @@ export class AddUserFromCSVComponent implements OnInit {
               public activeModal: NgbActiveModal) { }
   ngOnInit(): void {
     this.yearService.getValue().subscribe(
-      year => {
+      () => {
         this.relation = this.formBuilder.group({
           first: [''],
           last: [''],
@@ -136,7 +136,7 @@ export class AddUserFromCSVComponent implements OnInit {
       complete: result => {
         if (this.mapTheProperty(result)) {
           this.apiService.uploadFacultiesFromCSV(this.uploadedFaculties).subscribe(
-            value => {
+            () => {
               this.activeModal.close('return');
             }
           );

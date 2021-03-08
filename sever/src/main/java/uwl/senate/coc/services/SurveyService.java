@@ -3,15 +3,12 @@ package uwl.senate.coc.services;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import uwl.senate.coc.entities.Committee;
 import uwl.senate.coc.entities.Survey;
 import uwl.senate.coc.entities.SurveyResponse;
 import uwl.senate.coc.entities.User;
-import uwl.senate.coc.projections.SurveySummary;
 import uwl.senate.coc.repositories.SurveyRepository;
 import uwl.senate.coc.repositories.SurveyResponseRepository;
 
@@ -19,7 +16,7 @@ import uwl.senate.coc.repositories.SurveyResponseRepository;
 public class SurveyService {
     @Autowired
     private SurveyRepository surveyRepo;
-    
+
     @Autowired 
     private SurveyResponseRepository surveyResponseRepo;
     

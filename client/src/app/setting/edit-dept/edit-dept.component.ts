@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import {Department} from "../../models/department";
-import {YearService} from "../../service/year.service";
-import {ApiService} from "../../service/api.service";
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {Department} from '../../models/department';
+import {YearService} from '../../service/year.service';
+import {ApiService} from '../../service/api.service';
 
 @Component({
   selector: 'app-edit-dept',
@@ -24,7 +24,7 @@ export class EditDeptComponent implements OnInit {
   saveDept() {
     this.dept.name = this.editDeptText;
     this.apiService.modifyDept(this.dept).subscribe(
-      resDept => {
+      () => {
         this.activeModal.close('return');
       }
     );

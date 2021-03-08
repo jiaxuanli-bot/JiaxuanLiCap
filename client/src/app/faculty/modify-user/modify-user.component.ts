@@ -1,12 +1,12 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {YearService} from '../../service/year.service';
 import {ApiService} from '../../service/api.service';
-import {Gender} from "../../models/gender";
-import {College} from "../../models/college";
-import {Department} from "../../models/department";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {User} from "../../models/user";
-import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
+import {Gender} from '../../models/gender';
+import {College} from '../../models/college';
+import {Department} from '../../models/department';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {User} from '../../models/user';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-modify-user',
@@ -14,7 +14,6 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./modify-user.component.css']
 })
 export class ModifyUserComponent implements OnInit {
-  @Output() result: EventEmitter<any> = new EventEmitter();
   modifyUser: User;
   constructor(
     private formBuilder: FormBuilder,
@@ -121,7 +120,7 @@ export class ModifyUserComponent implements OnInit {
       user.college = this.editUserForm.controls.editCollege.value;
       user.dept = this.editUserForm.controls.editDept.value;
       this.apiService.modifyUser(user).subscribe(
-      res => {
+        () => {
         this.activeModal.close('return');
       }
     );

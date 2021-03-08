@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import {Gender} from "../../models/gender";
-import {YearService} from "../../service/year.service";
-import {ApiService} from "../../service/api.service";
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {Gender} from '../../models/gender';
+import {YearService} from '../../service/year.service';
+import {ApiService} from '../../service/api.service';
 
 @Component({
   selector: 'app-edit-gender',
@@ -23,7 +23,7 @@ export class EditGenderComponent implements OnInit {
   saveGender() {
     this.gender.name = this.editGenderText;
     this.apiService.modifyGender(this.gender).subscribe(
-      resGender => {
+      () => {
         this.activeModal.close('return');
       }
     );

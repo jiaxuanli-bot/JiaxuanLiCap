@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {User} from '../models/user';
 import {YearService} from '../service/year.service';
-import {SlideBarComponent} from '../slide-bar/slide-bar.component';
 import {ApiService} from '../service/api.service';
 import {FormBuilder} from '@angular/forms';
 import {Router} from '@angular/router';

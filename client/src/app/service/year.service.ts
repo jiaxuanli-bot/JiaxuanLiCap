@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ActivatedRoute, Router, ActivationEnd} from '@angular/router';
 import { map, filter } from 'rxjs/operators';
-import {ApiService} from './api.service';
 import {AuthenticationService} from './authentication.service';
-import {User} from "../models/user";
-import {AppConstants} from "../constants/app-constants";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +16,7 @@ export class YearService {
   private committeeId: string;
 
   constructor(public authentication: AuthenticationService, private router: Router,
-              private route: ActivatedRoute, private apiService: ApiService) {
+              private route: ActivatedRoute) {
     this.route.fragment.subscribe((fragment: string) => {
       if (/^[1-9]\d{3}$/.test(fragment)) {
         this.currentYear.next(fragment);

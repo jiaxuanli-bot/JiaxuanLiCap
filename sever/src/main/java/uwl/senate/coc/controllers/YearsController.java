@@ -11,7 +11,7 @@ import java.util.List;
 import javax.validation.constraints.Pattern;
 
 @RestController
-@RequestMapping( "/settings/years" )
+@RequestMapping( "/api/v1/settings/years" )
 @Validated
 public class YearsController {
 
@@ -23,7 +23,7 @@ public class YearsController {
         committeeService.createYear(year);
         return year;
     }
-    
+
     @RequestMapping( method=RequestMethod.GET ) 
     public List<String> read() {
     	return this.committeeService.getCommitteesYears();

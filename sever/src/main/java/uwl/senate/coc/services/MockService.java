@@ -78,7 +78,6 @@ public class MockService {
         return ts.get(index);
     }
 
-    
     public <T> List<T> choose( List<T> ts, int n ) {
         if( n > ts.size() ) return ts;
         List<T> copy = new ArrayList<T>( ts );
@@ -111,7 +110,6 @@ public class MockService {
         		.stream()
         		.map( roleName -> new Role.Builder().role(roleName).build() )
         		.collect( Collectors.toList() );
-        
         return roleRepo.saveAll( roles );
     }
     
@@ -144,15 +142,15 @@ public class MockService {
     				collegeNameToListOfDepartmentNames.get( college.getName() )
     				.stream()
     				.filter( name -> Math.random() < .85 ) // FOR TESTING PURPOSES ENSURE THAT DEPTS ARE NOT THE SAME FOR ALL YEARS
-    				.map( departmentName ->     					
-    					new Department.Builder()
+    				.map( departmentName ->
+                            new Department.Builder()
     						.name(departmentName)
     						.year( college.getYear() )
     						.college(college)
     						.build()
     				)
-    				.collect( Collectors.toList() );                
-             
+    				.collect( Collectors.toList() );
+
     		allYears.addAll( departments );
     	});
     	
@@ -180,7 +178,7 @@ public class MockService {
 
     public static boolean firstUser = true;
     public User user(List<Role> roles, List<Gender> genders, List<Department> departments) {
-    			
+
     	final Department department = one( departments );
     	List<Role> userRoles = choose( roles, (int)(Math.random() * 3 + 1 ) );
     	if( firstUser ) {
@@ -305,7 +303,7 @@ public class MockService {
         				.isEnabled(true)
         				.urlkey( EncryptionUtils.encrypt( user.getId() + ":" + user.getYear() + ":" + UUID.randomUUID() ) )
         				.build()
-        				
+
     				)
         		.collect( Collectors.toList() );
         

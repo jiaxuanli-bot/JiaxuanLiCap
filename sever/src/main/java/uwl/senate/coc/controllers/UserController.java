@@ -28,7 +28,7 @@ import uwl.senate.coc.services.SurveyService;
 import uwl.senate.coc.services.UserService;
 
 @RestController
-@RequestMapping( "/users" )
+@RequestMapping( "/api/v1/users" )
 @Validated
 public class UserController {
 
@@ -151,7 +151,7 @@ public class UserController {
     	/// NEED SOME VALIDATION HERE..........    	    	
     	return surveyService.updateResponse( surveyResponse );
     }
-    
+
     @RequestMapping( value="/{uid}/survey/comment", method=RequestMethod.PUT )
     public Survey updateComment(@RequestBody(required=true) Survey surveyWithCommentAndIdOnly,
                               @PathVariable Long uid) {

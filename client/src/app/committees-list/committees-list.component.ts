@@ -3,16 +3,10 @@ import {YearService} from '../service/year.service';
 import {ApiService} from '../service/api.service';
 import {AuthenticationService} from '../service/authentication.service';
 import {CommitteeSummary} from '../models/committee-summary';
-import {Criteria} from '../models/criteria';
-
 import { faTimesCircle, faCheckCircle, faTrash} from '@fortawesome/free-solid-svg-icons';
-import {TopBarService} from "../service/top-bar.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {AddCommitteeComponent} from "./add-committee/add-committee.component";
-import {User} from "../models/user";
-import {AppConstants} from "../constants/app-constants";
-import {forkJoin} from "rxjs";
-import {Committee} from "../models/committee";
+import {TopBarService} from '../service/top-bar.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {AddCommitteeComponent} from './add-committee/add-committee.component';
 
 @Component({
   selector: 'app-committees-list',
@@ -24,10 +18,10 @@ export class CommitteesListComponent implements OnInit {
   committeesCriteriaStatus: any;
 
   icons = {
-    faTimesCircle : faTimesCircle,
-    faCheckCircle : faCheckCircle,
-    faTrash : faTrash
-  }
+    faTimesCircle,
+    faCheckCircle,
+    faTrash
+  };
 
   constructor(
     private modalService: NgbModal,

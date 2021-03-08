@@ -23,16 +23,16 @@ export class SlideBarComponent implements OnInit {
     committees: false,
     reports:  false,
     settings: false
-  }
+  };
 
   icons = {
-    faUser : faUser,
-    faUsers : faUsers,
-    faQuestionCircle : faQuestionCircle,
-    faCog : faCog,
-    faChartPie : faChartPie,
-    faPlusSquare : faPlusSquare
-  }
+    faUser,
+    faUsers,
+    faQuestionCircle,
+    faCog,
+    faChartPie,
+    faPlusSquare
+  };
 
   yearsForm: FormGroup;
   selectedYear: string;

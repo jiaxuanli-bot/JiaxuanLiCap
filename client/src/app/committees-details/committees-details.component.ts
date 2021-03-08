@@ -30,17 +30,17 @@ export class CommitteesDetailsComponent implements OnInit {
   };
 
   icons = {
-    faCircle : faCircle,
-    faCheckCircle : faCheckCircle,
-    faAngleDown : faAngleDown,
-    faAngleUp : faAngleUp
+    faCircle,
+    faCheckCircle,
+    faAngleDown,
+    faAngleUp
   };
 
   constructor(
     private modalService: NgbModal,
     public authentication: AuthenticationService,
     private topBarService: TopBarService,
-    private yearService: YearService,
+    public yearService: YearService,
     private apiService: ApiService,
     private route: ActivatedRoute,
     private router: Router
@@ -55,7 +55,6 @@ export class CommitteesDetailsComponent implements OnInit {
       (err) => console.error(err),
     );
   }
-
   toggleView( view: string ): void {
     this.views[view] = !this.views[view];
   }
@@ -67,59 +66,50 @@ export class CommitteesDetailsComponent implements OnInit {
             this.yearService.setYears(years);
           }
         );
-        this.yearService.committeeGetValue().subscribe(
-          year => {
-            if (year !== undefined && year !== '') {
-              this.apiService.getCommitteeByYearAndName(year, committee.name).subscribe(
-                newCommittee => {
-                  if ( newCommittee.id !== this.committee.id && this.committee.name === this.yearService.getCommitteeNameValue()) {
-                    this.router.navigate(['/uwl/committees' , newCommittee.id] , { fragment: year});
+        if ( committee.name === this.yearService.getCommitteeNameValue()) {
+          this.yearService.committeeGetValue().subscribe(
+            year => {
+              if (year !== undefined && year !== '') {
+                this.apiService.getCommitteeByYearAndName(year, this.yearService.getCommitteeNameValue()).subscribe(
+                  newCommittee => {
+                    console.log( this.yearService.getCommitteeNameValue());
+                    if ( newCommittee.id !== this.committee.id && this.committee.name === this.yearService.getCommitteeNameValue()) {
+                      this.yearService.setCommitteeName(newCommittee.name);
+                      this.router.navigate(['/uwl/committees' , newCommittee.id] , { fragment: year});
+                    }
                   }
-                }
-              );
+                );
+              }
             }
-          }
-        );
-        this.committee = committee;
-        this.committee.members.forEach( m => m.rank = m.rank.split(' ')[0] );
-        this.committee.volunteers.forEach( m => m.rank = m.rank.split(' ')[0] );
-
-        const assignedUsersReqs = committee.members.map( m => this.apiService.getUserAssignedCommittees(m.id) );
-        forkJoin(assignedUsersReqs).subscribe(
-          results => {
-            this.usersCommittees = results as Committee[][];
-          }
-        );
-
-        const unassignedUserReqs = this.committee.volunteers.map( m => this.apiService.getUserAssignedCommittees(m.id) );
-        forkJoin(unassignedUserReqs).subscribe(
-          results => {
-            this.volunteersCommittees = results as Committee[][];
-          }
-        );
+          );
+        }
+        this.uploadVolunteerAndUserCommittees(committee);
       }
     );
   }
   uploadCommitteeById(committeeId: string) {
     this.apiService.getCommitteeById(committeeId).subscribe (
       committee => {
-        this.committee = committee;
-        this.committee.members.forEach( m => m.rank = m.rank.split(' ')[0] );
-        this.committee.volunteers.forEach( m => m.rank = m.rank.split(' ')[0] );
+        this.uploadVolunteerAndUserCommittees(committee);
+      }
+    );
+  }
+  uploadVolunteerAndUserCommittees(committee: Committee) {
+    this.committee = committee;
+    this.committee.members.forEach( m => m.rank = m.rank.split(' ')[0] );
+    this.committee.volunteers.forEach( m => m.rank = m.rank.split(' ')[0] );
 
-        const assignedUsersReqs = committee.members.map( m => this.apiService.getUserAssignedCommittees(m.id) );
-        forkJoin(assignedUsersReqs).subscribe(
-          results => {
-            this.usersCommittees = results as Committee[][];
-          }
-        );
+    const assignedUsersReqs = committee.members.map( m => this.apiService.getUserAssignedCommittees(m.id) );
+    forkJoin(assignedUsersReqs).subscribe(
+      results => {
+        this.usersCommittees = results as Committee[][];
+      }
+    );
 
-        const unassignedUserReqs = this.committee.volunteers.map( m => this.apiService.getUserAssignedCommittees(m.id) );
-        forkJoin(unassignedUserReqs).subscribe(
-          results => {
-            this.volunteersCommittees = results as Committee[][];
-          }
-        );
+    const unassignedUserReqs = this.committee.volunteers.map( m => this.apiService.getUserAssignedCommittees(m.id) );
+    forkJoin(unassignedUserReqs).subscribe(
+      results => {
+        this.volunteersCommittees = results as Committee[][];
       }
     );
   }

@@ -17,10 +17,10 @@ export class SelectedCommitteeComponent implements OnInit {
   };
 
   icons = {
-    faCircle : faCircle,
-    faCheckCircle : faCheckCircle,
-    faAngleDown : faAngleDown,
-    faAngleUp : faAngleUp
+    faCircle,
+    faCheckCircle,
+    faAngleDown,
+    faAngleUp
   };
 
   constructor(public activeModal: NgbActiveModal) { }

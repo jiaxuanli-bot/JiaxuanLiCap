@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import uwl.senate.coc.entities.College;
-
 import java.util.List;
 
 public interface CollegeRepository extends JpaRepository<College, Long> {

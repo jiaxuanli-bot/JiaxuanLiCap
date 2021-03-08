@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {YearService} from "../../service/year.service";
-import {ApiService} from "../../service/api.service";
-import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
+import {YearService} from '../../service/year.service';
+import {ApiService} from '../../service/api.service';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-delete-gen',
@@ -22,7 +22,7 @@ export class DeleteGenComponent implements OnInit {
 
   deleteGen() {
     this.apiService.deleteGender(this.genId).subscribe(
-      gen => {
+      () => {
         this.activeModal.close('return');
       }
     );

@@ -14,7 +14,7 @@ public class ExpressionParser {
 		this.tok = new StringTokenizer( txt, "() ", true);
 		fullyParse();
 	}
-	
+
 	private void fullyParse() {
 		this.tokens = new ArrayList<>();
 		while( this.tok.hasMoreElements() ) {

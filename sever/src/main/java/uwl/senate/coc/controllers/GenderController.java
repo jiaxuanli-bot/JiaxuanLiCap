@@ -18,13 +18,13 @@ import uwl.senate.coc.entities.Gender;
 import uwl.senate.coc.services.GenderService;
 
 @RestController
-@RequestMapping( "/settings/genders" )
+@RequestMapping( "/api/v1/settings/genders" )
 @Validated
 public class GenderController {
 
     @Autowired
     private GenderService genderService;
-	
+
     @RequestMapping( method= RequestMethod.GET)
     public List<Gender> getByYear(@Pattern( regexp = "\\b\\d{4}\\b", message = "the year format is wrong") @RequestParam(required=true) String year) {
         return this.genderService.getByYear(year);

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {ApiService} from "../../service/api.service";
+import {ApiService} from '../../service/api.service';
 
 @Component({
   selector: 'app-remove-member',
@@ -18,7 +18,7 @@ export class RemoveMemberComponent implements OnInit {
   removeUser() {
     this.activeModal.dismiss();
     this.apiService.removeUserFromCommittee(this.committeeId, this.userId).subscribe(
-      committee => {
+      () => {
         this.activeModal.close('return');
       }
     );

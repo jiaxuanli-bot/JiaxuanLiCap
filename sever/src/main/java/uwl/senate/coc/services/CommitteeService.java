@@ -35,7 +35,7 @@ public class CommitteeService {
     
     public List<Criteria> unsatisfiedCriteria( Long cid ) {
     	Committee c = getCommitteeDetail( cid );
-    	
+
     	return c.getCriteria()
     			.stream()
     			.filter( crit -> !CriteriaPredicateFactory.build( crit ).test( c ) )
@@ -78,7 +78,7 @@ public class CommitteeService {
         		.collect( Collectors.toList() );
     }
 
-    public String createYear(String year){
+    public String createYear(String year) {
         List<CommitteeYear> years  = committeeRepo.findDistinctByYearNotNullOrderByYearAsc();        
         String lastYear = years.get(years.size() - 1).getYear();
         List<Committee> committees = committeeRepo.findByYear(lastYear, Committee.class);
@@ -92,7 +92,7 @@ public class CommitteeService {
                             .year(year)
                             .build();                    
                     Committee finalCopy = committeeRepo.save(copy);
-                    
+
                     // ASSIGN DUTIES
                     List<Duty> newDuties = committee.getDuties()
                     	.stream()
@@ -122,7 +122,7 @@ public class CommitteeService {
     public List<String> getCommitteeYears(Long id){
         List<String> years = new ArrayList<String>();
         String name =  committeeRepo.findById(id).get().getName();
-        committeeRepo.findDistinctByNameEquals(name).forEach(
+        committeeRepo.findDistinctByNameEquals(name).stream().forEach(
                 committeesYearsOnly -> {
                     years.add(committeesYearsOnly.getYear());
                 }
@@ -150,13 +150,21 @@ public class CommitteeService {
 
     public User assignCommitteeMember(Long id,Long userId){
         final User[] res = new User[1];
-        User user = userRepo.findById(Long.valueOf(userId)).get();
-        Committee committee = committeeRepo.findById(Long.valueOf(id)).get();
-        user.getCommittees().add(committee);
-        user.getVolunteeredCommittees().remove(committee);
-        userRepo.save(user);
+        userRepo.findById(Long.valueOf(userId)).map(
+                user -> {
+                    return committeeRepo.findById(Long.valueOf(id)).map(
+                            committee -> {
+                                user.getCommittees().add(committee);
+                                user.getVolunteeredCommittees().remove(committee);
+                                res[0] = userRepo.save(user);
+                                return res[0];
+                            }
+                    );
+                }
+        );
         return res[0];
     }
+
 
     public User removeMember(Long id , Long memberId){
         final User[] res = new User[1];
@@ -213,7 +221,6 @@ public class CommitteeService {
                 .collect( Collectors.toList() );
         dutyRepo.saveAll( duties );
         committee.setDuties( duties );
-
         committeeRepo.save(committee);
     }
 

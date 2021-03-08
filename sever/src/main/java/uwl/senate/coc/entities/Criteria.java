@@ -56,11 +56,11 @@ public class Criteria {
 	public void setCriteria(String criteria) {
 		this.criteria = criteria;
 	}
-	
+
 	public Boolean getIsSatisfied( ) {
 		return CriteriaPredicateFactory.build( this ).test( this.committee );
 	}
-	
+
 	public void setIsSatisfied( Boolean f ) {
 		// this function only exists to
 		// support Springs IOC and to prevent 

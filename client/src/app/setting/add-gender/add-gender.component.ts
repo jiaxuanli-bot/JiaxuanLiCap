@@ -1,7 +1,6 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {YearService} from '../../service/year.service';
 import {ApiService} from '../../service/api.service';
-import {Department} from '../../models/department';
 import {Gender} from '../../models/gender';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
@@ -21,7 +20,7 @@ export class AddGenderComponent implements OnInit {
     gen.name = this.genName;
     gen.year = this.yearService.getYearValue;
     this.apiService.createGender(gen).subscribe(
-      resGen => {
+      () => {
         this.activeModal.close('return');
       }
     );
