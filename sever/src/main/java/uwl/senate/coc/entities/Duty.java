@@ -12,7 +12,7 @@ public class Duty {
 	private String duty;
 
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "committee_id", nullable = false)
 	private Committee committee;
 

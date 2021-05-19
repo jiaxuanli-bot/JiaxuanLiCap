@@ -13,13 +13,18 @@ export class YearService {
   private yearForCommitteePage: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private years: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   private path: string;
+  private yearList: string[];
   private committeeId: string;
 
   constructor(public authentication: AuthenticationService, private router: Router,
               private route: ActivatedRoute) {
     this.route.fragment.subscribe((fragment: string) => {
-      if (/^[1-9]\d{3}$/.test(fragment)) {
-        this.currentYear.next(fragment);
+      if (fragment && fragment !== undefined ) {
+        if (/^[1-9]\d{3}$/.test(fragment)) {
+          this.currentYear.next(fragment);
+        } else {
+          window.location.hash = this.currentYear.value;
+        }
       }
     });
 
@@ -68,6 +73,7 @@ export class YearService {
   }
 
   public setYears(years: string[]) {
+    this.yearList = years;
     this.years.next(years);
   }
 

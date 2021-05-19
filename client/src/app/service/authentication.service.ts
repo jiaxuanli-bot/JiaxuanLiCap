@@ -47,6 +47,9 @@ export class AuthenticationService {
   private extractRoles( user ) {
     this.roles = user && (user.roles.map( role => role.role ) );
   }
+
+
+
   login( email ) {
     const config = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const data = {  "email" : email};
@@ -55,7 +58,6 @@ export class AuthenticationService {
         this.http.get<string[]>(`${AppConstants.API_URL}/users/email/${email}/years`, {} ).subscribe(
           value => {
             user.years = value;
-            console.log(user);
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             this.extractRoles(user);
             return this.storeUser( user );

@@ -72,11 +72,6 @@
 			<version>1.2.59</version>
 		</dependency>
 
-
-
-
-
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -101,6 +96,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
 
 </project>

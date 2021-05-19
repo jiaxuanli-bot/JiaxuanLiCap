@@ -16,9 +16,8 @@ export class RemoveMemberComponent implements OnInit {
   ngOnInit(): void {
   }
   removeUser() {
-    this.activeModal.dismiss();
     this.apiService.removeUserFromCommittee(this.committeeId, this.userId).subscribe(
-      () => {
+      result => {
         this.activeModal.close('return');
       }
     );

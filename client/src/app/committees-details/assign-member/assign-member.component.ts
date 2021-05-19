@@ -19,7 +19,7 @@ export class AssignMemberComponent implements OnInit {
 
   assignMember() {
     this.apiService.assignUserToOneCommittee(this.committeeId, this.userId).subscribe(
-      () => {
+      result => {
         this.activeModal.close('return');
       }
     );

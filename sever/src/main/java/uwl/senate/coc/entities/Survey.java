@@ -36,7 +36,7 @@ public class Survey {
 	@Column( name="enabled" )
 	private Boolean isEnabled;
 
-	@OneToMany( fetch=FetchType.LAZY )
+	@OneToMany( fetch=FetchType.EAGER )
 	private List<SurveyResponse> responses;
 	
 	public Survey() {		

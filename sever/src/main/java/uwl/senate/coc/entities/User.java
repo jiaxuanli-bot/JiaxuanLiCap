@@ -24,17 +24,6 @@ public class User {
 	private Boolean soe;
 	private Boolean chair;
 
-
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", first=" + first + ", last=" + last + ", adminResponsibility=" + adminResponsibility
-				+ ", rank=" + rank + ", email=" + email + ", year=" + year + ", tenured=" + tenured + ", gradStatus="
-				+ gradStatus + ", soe=" + soe + ", chair=" + chair + ", college=" + college + ", gender=" + gender
-				+ ", dept=" + dept + ", committees=" + committees + ", volunteeredCommittees=" + volunteeredCommittees
-				+ ", roles=" + roles + "]";
-	}
-
 	@ManyToOne
 	@JoinTable(name = "user_college",
 			joinColumns =
@@ -60,16 +49,16 @@ public class User {
 	private Department dept;
 
 	@JsonIgnore
-	@ManyToMany(fetch=FetchType.LAZY)
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "committee_members",joinColumns = { @JoinColumn(name = "members_id")},inverseJoinColumns = {@JoinColumn(name = "committee_id")})
 	private Set<Committee> committees;
 
 	@JsonIgnore
-	@ManyToMany(fetch=FetchType.LAZY)
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "committee_volunteers",joinColumns = { @JoinColumn(name = "volunteers_id")},inverseJoinColumns = {@JoinColumn(name = "committee_id")})
 	private Set<Committee> volunteeredCommittees;
 
-    @ManyToMany(fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.EAGER)
 	private List<Role> roles;
 
 	public User() {
@@ -360,5 +349,13 @@ public class User {
 			return new User( this );
 		}
 
+		@Override
+		public String toString() {
+			return "User [id=" + id + ", first=" + first + ", last=" + last + ", adminResponsibility=" + adminResponsibility
+					+ ", rank=" + rank + ", email=" + email + ", year=" + year + ", tenured=" + tenured + ", gradStatus="
+					+ gradStatus + ", soe=" + soe + ", chair=" + chair + ", college=" + college + ", gender=" + gender
+					+ ", dept=" + dept + ", committees=" + committees + ", volunteeredCommittees=" + volunteeredCommittees
+					+ ", roles=" + roles + "]";
+		}
 	}
 }

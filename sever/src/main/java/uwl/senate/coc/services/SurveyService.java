@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uwl.senate.coc.entities.Committee;
 import uwl.senate.coc.entities.Survey;
 import uwl.senate.coc.entities.SurveyResponse;
@@ -22,7 +23,8 @@ public class SurveyService {
     
     @Autowired
     private CommitteeService committeeService;
-    
+
+    @Transactional
     public Survey create( User user ) {
     	List<Committee> committees = committeeService.getCommitteesByYear( user.getYear() );
 	
@@ -45,11 +47,11 @@ public class SurveyService {
 		surveyResponseRepo.saveAll( responses );		
 		return survey;
     }
-    
+
     public <T> T getByUserId( Long uid, Class<T> clazz) {
     	return surveyRepo.findByUserId(uid, clazz );
     }
-    
+
     public List<SurveyResponse> getResponsesBySurveyId( Long sid ) {
     	return surveyResponseRepo.findBySurveyId(sid);
     }

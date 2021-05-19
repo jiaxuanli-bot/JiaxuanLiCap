@@ -26,23 +26,23 @@ public class SurveyResponse {
 	private Boolean selected;
 	
 	@JsonIgnore
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinTable( 
 			name="survey_surveyresponse", 
 			joinColumns={ @JoinColumn(name = "response_id") },
 			inverseJoinColumns={ @JoinColumn(name = "survey_id") }
 	)
 	private Survey survey;
-	
+
 	@JsonIgnore
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinTable( 
 			name="committee_surveyresponse", 
 			joinColumns={ @JoinColumn(name = "response_id") },
 			inverseJoinColumns={ @JoinColumn(name = "committee_id") }
 	)
 	private Committee committee;
-	
+
 	public SurveyResponse() {		
 	}
 	

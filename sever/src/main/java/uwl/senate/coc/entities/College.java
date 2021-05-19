@@ -35,14 +35,6 @@ public class College {
     public College() {
     }
 
-    private College( Builder b ) {
-        this.id = b.id;
-        this.name = b.name;
-        this.year = b.year;
-        this.users = b.users;
-        this.departments = b.departments;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -117,6 +109,13 @@ public class College {
         public College build() {
             return new College( this );
         }
+    }
+    private College( Builder b ) {
+        this.id = b.id;
+        this.name = b.name;
+        this.year = b.year;
+        this.users = b.users;
+        this.departments = b.departments;
     }
 }
 

@@ -14,7 +14,7 @@ public class Role {
 
 	public Role() {
 	}
-	
+
 	private Role( Builder b ) {
 		this.id = b.id;
 		this.role = b.role;

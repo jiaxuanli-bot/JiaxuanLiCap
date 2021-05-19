@@ -32,22 +32,17 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                // 必须配置，不然OAuth2的http配置不生效----不明觉厉
                 .requestMatchers()
                 .antMatchers("/auth/login","/index","/static", "/oauth/authorize")
                 .and()
                 .authorizeRequests()
-                // 自定义页面或处理url是，如果不配置全局允许，浏览器会提示服务器将页面转发多次
                 .antMatchers("/auth/login", "/index","/static")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
 
-        // 表单登录
         http.formLogin()
-                // 登录页面
                 .loginPage("/auth/login")
-                // 登录处理url
                 .loginProcessingUrl("/index");
     }
 

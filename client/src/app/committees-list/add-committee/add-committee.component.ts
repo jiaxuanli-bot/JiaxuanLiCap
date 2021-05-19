@@ -135,4 +135,8 @@ export class AddCommitteeComponent implements OnInit {
   deleteCri(index: number) {
     this.newCommittee.criteria.splice(index, 1);
   }
+
+  deleteDuty(index: number) {
+    this.newCommittee.duties.splice(index, 1);
+  }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 public interface CollegeRepository extends JpaRepository<College, Long> {
     List<College> findByYear(String year);
     List<College> findAllByYearBetween(String startYear, String endYear);
+
     @Transactional
     @Modifying
     @Query(value = "UPDATE college c set name =?1 where c.id = ?2",

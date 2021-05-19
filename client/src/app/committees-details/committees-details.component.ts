@@ -72,7 +72,6 @@ export class CommitteesDetailsComponent implements OnInit {
               if (year !== undefined && year !== '') {
                 this.apiService.getCommitteeByYearAndName(year, this.yearService.getCommitteeNameValue()).subscribe(
                   newCommittee => {
-                    console.log( this.yearService.getCommitteeNameValue());
                     if ( newCommittee.id !== this.committee.id && this.committee.name === this.yearService.getCommitteeNameValue()) {
                       this.yearService.setCommitteeName(newCommittee.name);
                       this.router.navigate(['/uwl/committees' , newCommittee.id] , { fragment: year});
@@ -118,7 +117,7 @@ export class CommitteesDetailsComponent implements OnInit {
     modalRef.componentInstance.committeeId = this.committee.id;
     modalRef.componentInstance.userId = id;
     modalRef.result.then(() => {
-      this.uploadCommitteeById(this.committee.id);
+      this.initCommitteeById( this.committee.id );
     });
   }
   assignUser(id): void {
@@ -126,7 +125,7 @@ export class CommitteesDetailsComponent implements OnInit {
     modalRef.componentInstance.committeeId = this.committee.id;
     modalRef.componentInstance.userId = id;
     modalRef.result.then(() => {
-      this.uploadCommitteeById(this.committee.id);
+      this.initCommitteeById( this.committee.id );
     });
   }
 }

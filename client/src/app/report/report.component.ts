@@ -149,16 +149,18 @@ export class ReportComponent implements OnInit {
   }
 
   committeeMemberMaxLength(committees) {
-    for (const property of committees) {
-      let maxNum = 0;
-      committees[property].forEach(
-        value => {
-          if  (value.members.length > maxNum) {
-            maxNum = value.members.length;
+    Object.keys(committees).forEach(
+      key => {
+        let maxNum = 0;
+        committees[key].forEach(
+          value => {
+            if  (value.members.length > maxNum) {
+              maxNum = value.members.length;
+            }
           }
-        }
-      );
-      this.max[property] = maxNum;
-    }
+        );
+        this.max[key] = maxNum;
+      }
+    );
   }
 }

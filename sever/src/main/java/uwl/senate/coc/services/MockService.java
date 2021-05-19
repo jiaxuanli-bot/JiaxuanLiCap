@@ -306,7 +306,7 @@ public class MockService {
 
     				)
         		.collect( Collectors.toList() );
-        
+
         surveyRepo.saveAll( allSurveys ); // all surveys have been saved with ids
         
         Map<String, List<Committee>> committeesByYear = new HashMap<>();
@@ -359,13 +359,13 @@ public class MockService {
         List<Department> departments = departments( colleges );
         List<Committee> committees = committees( years, colleges, departments, genders );
 
-        // The USERS are aware of years via departments
         @SuppressWarnings("unused")
         List<User> users = users(roles, genders, departments);
         committees
                 .stream()
                 .forEach( c -> {
-                    List<User> volunteers = choose( userRepo.findByYear(c.getYear()) , randomBetween( 0, 20 ) );
+                    List<User> volunteers = choose( userRepo.findByYear(c.getYear()) ,
+                            randomBetween( 0, 20 ) );
                     List<User> members = choose( volunteers, randomBetween(0, volunteers.size() ) );
 
                     c.setMembers( new HashSet<>( members ) );

@@ -9,11 +9,38 @@
         </form>
     </div>
 
+    <div class="d-block d-lg-none d-xl-none" id="smallSidebar">
+      <form [formGroup]="yearsForm" class="form-inline">
+        <select [(ngModel)]="selectedYear" formControlName="year" id="year" class= "form-control mr-2" (change)="changeYear()">
+          <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
+        </select>
+        <fa-icon class="clickableIcon" [icon]="icons.faPlusSquare" *ngIf="hasRole('Admin')" (click)="createYear()"></fa-icon>
+      </form>
+      <ul class="nav mt-2" >
+        <li *ngIf="hasRole( 'Admin')" (click)="goTo('faculty')" [ngClass]="pages.faculty? 'selected':''">
+          <fa-icon [icon]="icons.faUser"></fa-icon>
+        </li>
+        <li *ngIf="(hasRole( 'Admin') || hasRole('Nominate'))" [ngClass]="pages.committees? 'selected':''" (click)="goTo('committees')">
+          <fa-icon [icon]="icons.faUsers"></fa-icon>
+        </li>
+        <li *ngIf="(hasRole('Normal') || hasRole('Nominate'))" (click)="goTo('survey')" [ngClass]="pages.survey? 'selected':''">
+          <fa-icon [icon]="icons.faQuestionCircle"></fa-icon>
+        </li>
+        <li *ngIf="hasRole( 'Admin')" (click)="goTo('reports')" [ngClass]="pages.reports? 'selected':''">
+          <fa-icon [icon]="icons.faChartPie"></fa-icon>
+        </li>
+        <li *ngIf="hasRole( 'Admin')"  (click)="goTo('settings')" [ngClass]="pages.settings? 'selected':''">
+          <fa-icon [icon]="icons.faCog"></fa-icon>
+        </li>
+      </ul>
+    </div>
+
+
     <ul class="nav d-none d-lg-block d-xl-block mt-2 mt-4">
       <li *ngIf="hasRole( 'Admin')" (click)="goTo('faculty')" [ngClass]="pages.faculty? 'selected':''">
         <fa-icon [icon]="icons.faUser"></fa-icon>Users
       </li>
-      <li  *ngIf="(hasRole( 'Admin') || hasRole('Nominate'))" [ngClass]="pages.committees? 'selected':''" (click)="goTo('committees')">
+      <li *ngIf="(hasRole( 'Admin') || hasRole('Nominate'))" [ngClass]="pages.committees? 'selected':''" (click)="goTo('committees')">
         <fa-icon [icon]="icons.faUsers"></fa-icon>Committees
       </li>
       <li *ngIf="(hasRole('Normal') || hasRole('Nominate'))" (click)="goTo('survey')" [ngClass]="pages.survey? 'selected':''">
@@ -26,6 +53,7 @@
         <fa-icon [icon]="icons.faCog"></fa-icon>Settings
       </li>
     </ul>
+
 
     <div class="modal mt-5 fade" id="createYear" tabindex="-1" role="dialog" aria-labelledby="modifyModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
