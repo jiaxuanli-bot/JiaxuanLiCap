@@ -1,0 +1,42 @@
+{
+  "groups": [
+    {
+      "name": "github",
+      "type": "uwl.senate.coc.entities.Oauth2Properties",
+      "sourceType": "uwl.senate.coc.entities.Oauth2Properties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "github.access-token-url",
+      "type": "java.lang.String",
+      "sourceType": "uwl.senate.coc.entities.Oauth2Properties"
+    },
+    {
+      "name": "github.authorize-url",
+      "type": "java.lang.String",
+      "sourceType": "uwl.senate.coc.entities.Oauth2Properties"
+    },
+    {
+      "name": "github.client-id",
+      "type": "java.lang.String",
+      "sourceType": "uwl.senate.coc.entities.Oauth2Properties"
+    },
+    {
+      "name": "github.client-secret",
+      "type": "java.lang.String",
+      "sourceType": "uwl.senate.coc.entities.Oauth2Properties"
+    },
+    {
+      "name": "github.redirect-url",
+      "type": "java.lang.String",
+      "sourceType": "uwl.senate.coc.entities.Oauth2Properties"
+    },
+    {
+      "name": "github.user-info-url",
+      "type": "java.lang.String",
+      "sourceType": "uwl.senate.coc.entities.Oauth2Properties"
+    }
+  ],
+  "hints": []
+}
