@@ -10,7 +10,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-//@Order(101)
+@Order(101)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
